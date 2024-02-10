@@ -25,17 +25,14 @@ class _ReviewScreenState extends State<ReviewScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Top Reviews',
-                    style: kBody1MediumBlue,
-                  ),
-                  SizedBox(width: 3)
-                ],
+              SizedBox(height: Get.height * 0.02),
+              Center(
+                child: Text(
+                  'Top Reviews',
+                  style: kBody1MediumBlue,
+                ),
               ),
+              SizedBox(height: Get.height * 0.01),
               reviewContainer(),
               reviewContainer(),
               reviewContainer(),
@@ -60,7 +57,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           child: Container(
             width: Get.width,
             child: FittedBox(
@@ -70,7 +67,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                 children: [
                   CircleAvatar(
                     radius: 24.r,
-                    backgroundImage: AssetImage(
+                    backgroundImage: const AssetImage(
                       'assets/images/lawyer/lawyer.png',
                     ),
                   ),
@@ -84,7 +81,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                         children: [
                           Text(
                             'Shanti K M',
-                            style: kHead2Black,
+                            style: kBody2Black,
                           ),
                           SizedBox(width: Get.width * 0.35),
                           ratingBar(4.3)
@@ -94,18 +91,19 @@ class _ReviewScreenState extends State<ReviewScreen> {
                         width: Get.width * 0.7,
                         child: Text(
                           'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using  making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for  will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).',
+                          style: kBody5Black,
                           maxLines: isMaxLines ? 5 : 2,
                         ),
                       ),
-                      TextButton(
-                        onPressed: () {
+                      GestureDetector(
+                        onTap: () {
                           setState(() {
                             isMaxLines = !isMaxLines;
                           });
                         },
                         child: Text(
                           isMaxLines ? "See less" : 'See more',
-                          style: kBody2MediumBlue,
+                          style: kBody4MediumBlue,
                         ),
                       ),
                     ],
@@ -125,11 +123,11 @@ class _ReviewScreenState extends State<ReviewScreen> {
       rating: rating,
       itemBuilder: (context, index) => Icon(
         Icons.star,
-        size: 10,
+        //  size: 10.sp,
         color: Colors.blue.shade200,
       ),
       itemCount: 5,
-      itemSize: 15.0,
+      itemSize: 15.r,
       direction: Axis.horizontal,
     );
   }

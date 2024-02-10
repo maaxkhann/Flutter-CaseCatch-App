@@ -30,12 +30,12 @@ class _FilterScreenState extends State<FilterScreen> {
     return SafeArea(
       child: Scaffold(
         body: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.symmetric(horizontal: Get.width * 0.02),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                height: Get.height * 0.08,
+                height: Get.height * 0.1,
                 child: appBar(),
               ),
               Row(
@@ -56,7 +56,7 @@ class _FilterScreenState extends State<FilterScreen> {
                             color: Colors.grey.shade300),
                         child: const Center(child: Text('Lowest')),
                       ),
-                      SizedBox(width: 5),
+                      SizedBox(width: Get.width * 0.01),
                       Container(
                         height: Get.height * 0.03,
                         width: Get.width * 0.2,
@@ -70,23 +70,17 @@ class _FilterScreenState extends State<FilterScreen> {
                 ],
               ),
               SizedBox(
-                height: 20,
+                height: Get.height * 0.02,
               ),
               rangeSLider(),
-              SizedBox(
-                height: 20,
-              ),
+              SizedBox(height: Get.height * 0.02),
               divider(),
-              SizedBox(
-                height: 20,
-              ),
+              SizedBox(height: Get.height * 0.02),
               Text(
                 'Ratings',
                 style: kBody1Black,
               ),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: Get.height * 0.01),
               Row(
                 children: [
                   ratingContainer(5),
@@ -96,40 +90,28 @@ class _FilterScreenState extends State<FilterScreen> {
                   ratingContainer(1),
                 ],
               ),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: Get.height * 0.01),
               divider(),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: Get.height * 0.01),
               Text(
                 'Area of Practice',
                 style: kBody1Black,
               ),
-              SizedBox(
-                height: 15,
-              ),
+              SizedBox(height: Get.height * 0.015),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   customButton(() {}, 'Go to all lawyers list'),
                 ],
               ),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: Get.height * 0.01),
               divider(),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: Get.height * 0.01),
               Text(
                 'Years of Experience',
                 style: kBody1Black,
               ),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: Get.height * 0.01),
               Row(
                 children: [
                   experienceContainer('1-3 Years'),
@@ -163,8 +145,8 @@ class _FilterScreenState extends State<FilterScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Container(
-              height: 5,
-              width: 35,
+              height: Get.height * 0.008,
+              width: Get.width * 0.15,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30), color: Colors.black),
             ),
