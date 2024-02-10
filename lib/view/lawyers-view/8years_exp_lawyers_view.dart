@@ -1,8 +1,7 @@
+import 'package:catch_case/constant-widgets/constant_appbar.dart';
 import 'package:catch_case/constant-widgets/constant_textfield2.dart';
-import 'package:catch_case/constants/colors.dart';
 import 'package:catch_case/constants/textstyles.dart';
 import 'package:catch_case/view/lawyers-view/about-view/about_view.dart';
-import 'package:catch_case/view/lawyers-view/widgets/lawyers_appbar.dart';
 import 'package:catch_case/view/lawyers-view/widgets/lawyers_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,7 +13,7 @@ class EightYearsExpLawyersView extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: const LawyersAppBar(text: 'Lawyers'),
+        appBar: const ConstantAppBar(text: 'Lawyers'),
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: Get.width * 0.02),

@@ -49,6 +49,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.18.0"
+  credit_card_form:
+    dependency: "direct main"
+    description:
+      name: credit_card_form
+      sha256: "1943fe2f2b2ab9204d76ca1135c6f313907f59199ab0e546d489cedf55c9fd0a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.7"
   crypto:
     dependency: transitive
     description:
@@ -65,6 +73,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  date_picker_plus:
+    dependency: "direct main"
+    description:
+      name: date_picker_plus
+      sha256: ee4a6e31d5834a0fd394a2e475e08ca596e6e5e7a4952b01281ba31dda96e2c1
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   dots_indicator:
     dependency: transitive
     description:
@@ -94,14 +110,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_date_pickers:
-    dependency: "direct main"
-    description:
-      name: flutter_date_pickers
-      sha256: "8e35077959d0cb6a915ad1f8c27e5d1e3ef6b1eb13fbefaa18680a3d6c118e13"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.2"
   flutter_keyboard_visibility:
     dependency: transitive
     description:
@@ -158,11 +166,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
-  flutter_localizations:
-    dependency: transitive
-    description: flutter
-    source: sdk
-    version: "0.0.0"
+  flutter_rating_bar:
+    dependency: "direct main"
+    description:
+      name: flutter_rating_bar
+      sha256: d2af03469eac832c591a1eba47c91ecc871fe5708e69967073c043b2d775ed93
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.1"
   flutter_screenutil:
     dependency: "direct main"
     description:
@@ -418,6 +429,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  syncfusion_flutter_core:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_core
+      sha256: e8580e201c7197feac830b501889e877796a9fabbe20dcdbe90a981603939101
+      url: "https://pub.dev"
+    source: hosted
+    version: "24.2.4"
+  syncfusion_flutter_sliders:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_sliders
+      sha256: "8df6425c74b2c2434a3e9109d04ff3adeb4c821a3a22efe3e0cbbd0b5a22afdc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "24.2.4"
   term_glyph:
     dependency: transitive
     description:

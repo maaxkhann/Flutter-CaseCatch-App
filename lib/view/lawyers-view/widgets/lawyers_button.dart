@@ -6,8 +6,12 @@ import 'package:get/get.dart';
 class LawyersButton extends StatelessWidget {
   final String buttonText;
   final VoidCallback onTap;
+  final Color? buttonColor;
   const LawyersButton(
-      {super.key, required this.buttonText, required this.onTap});
+      {super.key,
+      required this.buttonText,
+      required this.onTap,
+      this.buttonColor});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +22,7 @@ class LawyersButton extends StatelessWidget {
         width: Get.width * 0.23,
         height: Get.height * 0.05,
         decoration: BoxDecoration(
-            color: kDarkBlue,
+            color: buttonColor ?? kDarkBlue,
             borderRadius: BorderRadius.circular(Get.width * 0.02)),
         child: FittedBox(
           fit: BoxFit.scaleDown,

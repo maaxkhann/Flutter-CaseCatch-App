@@ -118,3 +118,7 @@ TextStyle kBody5White = GoogleFonts.poppins(
     fontSize: 10.sp, color: Colors.white, fontWeight: FontWeight.w500);
 TextStyle kBody5Black = GoogleFonts.poppins(
     fontSize: 10.sp, color: Colors.black, fontWeight: FontWeight.w500);
+TextStyle kBody5DarkBlue = GoogleFonts.poppins(
+    fontSize: 10.sp,
+    color: const Color(0xFF75B1CE),
+    fontWeight: FontWeight.w500);

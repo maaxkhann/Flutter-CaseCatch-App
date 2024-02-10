@@ -3,13 +3,11 @@ import 'package:catch_case/constants/textstyles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LawyersAppBar extends StatelessWidget implements PreferredSizeWidget {
+class ConstantAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String text;
+  final TextStyle? textStyle;
 
-  const LawyersAppBar({
-    super.key,
-    required this.text,
-  });
+  const ConstantAppBar({super.key, required this.text, this.textStyle});
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +22,8 @@ class LawyersAppBar extends StatelessWidget implements PreferredSizeWidget {
         backgroundColor: kButtonColor,
         centerTitle: true,
         title: Text(
-          'Lawyers',
-          style: kBody1White,
+          text,
+          style: textStyle ?? kBody1White,
         ));
   }
 

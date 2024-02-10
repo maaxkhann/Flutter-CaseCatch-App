@@ -42,7 +42,10 @@ dependencies:
   introduction_screen: ^3.1.12
   pinput: ^3.0.1
   icon_decoration: ^2.0.2
-  flutter_date_pickers: ^0.4.2
+  date_picker_plus: ^2.1.0
+  syncfusion_flutter_sliders: ^24.2.4
+  credit_card_form: ^0.0.7
+  flutter_rating_bar: ^4.0.1
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +74,7 @@ flutter:
    - assets/images/home/
    - assets/images/intro-auth/
    - assets/images/lawyer/
+   - assets/images/payment/
    - assets/images/
   #   - images/a_dot_ham.jpeg
 

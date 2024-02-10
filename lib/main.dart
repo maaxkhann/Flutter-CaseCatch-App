@@ -1,6 +1,3 @@
-import 'package:catch_case/constant-widgets/bottom_nav_bar.dart';
-import 'package:catch_case/view/home-view/home_view.dart';
-import 'package:catch_case/view/lawyers-view/8years_exp_lawyers_view.dart';
 import 'package:catch_case/view/splash_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

@@ -6,6 +6,7 @@ import 'package:catch_case/view/home-view/widgets/free_consultation_widget.dart'
 import 'package:catch_case/view/home-view/widgets/home_appbar.dart';
 import 'package:catch_case/view/home-view/widgets/home_button.dart';
 import 'package:catch_case/view/home-view/widgets/lawyers_category.dart';
+import 'package:catch_case/view/lawyers-view/all_lawyers_category_view.dart';
 import 'package:catch_case/view/lawyers-view/all_lawyers_view.dart';
 import 'package:catch_case/view/lawyers-view/free_lawyers_view.dart';
 import 'package:flutter/material.dart';
@@ -73,12 +74,15 @@ class HomeView extends StatelessWidget {
                   height: Get.height * 0.02,
                 ),
                 Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    'View all',
-                    style: kBody3DarkBlue,
-                  ),
-                ),
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () =>
+                          Get.to(() => const AllLawyersCategoryView()),
+                      child: Text(
+                        'View all',
+                        style: kBody3DarkBlue,
+                      ),
+                    )),
                 SizedBox(
                   height: Get.height * 0.01,
                 ),

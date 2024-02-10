@@ -1,3 +1,4 @@
+import 'package:catch_case/view/home-view/filter_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -19,7 +20,7 @@ class ConstantTextField2 extends StatelessWidget {
       decoration: InputDecoration(
           prefixIcon: Icon(prefixIcon, color: const Color(0xFFCFCFCF)),
           suffixIcon: InkWell(
-            onTap: onTapSuffixIcon,
+            onTap: onTapSuffixIcon ?? () => Get.to(() => const FilterScreen()),
             child: Icon(
               suffixIcon,
               color: const Color(0xFFCFCFCF),

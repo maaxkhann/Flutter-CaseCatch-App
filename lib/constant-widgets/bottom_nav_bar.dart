@@ -1,5 +1,6 @@
 import 'package:catch_case/constants/colors.dart';
 import 'package:catch_case/view/home-view/home_view.dart';
+import 'package:catch_case/view/notification-view/notification_view.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,7 +20,7 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
   List<Widget> pages = [
     const HomeView(),
     const HomeView(),
-    const HomeView(),
+    const NotificationView(),
     const HomeView(),
     const HomeView(),
   ];

@@ -1,8 +1,9 @@
+import 'package:catch_case/constant-widgets/constant_appbar.dart';
 import 'package:catch_case/constant-widgets/constant_button.dart';
 import 'package:catch_case/constants/colors.dart';
 import 'package:catch_case/constants/textstyles.dart';
+import 'package:catch_case/view/lawyers-view/about-view/review_view.dart';
 import 'package:catch_case/view/lawyers-view/time&date-schedule-view/time&date_schedule_view.dart';
-import 'package:catch_case/view/lawyers-view/widgets/lawyers_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,7 +14,7 @@ class AboutView extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: const LawyersAppBar(text: 'About'),
+        appBar: const ConstantAppBar(text: 'About'),
         body: Stack(
           children: [
             Image.asset(
@@ -63,9 +64,12 @@ class AboutView extends StatelessWidget {
                             '4.7',
                             style: kBody1MediumBlue,
                           ),
-                          const Icon(
-                            Icons.star,
-                            color: Colors.greenAccent,
+                          InkWell(
+                            onTap: () => Get.to(() => const ReviewScreen()),
+                            child: const Icon(
+                              Icons.star,
+                              color: Colors.greenAccent,
+                            ),
                           ),
                         ],
                       ),
@@ -161,7 +165,7 @@ class AboutView extends StatelessWidget {
                       Row(
                         children: [
                           const Icon(
-                            Icons.lock_open,
+                            Icons.content_paste,
                             color: kMediumBlue,
                           ),
                           SizedBox(
