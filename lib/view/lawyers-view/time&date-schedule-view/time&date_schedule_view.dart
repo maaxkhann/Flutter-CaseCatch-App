@@ -1,5 +1,6 @@
 import 'package:catch_case/constants/colors.dart';
 import 'package:catch_case/constants/textstyles.dart';
+import 'package:catch_case/view/lawyers-view/all_lawyers_view.dart';
 import 'package:catch_case/view/lawyers-view/widgets/booking_appbar.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +80,7 @@ class _TimeScheduleViewState extends State<TimeScheduleView> {
                 ),
                 Center(
                   child: TextButton(
-                      onPressed: () {},
+                      onPressed: () => Get.off(() => const AllLawyersView()),
                       child: Text(
                         'Back to search',
                         style: kBody1MediumBlue,

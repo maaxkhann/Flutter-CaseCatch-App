@@ -1,6 +1,10 @@
 import 'package:catch_case/constants/colors.dart';
+import 'package:catch_case/view/chat-view/chat_view.dart';
+import 'package:catch_case/view/chat-view/messages_view.dart';
 import 'package:catch_case/view/home-view/home_view.dart';
+import 'package:catch_case/view/lawyers-view/all_lawyers_view.dart';
 import 'package:catch_case/view/notification-view/notification_view.dart';
+import 'package:catch_case/view/profile-view/profile_view.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,10 +23,10 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
 
   List<Widget> pages = [
     const HomeView(),
-    const HomeView(),
+    const MessageView(),
     const NotificationView(),
-    const HomeView(),
-    const HomeView(),
+    const AllLawyersView(),
+    const ProfileView()
   ];
 
   @override

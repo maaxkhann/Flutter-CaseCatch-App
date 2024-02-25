@@ -3,6 +3,7 @@ import 'package:catch_case/constant-widgets/constant_button.dart';
 import 'package:catch_case/constants/colors.dart';
 import 'package:catch_case/constants/textstyles.dart';
 import 'package:catch_case/view/lawyers-view/about-view/review_view.dart';
+import 'package:catch_case/view/lawyers-view/all_lawyers_view.dart';
 import 'package:catch_case/view/lawyers-view/time&date-schedule-view/time&date_schedule_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -208,7 +209,8 @@ class AboutView extends StatelessWidget {
                       ),
                       Center(
                         child: TextButton(
-                            onPressed: () {},
+                            onPressed: () =>
+                                Get.off(() => const AllLawyersView()),
                             child: Text(
                               'Back to search',
                               style: kBody1MediumBlue,

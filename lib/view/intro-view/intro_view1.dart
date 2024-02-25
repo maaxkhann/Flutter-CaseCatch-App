@@ -1,6 +1,7 @@
 import 'package:catch_case/constant-widgets/constant_button.dart';
 import 'package:catch_case/constants/colors.dart';
 import 'package:catch_case/constants/textstyles.dart';
+import 'package:catch_case/view/auth-view/login_view.dart';
 import 'package:catch_case/view/intro-view/intro_view2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -82,7 +83,7 @@ class IntroView1 extends StatelessWidget {
                   onTap: () => Get.to(() => const IntroView2()),
                 ),
                 TextButton(
-                    onPressed: () {},
+                    onPressed: () => Get.offAll(() => const LoginView()),
                     child: Text(
                       'Skip',
                       style: kBody1MediumBlue,
@@ -96,6 +97,8 @@ class IntroView1 extends StatelessWidget {
               padding: EdgeInsets.only(top: Get.height * 0.09),
               child: Image.asset(
                 'assets/images/intro-auth/intro1.png',
+                width: Get.width * 0.6,
+                height: Get.height * 0.35,
               ),
             ),
           )

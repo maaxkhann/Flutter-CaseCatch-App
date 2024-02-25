@@ -2,18 +2,41 @@ import 'package:catch_case/constant-widgets/constant_button.dart';
 import 'package:catch_case/constant-widgets/constant_textfield.dart';
 import 'package:catch_case/constants/colors.dart';
 import 'package:catch_case/constants/textstyles.dart';
+import 'package:catch_case/view-model/auth_view_model.dart';
 import 'package:catch_case/view/auth-view/login_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
-class SignUpView extends StatelessWidget {
+class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
 
   @override
+  State<SignUpView> createState() => _SignUpViewState();
+}
+
+class _SignUpViewState extends State<SignUpView> {
+  ValueNotifier<bool> isPasswordVisible = ValueNotifier(false);
+  ValueNotifier<bool> isConfirmPasswordVisible = ValueNotifier(false);
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    ValueNotifier<bool> isChecked = ValueNotifier<bool>(false);
-    ValueNotifier<bool> isPasswordVisible = ValueNotifier(false);
-    ValueNotifier<bool> isConfirmPasswordVisible = ValueNotifier(false);
+    final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+    //   ValueNotifier<bool> isChecked = ValueNotifier<bool>(false);
     return SafeArea(
       child: Scaffold(
         body: Padding(
@@ -46,7 +69,8 @@ class SignUpView extends StatelessWidget {
                 'Name',
                 style: kBody1Black,
               ),
-              const ConstantTextField(
+              ConstantTextField(
+                controller: nameController,
                 hintText: 'Name',
                 prefixIcon: Icons.email,
               ),
@@ -57,7 +81,8 @@ class SignUpView extends StatelessWidget {
                 'Email',
                 style: kBody1Black,
               ),
-              const ConstantTextField(
+              ConstantTextField(
+                controller: emailController,
                 hintText: 'Email',
                 prefixIcon: Icons.email,
               ),
@@ -72,6 +97,7 @@ class SignUpView extends StatelessWidget {
                   valueListenable: isPasswordVisible,
                   builder: (ctx, value, child) {
                     return ConstantTextField(
+                      controller: passwordController,
                       hintText: 'Password',
                       obscureText: !isPasswordVisible.value,
                       prefixIcon: Icons.lock,
@@ -94,6 +120,7 @@ class SignUpView extends StatelessWidget {
                   valueListenable: isConfirmPasswordVisible,
                   builder: (ctx, value, child) {
                     return ConstantTextField(
+                      controller: confirmPasswordController,
                       hintText: 'Confirm Password',
                       obscureText: !isConfirmPasswordVisible.value,
                       prefixIcon: Icons.lock,
@@ -106,27 +133,33 @@ class SignUpView extends StatelessWidget {
                       },
                     );
                   }),
-              Row(
-                children: [
-                  ValueListenableBuilder(
-                      valueListenable: isChecked,
-                      builder: ((context, value, child) {
-                        return Checkbox(
-                            value: isChecked.value,
-                            onChanged: (value) {
-                              isChecked.value = value!;
-                            });
-                      })),
-                  Text(
-                    'Remember me',
-                    style: kBody4Dark,
-                  ),
-                ],
-              ),
+              // Row(
+              //   children: [
+              //     ValueListenableBuilder(
+              //         valueListenable: isChecked,
+              //         builder: ((context, value, child) {
+              //           return Checkbox(
+              //               value: isChecked.value,
+              //               onChanged: (value) {
+              //                 isChecked.value = value!;
+              //               });
+              //         })),
+              //     Text(
+              //       'Remember me',
+              //       style: kBody4Dark,
+              //     ),
+              //   ],
+              // ),
               SizedBox(
-                height: Get.height * 0.02,
+                height: Get.height * 0.04,
               ),
-              ConstantButton(buttonText: 'Sign Up', onTap: () {}),
+              ConstantButton(
+                  buttonText: 'Sign Up',
+                  onTap: () => authViewModel.createUser(
+                      context,
+                      nameController.text.trim(),
+                      emailController.text.trim(),
+                      passwordController.text.trim())),
               SizedBox(
                 height: Get.height * 0.01,
               ),
@@ -165,18 +198,9 @@ class SignUpView extends StatelessWidget {
               SizedBox(
                 height: Get.height * 0.01,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset('assets/images/intro-auth/google.png'),
-                  SizedBox(
-                    width: Get.width * 0.02,
-                  ),
-                  Image.asset('assets/images/intro-auth/facebook.png')
-                ],
-              ),
-              SizedBox(
-                height: Get.height * 0.01,
+              Image.asset(
+                'assets/images/intro-auth/google.png',
+                height: 40.h,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

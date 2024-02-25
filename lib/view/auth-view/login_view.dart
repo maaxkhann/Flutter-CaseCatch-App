@@ -3,18 +3,37 @@ import 'package:catch_case/constant-widgets/constant_button.dart';
 import 'package:catch_case/constant-widgets/constant_textfield.dart';
 import 'package:catch_case/constants/colors.dart';
 import 'package:catch_case/constants/textstyles.dart';
+import 'package:catch_case/view-model/auth_view_model.dart';
 import 'package:catch_case/view/auth-view/forgot_password_view.dart';
 import 'package:catch_case/view/auth-view/signup_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
-class LoginView extends StatelessWidget {
+class LoginView extends StatefulWidget {
   const LoginView({super.key});
 
   @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  ValueNotifier<bool> isChecked = ValueNotifier<bool>(false);
+  ValueNotifier<bool> isPasswordVisible = ValueNotifier(false);
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+
+    emailController.dispose();
+    passwordController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    ValueNotifier<bool> isChecked = ValueNotifier<bool>(false);
-    ValueNotifier<bool> isPasswordVisible = ValueNotifier(false);
+    final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
     return SafeArea(
       child: Scaffold(
         body: Padding(
@@ -47,7 +66,8 @@ class LoginView extends StatelessWidget {
                 'Email',
                 style: kBody1Black,
               ),
-              const ConstantTextField(
+              ConstantTextField(
+                controller: emailController,
                 hintText: 'Email',
                 prefixIcon: Icons.email,
               ),
@@ -62,6 +82,7 @@ class LoginView extends StatelessWidget {
                   valueListenable: isPasswordVisible,
                   builder: (ctx, value, child) {
                     return ConstantTextField(
+                      controller: passwordController,
                       hintText: 'Password',
                       obscureText: !isPasswordVisible.value,
                       prefixIcon: Icons.lock,
@@ -103,7 +124,10 @@ class LoginView extends StatelessWidget {
               ),
               ConstantButton(
                   buttonText: 'Login',
-                  onTap: () => Get.to(() => const BottomNavigationBarWidget())),
+                  onTap: () => authViewModel.loginUser(
+                      context,
+                      emailController.text.trim(),
+                      passwordController.text.trim())),
               SizedBox(
                 height: Get.height * 0.01,
               ),

@@ -1,15 +1,32 @@
 import 'package:catch_case/constant-widgets/constant_button.dart';
 import 'package:catch_case/constant-widgets/constant_textfield.dart';
 import 'package:catch_case/constants/textstyles.dart';
-import 'package:catch_case/view/auth-view/verify_otp_view.dart';
+import 'package:catch_case/view-model/auth_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
-class ForgotPasswordView extends StatelessWidget {
+class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});
 
   @override
+  State<ForgotPasswordView> createState() => _ForgotPasswordViewState();
+}
+
+class _ForgotPasswordViewState extends State<ForgotPasswordView> {
+  final emailController = TextEditingController();
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+
+    emailController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
     return SafeArea(
       child: Scaffold(
         body: Padding(
@@ -37,7 +54,7 @@ class ForgotPasswordView extends StatelessWidget {
                 style: kBody1DarkBlue,
               )),
               Text(
-                'Type your email and we shall send a verification code to your account to reset password.',
+                'Type your email and we shall send an email to your account in few seconds to reset password.',
                 style: kBody4Blue2,
                 textAlign: TextAlign.center,
               ),
@@ -48,7 +65,8 @@ class ForgotPasswordView extends StatelessWidget {
                 'Email',
                 style: kBody1Black,
               ),
-              const ConstantTextField(
+              ConstantTextField(
+                controller: emailController,
                 hintText: 'Email',
                 prefixIcon: Icons.email,
               ),
@@ -56,8 +74,15 @@ class ForgotPasswordView extends StatelessWidget {
                 height: Get.height * 0.04,
               ),
               ConstantButton(
-                  buttonText: 'Get OTP',
-                  onTap: () => Get.to(() => const VerifyOtpView()))
+                  buttonText: 'Submit',
+                  onTap: () {
+                    if (emailController.text.isEmpty) {
+                      Fluttertoast.showToast(msg: 'Please enter email');
+                      return;
+                    } else {
+                      authViewModel.resetPassword(emailController.text.trim());
+                    }
+                  })
             ],
           ),
         ),

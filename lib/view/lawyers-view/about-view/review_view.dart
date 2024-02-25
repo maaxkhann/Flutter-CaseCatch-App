@@ -42,13 +42,6 @@ class _ReviewScreenState extends State<ReviewScreen> {
             ],
           ),
         ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ConstantButton(
-            buttonText: 'Load more',
-            onTap: () {},
-          ),
-        ),
       ),
     );
   }

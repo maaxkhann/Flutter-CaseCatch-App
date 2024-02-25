@@ -1,5 +1,6 @@
 import 'package:catch_case/view/payment-view/payment_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../constants/colors.dart';
 import '../../../constants/textstyles.dart';
@@ -81,14 +82,16 @@ class _FilterScreenState extends State<FilterScreen> {
                 style: kBody1Black,
               ),
               SizedBox(height: Get.height * 0.01),
-              Row(
-                children: [
-                  ratingContainer(5),
-                  ratingContainer(4),
-                  ratingContainer(3),
-                  ratingContainer(2),
-                  ratingContainer(1),
-                ],
+              FittedBox(
+                child: Row(
+                  children: [
+                    ratingContainer(5),
+                    ratingContainer(4),
+                    ratingContainer(3),
+                    ratingContainer(2),
+                    ratingContainer(1),
+                  ],
+                ),
               ),
               SizedBox(height: Get.height * 0.01),
               divider(),
@@ -112,13 +115,15 @@ class _FilterScreenState extends State<FilterScreen> {
                 style: kBody1Black,
               ),
               SizedBox(height: Get.height * 0.01),
-              Row(
-                children: [
-                  experienceContainer('1-3 Years'),
-                  experienceContainer('4-7 Years'),
-                  experienceContainer('8-10 Years'),
-                  experienceContainer('11+ Years'),
-                ],
+              FittedBox(
+                child: Row(
+                  children: [
+                    experienceContainer('1-3 Years'),
+                    experienceContainer('4-7 Years'),
+                    experienceContainer('8-10 Years'),
+                    experienceContainer('11+ Years'),
+                  ],
+                ),
               )
             ],
           ),
@@ -194,7 +199,7 @@ class _FilterScreenState extends State<FilterScreen> {
 
   Widget ratingContainer(double rating) {
     return Container(
-      margin: const EdgeInsets.all(8),
+      margin: const EdgeInsets.all(6),
       height: Get.height * 0.03,
       width: Get.width * 0.15,
       decoration: BoxDecoration(
@@ -203,9 +208,9 @@ class _FilterScreenState extends State<FilterScreen> {
           child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          const Icon(
+          Icon(
             Icons.star,
-            size: 20,
+            size: 18.r,
           ),
           Text("$rating+")
         ],
@@ -234,7 +239,7 @@ class _FilterScreenState extends State<FilterScreen> {
 
   Widget experienceContainer(String experience) {
     return Container(
-      margin: const EdgeInsets.all(8),
+      margin: const EdgeInsets.all(6),
       height: Get.height * 0.03,
       width: Get.width * 0.2,
       decoration: BoxDecoration(

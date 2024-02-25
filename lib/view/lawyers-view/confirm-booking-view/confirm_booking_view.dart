@@ -1,6 +1,7 @@
 import 'package:catch_case/constant-widgets/constant_button.dart';
 import 'package:catch_case/constants/textstyles.dart';
 import 'package:catch_case/view/lawyers-view/widgets/confirmbooking_appbar.dart';
+import 'package:catch_case/view/notification-view/notification_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -55,7 +56,9 @@ class ConfirmBookingView extends StatelessWidget {
                 const Spacer(),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: Get.width * 0.04),
-                  child: ConstantButton(buttonText: 'Remind me', onTap: () {}),
+                  child: ConstantButton(
+                      buttonText: 'Remind me',
+                      onTap: () => Get.to(() => const NotificationView())),
                 ),
                 Center(
                   child: TextButton(

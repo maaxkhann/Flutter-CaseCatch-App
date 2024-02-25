@@ -4,8 +4,6 @@ import 'package:catch_case/view/payment-view/payment_verified_view.dart';
 import 'package:credit_card_form/credit_card_form.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../constants/colors.dart';
 import '../../constants/textstyles.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -36,15 +34,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   style: kBody1Black,
                 ),
                 SizedBox(height: Get.height * 0.01),
-                Row(
-                  children: [
-                    circularPaymentAvatar('assets/images/payment/paypal.png'),
-                    circularPaymentAvatar('assets/images/payment/visa.png'),
-                    circularPaymentAvatar(
-                        'assets/images/payment/mastercard.png'),
-                    circularPaymentAvatar('assets/images/payment/paypal.png'),
-                    circularPaymentAvatar('assets/images/payment/paypal.png'),
-                  ],
+                FittedBox(
+                  child: Row(
+                    children: [
+                      circularPaymentAvatar('assets/images/payment/paypal.png'),
+                      circularPaymentAvatar('assets/images/payment/visa.png'),
+                      circularPaymentAvatar(
+                          'assets/images/payment/mastercard.png'),
+                      circularPaymentAvatar('assets/images/payment/paypal.png'),
+                      circularPaymentAvatar('assets/images/payment/paypal.png'),
+                    ],
+                  ),
                 ),
                 SizedBox(height: Get.height * 0.02),
                 Text(

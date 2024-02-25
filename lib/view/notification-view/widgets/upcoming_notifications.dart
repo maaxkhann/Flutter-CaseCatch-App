@@ -1,5 +1,6 @@
 import 'package:catch_case/constants/colors.dart';
 import 'package:catch_case/constants/textstyles.dart';
+import 'package:catch_case/view/chat-view/chat_view.dart';
 import 'package:catch_case/view/lawyers-view/widgets/lawyers_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -72,7 +73,7 @@ class UpcomingNotifications extends StatelessWidget {
                 LawyersButton(
                     buttonText: 'Message',
                     buttonColor: kButtonColor,
-                    onTap: () {})
+                    onTap: () => Get.to(() => const ChatView()))
               ],
             ),
           ],

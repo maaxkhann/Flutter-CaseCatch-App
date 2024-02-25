@@ -46,6 +46,16 @@ dependencies:
   syncfusion_flutter_sliders: ^24.2.4
   credit_card_form: ^0.0.7
   flutter_rating_bar: ^4.0.1
+  chat_bubbles: ^1.6.0
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.16.0
+  firebase_storage: ^11.6.0
+  cloud_firestore: ^4.14.0
+  fluttertoast: ^8.2.4
+  shared_preferences: ^2.2.2
+  ndialog: ^4.3.1
+  provider: ^6.1.1
+  
 
 dev_dependencies:
   flutter_test:
