@@ -1,5 +1,6 @@
 import 'package:catch_case/constant-widgets/constant_button.dart';
 import 'package:catch_case/constants/textstyles.dart';
+import 'package:catch_case/view/lawyer/lawyer_home_view.dart';
 import 'package:catch_case/view/lawyer/widgets/multi_select_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -137,7 +138,7 @@ class _LawyerRegistrationView2State extends State<LawyerRegistrationView2> {
                 ),
               ),
               const Spacer(),
-              ConstantButton(buttonText: 'Submit', onTap: () {})
+              ConstantButton(buttonText: 'Submit', onTap: () => const LawyerHomeView())
             ],
           ),
         ),

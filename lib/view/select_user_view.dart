@@ -3,7 +3,6 @@ import 'package:catch_case/constants/textstyles.dart';
 import 'package:catch_case/view/auth-view/login_view.dart';
 import 'package:catch_case/view/lawyer/lawyer_registration_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
@@ -27,7 +26,7 @@ class SelectUserView extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: Get.height * 0.04,
+                  height: Get.height * 0.1,
                 ),
                 GestureDetector(
                   onTap: () => Get.to(() => const LawyerRegistrationView()),
