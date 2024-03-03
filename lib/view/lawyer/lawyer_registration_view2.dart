@@ -138,7 +138,9 @@ class _LawyerRegistrationView2State extends State<LawyerRegistrationView2> {
                 ),
               ),
               const Spacer(),
-              ConstantButton(buttonText: 'Submit', onTap: () => const LawyerHomeView())
+              ConstantButton(
+                  buttonText: 'Submit',
+                  onTap: () => Get.to(() => const LawyerHomeView()))
             ],
           ),
         ),
