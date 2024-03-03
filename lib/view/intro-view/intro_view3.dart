@@ -1,7 +1,7 @@
 import 'package:catch_case/constant-widgets/constant_button.dart';
 import 'package:catch_case/constants/colors.dart';
 import 'package:catch_case/constants/textstyles.dart';
-import 'package:catch_case/view/auth-view/login_view.dart';
+import 'package:catch_case/view/select_user_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -80,7 +80,7 @@ class IntroView3 extends StatelessWidget {
                   ),
                   ConstantButton(
                     buttonText: 'Get Started',
-                    onTap: () => Get.offAll(() => const LoginView()),
+                    onTap: () => Get.offAll(() => const SelectUserView()),
                   ),
                 ],
               ),

@@ -6,6 +6,7 @@ class ConstantTextField extends StatelessWidget {
   final String hintText;
   final IconData prefixIcon;
   final IconData? suffixIcon;
+  final bool? isExpand;
   final VoidCallback? onTapSuffixIcon;
   final bool? obscureText;
   const ConstantTextField(
@@ -14,6 +15,7 @@ class ConstantTextField extends StatelessWidget {
       required this.hintText,
       required this.prefixIcon,
       this.suffixIcon,
+      this.isExpand,
       this.onTapSuffixIcon,
       this.obscureText});
 
@@ -21,6 +23,8 @@ class ConstantTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      expands: isExpand ?? false,
+      maxLines: isExpand == true ? null : 1,
       obscureText: obscureText ?? false,
       decoration: InputDecoration(
           prefixIcon: Icon(prefixIcon, color: const Color(0xFFCFCFCF)),

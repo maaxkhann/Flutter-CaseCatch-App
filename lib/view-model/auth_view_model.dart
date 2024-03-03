@@ -88,14 +88,4 @@ class AuthViewModel with ChangeNotifier {
       Fluttertoast.showToast(msg: 'Something went wrong');
     }
   }
-
-  void resetPassword(String email) {
-    try {
-      auth.sendPasswordResetEmail(email: email);
-      Fluttertoast.showToast(msg: 'Please check email and reset password');
-      Get.back();
-    } catch (e) {
-      Fluttertoast.showToast(msg: 'Something went wrong');
-    }
-  }
 }

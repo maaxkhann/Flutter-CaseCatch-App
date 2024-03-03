@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class FreeConsultationWidget extends StatelessWidget {
+  final String name;
+
   const FreeConsultationWidget({
     super.key,
+    required this.name,
   });
 
   @override
@@ -36,7 +39,7 @@ class FreeConsultationWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Rako',
+                      name,
                       style: kBody4Black,
                     ),
                     SizedBox(

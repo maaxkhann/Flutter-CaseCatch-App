@@ -58,15 +58,21 @@ class HomeView extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      const FreeConsultationWidget(),
+                      const FreeConsultationWidget(
+                        name: 'Rako',
+                      ),
                       SizedBox(
                         width: Get.width * 0.02,
                       ),
-                      const FreeConsultationWidget(),
+                      const FreeConsultationWidget(
+                        name: 'Surendra',
+                      ),
                       SizedBox(
                         width: Get.width * 0.02,
                       ),
-                      const FreeConsultationWidget()
+                      const FreeConsultationWidget(
+                        name: 'Rako',
+                      )
                     ],
                   ),
                 ),
@@ -183,15 +189,21 @@ class HomeView extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      const FreeConsultationWidget(),
+                      const FreeConsultationWidget(
+                        name: 'Rako',
+                      ),
                       SizedBox(
                         width: Get.width * 0.02,
                       ),
-                      const FreeConsultationWidget(),
+                      const FreeConsultationWidget(
+                        name: 'Surendra',
+                      ),
                       SizedBox(
                         width: Get.width * 0.02,
                       ),
-                      const FreeConsultationWidget()
+                      const FreeConsultationWidget(
+                        name: 'Rako',
+                      )
                     ],
                   ),
                 ),

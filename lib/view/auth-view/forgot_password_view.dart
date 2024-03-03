@@ -2,6 +2,7 @@ import 'package:catch_case/constant-widgets/constant_button.dart';
 import 'package:catch_case/constant-widgets/constant_textfield.dart';
 import 'package:catch_case/constants/textstyles.dart';
 import 'package:catch_case/view-model/auth_view_model.dart';
+import 'package:catch_case/view/auth-view/verify_otp_view.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -54,7 +55,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 style: kBody1DarkBlue,
               )),
               Text(
-                'Type your email and we shall send an email to your account in few seconds to reset password.',
+                'Type your email and we shall send you a verification code to your account to reset password.',
                 style: kBody4Blue2,
                 textAlign: TextAlign.center,
               ),
@@ -74,14 +75,9 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 height: Get.height * 0.04,
               ),
               ConstantButton(
-                  buttonText: 'Submit',
+                  buttonText: 'Get OTP',
                   onTap: () {
-                    if (emailController.text.isEmpty) {
-                      Fluttertoast.showToast(msg: 'Please enter email');
-                      return;
-                    } else {
-                      authViewModel.resetPassword(emailController.text.trim());
-                    }
+                    Get.to(() => const VerifyOtpView());
                   })
             ],
           ),

@@ -6,6 +6,7 @@ import 'package:catch_case/view-model/auth_view_model.dart';
 import 'package:catch_case/view/auth-view/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
@@ -36,7 +37,6 @@ class _SignUpViewState extends State<SignUpView> {
   @override
   Widget build(BuildContext context) {
     final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
-    //   ValueNotifier<bool> isChecked = ValueNotifier<bool>(false);
     return SafeArea(
       child: Scaffold(
         body: Padding(
@@ -153,13 +153,7 @@ class _SignUpViewState extends State<SignUpView> {
               SizedBox(
                 height: Get.height * 0.04,
               ),
-              ConstantButton(
-                  buttonText: 'Sign Up',
-                  onTap: () => authViewModel.createUser(
-                      context,
-                      nameController.text.trim(),
-                      emailController.text.trim(),
-                      passwordController.text.trim())),
+              ConstantButton(buttonText: 'Sign Up', onTap: () {}),
               SizedBox(
                 height: Get.height * 0.01,
               ),
@@ -198,9 +192,15 @@ class _SignUpViewState extends State<SignUpView> {
               SizedBox(
                 height: Get.height * 0.01,
               ),
-              Image.asset(
-                'assets/images/intro-auth/google.png',
-                height: 40.h,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset('assets/images/intro-auth/google.png'),
+                  SizedBox(
+                    width: Get.width * 0.02,
+                  ),
+                  Image.asset('assets/images/intro-auth/facebook.png')
+                ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

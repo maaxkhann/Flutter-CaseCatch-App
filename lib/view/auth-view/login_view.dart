@@ -124,10 +124,9 @@ class _LoginViewState extends State<LoginView> {
               ),
               ConstantButton(
                   buttonText: 'Login',
-                  onTap: () => authViewModel.loginUser(
-                      context,
-                      emailController.text.trim(),
-                      passwordController.text.trim())),
+                  onTap: () {
+                    Get.to(() => const BottomNavigationBarWidget());
+                  }),
               SizedBox(
                 height: Get.height * 0.01,
               ),
