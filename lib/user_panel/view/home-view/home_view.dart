@@ -285,10 +285,7 @@ class _HomeViewState extends State<HomeView> {
                             stream: FirebaseFirestore.instance
                                 .collection('lawyers')
                                 .limit(4)
-                                .orderBy('name')
-                                .where('price', isEqualTo: 'price')
-                                .startAt([searchText.toUpperCase()]).endAt(
-                                    ['$searchText\uf8ff']).snapshots(),
+                               .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
                               if (snapshot.connectionState ==

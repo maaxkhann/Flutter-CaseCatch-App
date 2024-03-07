@@ -5,8 +5,12 @@ import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:catch_case/user_panel/view/lawyer/book_lawyer_screen.dart';
 import 'package:catch_case/user_panel/view/lawyers-view/about-view/review_view.dart';
 import 'package:catch_case/user_panel/view/lawyers-view/all_lawyers_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../chat-view/chat_screen.dart';
+import 'lawyer_schedule.dart';
 
 class AboutView extends StatefulWidget {
   final String image;
@@ -28,7 +32,8 @@ class AboutView extends StatefulWidget {
       this.fcmToken,
       this.uid,
       required this.address,
-      required this.contact, required this.practice});
+      required this.contact,
+      required this.practice});
 
   @override
   State<AboutView> createState() => _AboutViewState();
@@ -223,13 +228,86 @@ class _AboutViewState extends State<AboutView> {
                       SizedBox(
                         height: Get.height * 0.03,
                       ),
+
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
+                                Get.to(() => Chat(
+                                      fcmToken: widget.fcmToken,
+                                      groupId: FirebaseAuth
+                                          .instance.currentUser!.uid,
+                                      name: widget.name,
+                                      image: widget.image,
+                                      uid: widget.uid,
+                                    ));
+                              },
+                              child: Container(
+                                height: 49,
+                                width: Get.width * .4,
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  color: kButtonColor,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: const Center(
+                                  child: Text(
+                                    'Continue chat',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                Get.to(() => ScheduleScreen(
+                                      lawyerId: widget.uid.toString(),
+                                    ));
+                              },
+                              child: Container(
+                                width: Get.width * .4,
+                                height: 49,
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  color: kButtonColor,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: const Center(
+                                  child: Text(
+                                    'Availability',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 22,
+                      ),
                       Padding(
                         padding:
                             EdgeInsets.symmetric(horizontal: Get.width * 0.04),
                         child: ConstantButton(
                             buttonText: 'Book now for free',
                             onTap: () => Get.to(() => LawyerBookingScreen(
-                                  lawyerId: widget.uid.toString(), name: widget.name, image: widget.image,
+                                  lawyerId: widget.uid.toString(),
+                                  name: widget.name,
+                                  image: widget.image,
                                 ))),
                       ),
                       Center(
@@ -240,7 +318,8 @@ class _AboutViewState extends State<AboutView> {
                               'Back to search',
                               style: kBody1MediumBlue,
                             )),
-                      )
+                      ),
+                      
                     ],
                   ),
                 ),
