@@ -291,7 +291,7 @@ class _CaseDetailScreenState extends State<CaseDetailScreen> {
                   child: GestureDetector(
                     onTap: () {
                       profileController.updateCaseStatus(
-                          status: 'appealed', caseId: widget.caseId.toString());
+                          status: 'cancelled', caseId: widget.caseId.toString());
                     },
                     child: Container(
                       height: 50,
@@ -302,7 +302,7 @@ class _CaseDetailScreenState extends State<CaseDetailScreen> {
                       ),
                       child: const Center(
                         child: Text(
-                          'Appealed',
+                          'Cancelled',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,

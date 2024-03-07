@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:catch_case/user_panel/view/auth-view/login_view.dart';
+import 'package:catch_case/user_panel/view/intro-view/intro_view1.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -122,7 +122,7 @@ class ProfileController extends GetxController {
 
   logOut() async {
     await FirebaseAuth.instance.signOut();
-    Get.to(() => const LoginView());
+    Get.to(() => const IntroView1());
   }
   // 
   // 

@@ -40,9 +40,10 @@ class _HomeViewState extends State<HomeView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                 ConstantTextField2(
-                  controller: searchController,
-                    prefixIcon: Icons.search, suffixIcon: Icons.filter_alt),
+                ConstantTextField2(
+                    controller: searchController,
+                    prefixIcon: Icons.search,
+                    suffixIcon: Icons.filter_alt),
                 SizedBox(
                   height: Get.height * 0.025,
                 ),
@@ -54,7 +55,8 @@ class _HomeViewState extends State<HomeView> {
                       style: kBody1Black2,
                     ),
                     TextButton(
-                        onPressed: () => Get.to(() => const AllLawyersView()),
+                        onPressed: () =>
+                            Get.to(() => const FreeConsultaionScreen()),
                         child: Text(
                           'View all',
                           style: kBody3DarkBlue,
@@ -67,134 +69,136 @@ class _HomeViewState extends State<HomeView> {
                 SizedBox(
                   height: 128,
                   child: StreamBuilder(
-                      stream:  FirebaseFirestore.instance
-                        .collection('lawyers').limit(4)
-                        .orderBy('name')
-                        .startAt([searchText.toUpperCase()]).endAt(
-                            ['$searchText\uf8ff']).snapshots(),
+                      stream: FirebaseFirestore.instance
+                          .collection('lawyers')
+                          .limit(4)
+                          .orderBy('name')
+                          .where('price', isEqualTo: '')
+                          .startAt([searchText.toUpperCase()]).endAt(
+                              ['$searchText\uf8ff']).snapshots(),
                       builder:
                           (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                            child: Padding(
-                          padding: EdgeInsets.only(top: 4),
-                          child: CircularProgressIndicator(),
-                        ));
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else if (!snapshot.hasData ||
-                          snapshot.data!.docs.isEmpty) {
-                        return Center(
-                            child: Padding(
-                          padding: const EdgeInsets.only(top: 4),
-                          child: Text(
-                            'No lawyer Registered yet',
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.amber.shade700),
-                          ),
-                        ));
-                      } else {
-                        return ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          // itemCount:snapshot.data!.docs.length
-                          // <
-                          //                         3
-                          //                     ? snapshot.data!.docs.length
-                          //                     : 3,
-                          itemCount: snapshot.data?.docs.length ?? 0,
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: Padding(
+                            padding: EdgeInsets.only(top: 4),
+                            child: CircularProgressIndicator(),
+                          ));
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.docs.isEmpty) {
+                          return Center(
+                              child: Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Text(
+                              'No lawyer Registered yet',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.amber.shade700),
+                            ),
+                          ));
+                        } else {
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            shrinkWrap: true,
+                            // itemCount:snapshot.data!.docs.length
+                            // <
+                            //                         3
+                            //                     ? snapshot.data!.docs.length
+                            //                     : 3,
+                            itemCount: snapshot.data?.docs.length ?? 0,
 
-                          itemBuilder: (context, index) {
-                            final e = snapshot.data!.docs[index];
-                            return Card(
-                              color: Colors.white,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[100],
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                padding: const EdgeInsets.only(
-                                  left: 10,
-                                  right: 10,
-                                  top: 10,
-                                  bottom: 8,
-                                ),
-                                height: 120,
-                                width: 220,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 90,
-                                      width: 80,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: Image.network(
-                                          e['image'],
-                                          fit: BoxFit.cover,
-                                          height: 75,
+                            itemBuilder: (context, index) {
+                              final e = snapshot.data!.docs[index];
+                              return Card(
+                                color: Colors.white,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[100],
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.only(
+                                    left: 10,
+                                    right: 10,
+                                    top: 10,
+                                    bottom: 8,
+                                  ),
+                                  height: 120,
+                                  width: 220,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        height: 90,
+                                        width: 80,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          child: Image.network(
+                                            e['image'],
+                                            fit: BoxFit.cover,
+                                            height: 75,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        left: 6,
-                                        top: 9
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              
-                                              Text(
-                                                e['name'],
-                                                textAlign: TextAlign.center,
-                                                style: const TextStyle(
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 6, top: 9),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  e['name'],
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            2.heightBox,
+                                            Text(
+                                              e['category'],
+                                              style: const TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 10,
+                                              ),
+                                            ),
+                                            const Padding(
+                                              padding: EdgeInsets.only(
+                                                left: 60,
+                                                top: 10,
+                                              ),
+                                              child: Text(
+                                                'Free',
+                                                style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 12,
-                                                  fontWeight: FontWeight.bold,
+                                                  fontWeight: FontWeight.w600,
                                                 ),
                                               ),
-                                             
-                                            ],
-                                          ),
-                                          2.heightBox,
-                                          Text(
-                                            e['category'],
-                                            style: const TextStyle(
-                                              color: Colors.black87,
-                                              fontSize: 10,
                                             ),
-                                          ),
-                                          const Padding(
-                                            padding: EdgeInsets.only(
-                                              left: 60,
-                                              top: 10,
-                                            ),
-                                            child:  Text(
-                                              'Free',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        );
-    }  }),
+                              );
+                            },
+                          );
+                        }
+                      }),
                 ),
                 SizedBox(
                   height: Get.height * 0.02,
@@ -212,41 +216,7 @@ class _HomeViewState extends State<HomeView> {
                 SizedBox(
                   height: Get.height * 0.01,
                 ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: Get.height * 0.005),
-                          width: Get.width * 0.24,
-                          height: Get.height * 0.1,
-                          decoration: BoxDecoration(
-                              color: const Color.fromARGB(137, 233, 225, 225),
-                              borderRadius:
-                                  BorderRadius.circular(Get.width * 0.02)),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(
-                                'Category',
-                                style: kBody5Black,
-                              ),
-                              Image.asset('assets/images/home/home_cubes.png'),
-                            ],
-                          )),
-                      const LawyersCategory(text: 'Divorce lawyers'),
-                      const LawyersCategory(text: 'Family lawyers'),
-                      const LawyersCategory(text: 'Criminal lawyers'),
-                      const LawyersCategory(text: 'Labour lawyers'),
-                      const LawyersCategory(text: 'Civil lawyers'),
-                      const LawyersCategory(text: 'Military lawyers'),
-                      const LawyersCategory(text: 'Cyber lawyers'),
-                      const LawyersCategory(text: 'Contract lawyers'),
-                      const LawyersCategory(text: 'Securities lawyers'),
-                    ],
-                  ),
-                ),
+                const LawyersCategory(),
                 SizedBox(
                   height: Get.height * 0.02,
                 ),
@@ -309,21 +279,144 @@ class _HomeViewState extends State<HomeView> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      const FreeConsultationWidget(
-                        name: 'Rako',
-                      ),
                       SizedBox(
-                        width: Get.width * 0.02,
+                        height: 128,
+                        child: StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection('lawyers')
+                                .limit(4)
+                                .orderBy('name')
+                                .where('price', isEqualTo: 'price')
+                                .startAt([searchText.toUpperCase()]).endAt(
+                                    ['$searchText\uf8ff']).snapshots(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: Padding(
+                                  padding: EdgeInsets.only(top: 4),
+                                  child: CircularProgressIndicator(),
+                                ));
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else if (!snapshot.hasData ||
+                                  snapshot.data!.docs.isEmpty) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(left: 111),
+                                  child: Text(
+                                    'No lawyer Registered yet',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.amber.shade700),
+                                  ),
+                                );
+                              } else {
+                                return ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  shrinkWrap: true,
+                                  // itemCount:snapshot.data!.docs.length
+                                  // <
+                                  //                         3
+                                  //                     ? snapshot.data!.docs.length
+                                  //                     : 3,
+                                  itemCount: snapshot.data?.docs.length ?? 0,
+
+                                  itemBuilder: (context, index) {
+                                    final e = snapshot.data!.docs[index];
+                                    return Card(
+                                      color: Colors.white,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[100],
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        padding: const EdgeInsets.only(
+                                          left: 10,
+                                          right: 10,
+                                          top: 10,
+                                          bottom: 8,
+                                        ),
+                                        height: 120,
+                                        width: 220,
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              height: 90,
+                                              width: 80,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                child: Image.network(
+                                                  e['image'],
+                                                  fit: BoxFit.cover,
+                                                  height: 75,
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 6, top: 9),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        e['name'],
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: const TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  2.heightBox,
+                                                  Text(
+                                                    e['category'],
+                                                    style: const TextStyle(
+                                                      color: Colors.black87,
+                                                      fontSize: 10,
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                      left: 60,
+                                                      top: 10,
+                                                    ),
+                                                    child: Text(
+                                                      e['price'],
+                                                      style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+                            }),
                       ),
-                      const FreeConsultationWidget(
-                        name: 'Surendra',
-                      ),
-                      SizedBox(
-                        width: Get.width * 0.02,
-                      ),
-                      const FreeConsultationWidget(
-                        name: 'Rako',
-                      )
                     ],
                   ),
                 ),

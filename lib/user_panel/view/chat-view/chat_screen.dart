@@ -9,10 +9,9 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import '../../../lawyer_panel/controllers/data_controller.dart';
-import '../../../lawyer_panel/utils/AppColors.dart';
+import '../../../lawyer_panel/dashboard/chat/notification.dart';
 import '../../../user_panel/constants/colors.dart';
 import '../../../user_panel/constants/textstyles.dart';
-import '../../controllers/notification.dart';
 
 class Chat extends StatefulWidget {
   const Chat(
@@ -94,14 +93,19 @@ class _ChatState extends State<Chat> {
           ),
         ),
         centerTitle: true,
-        leading: const Row(
+        leading:  Row(
           children: [
-            SizedBox(
+            const SizedBox(
               width: 14,
             ),
-            Icon(
-              Icons.arrow_back_ios_new,
-              color: Colors.white,
+            GestureDetector(
+              onTap: () {
+                Get.back();
+              },
+              child: const Icon(
+                Icons.arrow_back_ios_new,
+                color: Colors.white,
+              ),
             ),
           ],
         ),
@@ -203,11 +207,11 @@ class _ChatState extends State<Chat> {
                           }
                           DocumentSnapshot<Map<String, dynamic>> document =
                               await FirebaseFirestore.instance
-                                  .collection('lawyers')
+                                  .collection('users')
                                   .doc(FirebaseAuth.instance.currentUser!.uid)
                                   .get();
                           final userData = document.data()!;
-                          String userName = userData['name'];
+                          String userName = userData['username'];
                           String userImage = userData['image'];
                           String fcmToken = userData['fcmToken'];
 
@@ -255,7 +259,7 @@ class _ChatState extends State<Chat> {
                                 final XFile? image = await _picker.pickImage(
                                     source: ImageSource.camera);
                                 if (image != null) {
-                                  Navigator.pop(context);
+                                  // Navigator.pop(context);
 
                                   dataController.isMessageSending(true);
 
@@ -271,7 +275,7 @@ class _ChatState extends State<Chat> {
                                   DocumentSnapshot<Map<String, dynamic>>
                                       document = await FirebaseFirestore
                                           .instance
-                                          .collection('lawyers')
+                                          .collection('users')
                                           .doc(FirebaseAuth
                                               .instance.currentUser!.uid)
                                           .get();
@@ -295,8 +299,8 @@ class _ChatState extends State<Chat> {
 
                                   LocalNotificationService.sendNotification(
                                       title: 'New message from $userName',
-                                      message:
-                                          '${widget.name} sent you an image',
+                                                              message: '$userName sent you an image',
+
                                       token: widget.fcmToken);
                                 }
                               },
@@ -305,70 +309,7 @@ class _ChatState extends State<Chat> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      width: screenwidth * 0.05,
-                    ),
-                    InkWell(
-                        onTap: () async {
-                          if (messageController.text.isEmpty) {
-                            return;
-                          }
-                          String message = messageController.text;
-                          messageController.clear();
-
-                          Map<String, dynamic> data = {
-                            'type': 'iSentText',
-                            'message': message,
-                            'timeStamp': DateTime.now(),
-                            'uid': myUid
-                          };
-
-                          if (replyText.length > 0) {
-                            data['reply'] = replyText;
-                            data['type'] = 'iSentReply';
-                            replyText = '';
-                          }
-                          DocumentSnapshot<Map<String, dynamic>> document =
-                              await FirebaseFirestore.instance
-                                  .collection('lawyers')
-                                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                                  .get();
-                          final userData = document.data()!;
-                          String userName = userData['name'];
-                          String userImage = userData['image'];
-                          String fcmToken = userData['fcmToken'];
-
-                          dataController.sendMessageToFirebase(
-                              data: data,
-                              userId: widget.groupId.toString(),
-                              otherUserId: widget.uid.toString(),
-                              lastMessage: message,
-                              name: userName,
-                              image: userImage,
-                              fcmToken: fcmToken);
-
-                          dataController.createNotification(
-                            userId: widget.uid.toString(),
-                            message: message,
-                          );
-
-                          LocalNotificationService.sendNotification(
-                              title: 'New message from $userName',
-                              message: message,
-                              token: widget.fcmToken);
-                        },
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: const BoxDecoration(
-                              shape: BoxShape.circle, color: Colors.amber),
-                          child: const Icon(
-                            Icons.send,
-                            color: Colors.white,
-                            size: 26,
-                          ),
-                        )),
-                  ],
+                  ]
                 ),
               ),
             ],
@@ -608,7 +549,7 @@ class _ChatState extends State<Chat> {
                 child: Text(
                   "You replied to ${widget.name}",
                   style: const TextStyle(
-                    color: Colors.black87,
+                    color: Colors.green,
                     fontWeight: FontWeight.w500,
                     fontSize: 16,
                   ),
@@ -622,30 +563,30 @@ class _ChatState extends State<Chat> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Container(
-                margin: const EdgeInsets.only(left: 0),
-                width: screenwidth * 0.4,
-                // height: screenheight * 0.06,
-                decoration: BoxDecoration(
+               Container(
+                margin: const EdgeInsets.only(left: 17),
+                width: screenwidth * 0.43,
+                decoration:  BoxDecoration(
                     borderRadius: const BorderRadius.only(
                       bottomRight: Radius.circular(18),
                       bottomLeft: Radius.circular(18),
                       topRight: Radius.circular(18),
                       topLeft: Radius.circular(18),
                     ),
-                    color: AppColors.greychat),
+                    color: Colors.grey.shade300),
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Text(
                     reply,
-                    style: TextStyle(
-                      color: AppColors.grey,
+                    style: const TextStyle(
+                      color: Colors.black,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
               ),
+             
               Padding(
                 padding: const EdgeInsets.only(
                   left: 10,
@@ -664,29 +605,8 @@ class _ChatState extends State<Chat> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Container(
-                margin: const EdgeInsets.only(left: 17),
-                width: screenwidth * 0.43,
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(18),
-                      bottomLeft: Radius.circular(18),
-                      topRight: Radius.circular(18),
-                      topLeft: Radius.circular(18),
-                    ),
-                    color: Colors.amber),
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Text(
-                    message,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
+             BubbleSpecialOne(
+            text: message, color: Colors.blue, textStyle: kBody3LightBlue),
             ],
           ),
           Row(
@@ -732,7 +652,7 @@ class _ChatState extends State<Chat> {
                 child: Text(
                   "Replied to you ",
                   style: TextStyle(
-                    color: Colors.black87,
+                    color: Colors.amber,
                     fontWeight: FontWeight.w500,
                     fontSize: 16,
                   ),
@@ -757,14 +677,14 @@ class _ChatState extends State<Chat> {
                 margin: const EdgeInsets.only(left: 0),
                 width: screenwidth * 0.4,
                 // height: screenheight * 0.06,
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
+                decoration:  BoxDecoration(
+                    borderRadius: const BorderRadius.only(
                       bottomRight: Radius.circular(18),
                       bottomLeft: Radius.circular(18),
                       topRight: Radius.circular(18),
                       topLeft: Radius.circular(18),
                     ),
-                    color: Colors.amber),
+                    color: Colors.blue.shade400),
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Text(
@@ -772,7 +692,6 @@ class _ChatState extends State<Chat> {
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 14,
-                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
@@ -798,29 +717,8 @@ class _ChatState extends State<Chat> {
                         backgroundImage: NetworkImage(widget.image!),
                       ),
               ),
-              Container(
-                margin: const EdgeInsets.only(left: 17),
-                width: screenwidth * 0.43,
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      bottomRight: Radius.circular(18),
-                      bottomLeft: Radius.circular(18),
-                      topRight: Radius.circular(18),
-                      topLeft: Radius.circular(18),
-                    ),
-                    color: AppColors.greychat),
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Text(
-                    message,
-                    style: TextStyle(
-                      color: AppColors.grey,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
+              BubbleSpecialOne(
+            text: message, color: Colors.grey.shade300, textStyle: kBody3Black),
             ],
           ),
           Row(
@@ -869,11 +767,11 @@ class _ChatState extends State<Chat> {
                     };
                     DocumentSnapshot<Map<String, dynamic>> document =
                         await FirebaseFirestore.instance
-                            .collection('lawyers')
+                            .collection('users')
                             .doc(FirebaseAuth.instance.currentUser!.uid)
                             .get();
                     final userData = document.data()!;
-                    String userName = userData['name'];
+                    String userName = userData['username'];
                     String userImage = userData['image'];
                     String fcmToken = userData['fcmToken'];
                     dataController.sendMessageToFirebase(
@@ -892,7 +790,8 @@ class _ChatState extends State<Chat> {
 
                     LocalNotificationService.sendNotification(
                         title: 'New message from $userName',
-                        message: '${widget.name} sent you an image',
+                                               message: '$userName sent you an image',
+
                         token: widget.fcmToken);
                   }
                 },
@@ -924,11 +823,11 @@ class _ChatState extends State<Chat> {
                       };
                       DocumentSnapshot<Map<String, dynamic>> document =
                           await FirebaseFirestore.instance
-                              .collection('lawyers')
+                              .collection('users')
                               .doc(FirebaseAuth.instance.currentUser!.uid)
                               .get();
                       final userData = document.data()!;
-                      String userName = userData['name'];
+                      String userName = userData['username'];
                       String userImage = userData['image'];
                       String fcmToken = userData['fcmToken'];
                       dataController.sendMessageToFirebase(
@@ -947,7 +846,8 @@ class _ChatState extends State<Chat> {
 
                       LocalNotificationService.sendNotification(
                           title: 'New message from $userName',
-                          message: '${widget.name} sent you an image',
+                                                  message: '$userName sent you an image',
+
                           token: widget.fcmToken);
                     }
                   },

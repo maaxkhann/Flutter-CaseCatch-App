@@ -32,12 +32,12 @@ class LawyerAuthController extends GetxController {
     required BuildContext context,
     required String contact,
     required String password,
-    required String bar,
     required String email,
     required String category,
     required String address,
     required String experience,
     required String date,
+    required String price, required String practice,
   }) async {
     ProgressDialog progressDialog = ProgressDialog(context,
         title: const Text('Signing Up'), message: const Text('Please wait'));
@@ -51,17 +51,16 @@ class LawyerAuthController extends GetxController {
           name: name,
           contact: contact,
           password: password,
-          bar: bar,
           email: email,
           category: category,
           address: address,
           experience: experience,
           image: uploadImage,
-          date: date);
+          date: date, price:price, practice: practice );
 
       if (userCredential.user != null) {
         await _firestore
-            .collection('users')
+            .collection('lawyers')
             .doc(FirebaseAuth.instance.currentUser!.uid)
             .set(accountModel.toJson());
         progressDialog.dismiss();

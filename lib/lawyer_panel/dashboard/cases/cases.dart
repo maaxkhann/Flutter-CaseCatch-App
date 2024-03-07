@@ -65,8 +65,8 @@ class _CasesState extends State<Cases> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          height: Get.height*.108,
-                          width: Get.width*.446,
+                          height: Get.height * .108,
+                          width: Get.width * .446,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             color: Colors.blue[900],
@@ -75,20 +75,17 @@ class _CasesState extends State<Cases> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               10.heightBox,
-
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   5.widthBox,
-
                                   buildCasesStream('ongoing'),
                                   const Icon(
                                     Icons.refresh,
                                     color: Colors.white,
                                   ),
                                   5.widthBox,
-
                                 ],
                               ),
                               const Text(
@@ -102,8 +99,8 @@ class _CasesState extends State<Cases> {
                           ),
                         ),
                         Container(
-                        height: Get.height*.108,
-                          width: Get.width*.446,
+                          height: Get.height * .108,
+                          width: Get.width * .446,
                           decoration: BoxDecoration(
                             color: Colors.purple,
                             borderRadius: BorderRadius.circular(12),
@@ -117,7 +114,7 @@ class _CasesState extends State<Cases> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   5.widthBox,
-                                  buildCasesStream('appealed'),
+                                  buildCasesStream('cancelled'),
                                   const Icon(
                                     Icons.man,
                                     color: Colors.white,
@@ -127,7 +124,7 @@ class _CasesState extends State<Cases> {
                               ),
                               const Center(
                                 child: Text(
-                                  'Appealed',
+                                  'Cancelled',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
@@ -144,8 +141,8 @@ class _CasesState extends State<Cases> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                       height: Get.height*.108,
-                          width: Get.width*.446,
+                          height: Get.height * .108,
+                          width: Get.width * .446,
                           decoration: BoxDecoration(
                             color: Colors.orange,
                             borderRadius: BorderRadius.circular(12),
@@ -180,8 +177,8 @@ class _CasesState extends State<Cases> {
                           ),
                         ),
                         Container(
-                            height: Get.height*.108,
-                          width: Get.width*.446,
+                          height: Get.height * .108,
+                          width: Get.width * .446,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             color: Colors.redAccent,
@@ -243,13 +240,11 @@ class _CasesState extends State<Cases> {
                     ),
                     StreamBuilder(
                         stream: FirebaseFirestore.instance
-                            .collection('lawyers')
-                            .doc(FirebaseAuth.instance.currentUser!.uid)
                             .collection('appointments')
-                            .orderBy('date', descending: false)
                             .where('lawyerId',
                                 isEqualTo:
                                     FirebaseAuth.instance.currentUser!.uid)
+                            .orderBy('date', descending: false)
                             .snapshots(),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
@@ -410,8 +405,6 @@ class _CasesState extends State<Cases> {
   Widget buildCasesStream(String status) {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
-          .collection('lawyers')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection('appointments')
           .where('lawyerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .where('status', isEqualTo: status)
@@ -420,7 +413,7 @@ class _CasesState extends State<Cases> {
         return Column(
           children: [
             Text(
-              snapshot.data?.docs.length.toString()??'',
+              snapshot.data?.docs.length.toString() ?? '',
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 25,

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:catch_case/user_panel/view/intro-view/intro_view1.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,7 +11,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../authentication/signin_screen.dart';
 
 class LawyerProfileController extends GetxController {
   RxBool isLoading = false.obs;
@@ -122,7 +122,7 @@ class LawyerProfileController extends GetxController {
 
   logOut() async {
     await FirebaseAuth.instance.signOut();
-    Get.to(() => const SigninScreen());
+    Get.to(() => const IntroView1());
   }
   //
   //
@@ -182,8 +182,7 @@ class LawyerProfileController extends GetxController {
 
       EasyLoading.show(status: 'Processing');
       await FirebaseFirestore.instance
-          .collection('lawyers')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
+          
           .collection('appointments')
           .doc(caseId)
           .update({'status': status});

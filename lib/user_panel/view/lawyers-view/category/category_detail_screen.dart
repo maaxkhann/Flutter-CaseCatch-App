@@ -228,6 +228,7 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                                                           experience:
                                                               e['experience'],
                                                           address: e['address'],
+                                                          practice: e['practice'],
                                                           contact:
                                                               e['contact'])))
                                             ],

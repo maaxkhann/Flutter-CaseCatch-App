@@ -17,6 +17,7 @@ class AboutView extends StatefulWidget {
   final String? uid;
   final String address;
   final String contact;
+  final String practice;
 
   const AboutView(
       {super.key,
@@ -27,7 +28,7 @@ class AboutView extends StatefulWidget {
       this.fcmToken,
       this.uid,
       required this.address,
-      required this.contact});
+      required this.contact, required this.practice});
 
   @override
   State<AboutView> createState() => _AboutViewState();
@@ -132,25 +133,25 @@ class _AboutViewState extends State<AboutView> {
                                 borderRadius: BorderRadius.circular(6),
                                 border: Border.all(color: kMediumBlue)),
                             child: Text(
-                              widget.category,
+                              widget.practice,
                               style: kBody3DarkBlue,
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: Get.height * 0.01,
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(color: kMediumBlue)),
-                        child: Text(
-                          widget.category,
-                          style: kBody3DarkBlue,
-                        ),
-                      ),
+                      // SizedBox(
+                      //   height: Get.height * 0.01,
+                      // ),
+                      // Container(
+                      //   padding: const EdgeInsets.all(6),
+                      //   decoration: BoxDecoration(
+                      //       borderRadius: BorderRadius.circular(6),
+                      //       border: Border.all(color: kMediumBlue)),
+                      //   child: Text(
+                      //     widget.category,
+                      //     style: kBody3DarkBlue,
+                      //   ),
+                      // ),
                       SizedBox(
                         height: Get.height * 0.015,
                       ),
@@ -228,7 +229,7 @@ class _AboutViewState extends State<AboutView> {
                         child: ConstantButton(
                             buttonText: 'Book now for free',
                             onTap: () => Get.to(() => LawyerBookingScreen(
-                                  lawyerId: widget.uid.toString(),
+                                  lawyerId: widget.uid.toString(), name: widget.name, image: widget.image,
                                 ))),
                       ),
                       Center(

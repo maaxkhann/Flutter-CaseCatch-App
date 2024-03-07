@@ -31,7 +31,13 @@ class _DataScreenState extends State<DataScreen> {
   String imageaddress = "";
   String imagetoUpload = "";
   String imageUploaded = "";
-
+ 
+ final practices = <String>[
+   'Family matters',
+    'Corporate buisness',
+    'Immigration case',
+    'Tax case'
+  ];
   final _categories = <String>[
     'Criminal',
     'Family',
@@ -43,6 +49,7 @@ class _DataScreenState extends State<DataScreen> {
   String loadingMessage = "Registring User";
 
   String? _category;
+  String? _practice;
   TextEditingController nameController = TextEditingController();
   TextEditingController contactController = TextEditingController();
   TextEditingController addressController = TextEditingController();
@@ -52,6 +59,7 @@ class _DataScreenState extends State<DataScreen> {
   TextEditingController barController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController dateController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
   LawyerAuthController authController = Get.put(LawyerAuthController());
   LawyerProfileController profileController = Get.put(LawyerProfileController());
   @override
@@ -292,8 +300,64 @@ class _DataScreenState extends State<DataScreen> {
                           .toList(),
                     ),
                     10.heightBox,
+                     const Text(
+                      'Specialization',
+                      style: TextStyle(
+                        color: Color(0xFF3D3D3D),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: MediaQuery.of(context).size.width * 0.030,
+                        ),
+                        filled: true,
+                        fillColor: const Color(0xffEEEEEE),
+                        prefixIcon:
+                            const Icon(Icons.category, color: Colors.black),
+                        hintText: 'Select Specialization',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.black),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.black),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.black),
+                        ),
+                      ),
+                      value: _practice,
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please select a category';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          _practice = value;
+                        });
+                      },
+                      items: practices
+                          .map(
+                            (e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(e),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                    10.heightBox,
                     const Text(
-                      'Bar Number',
+                      'Price optional',
                       style: TextStyle(
                         color: Color(0xFF3D3D3D),
                         fontSize: 14,
@@ -308,68 +372,10 @@ class _DataScreenState extends State<DataScreen> {
                           Icons.numbers,
                           color: Colors.black,
                         ),
-                        controller: barController,
-                        text: 'Enter your Bar Number'),
+                        controller: priceController,
+                        text: 'Enter your Price '),
                     10.heightBox,
-                    const Text(
-                      'Date of Birth',
-                      style: TextStyle(
-                        color: Color(0xFF3D3D3D),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    TextField(
-                      controller: dateController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: MediaQuery.of(context).size.width * 0.030,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Colors.black, // Change border color
-                          ),
-                        ),
-                        hintText: "Date of Birth",
-                        focusColor: Colors.black,
-                        hintStyle: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
-                        ),
-                        prefixIcon: const Icon(
-                          Icons.calendar_today_rounded,
-                          color: Colors.black,
-                        ),
-                        border: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.black,
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(16),
-                          ),
-                        ),
-                      ),
-                      onTap: () async {
-                        DateTime? pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1900),
-                          lastDate: DateTime(2100),
-                        );
-                        if (pickedDate != null) {
-                          setState(() {
-                            dateController.text =
-                                DateFormat('dd-MM-yyyy').format(pickedDate);
-                          });
-                        }
-                      },
-                    ),
-                    10.heightBox,
+                 
                     const Text(
                       'Experience',
                       style: TextStyle(
@@ -396,7 +402,7 @@ class _DataScreenState extends State<DataScreen> {
                             String name = nameController.text.trim();
                             String email = emailController.text.trim();
                             String contact = contactController.text.trim();
-                            String bar = barController.text.trim();
+                            String price = priceController.text.trim();
                             String date = dateController.text.trim();
                             String address = addressController.text.trim();
                             String password = passwordController.text.trim();
@@ -406,9 +412,9 @@ class _DataScreenState extends State<DataScreen> {
                             if (name.isEmpty ||
                                 email.isEmpty ||
                                 address.isEmpty ||
-                                bar.isEmpty ||
-                                date.isEmpty ||
                                 contact.isEmpty ||
+                                _categories.isEmpty ||
+                                practices.isEmpty ||
                                 experience.isEmpty ||
                                 password.isEmpty) {
                               Get.snackbar(
@@ -424,12 +430,12 @@ class _DataScreenState extends State<DataScreen> {
                                   name: name,
                                   contact: contact,
                                   password: password,
-                                  bar: bar,
                                   email: email,
                                   category: _category.toString(),
+                                  practice: practices.toString(),
                                   address: address,
                                   experience: experience,
-                                  date: date, context: context);
+                                  date: date, context: context, price: price);
                             }
                           } catch (e) {
                             Get.snackbar('Error', e.toString());
