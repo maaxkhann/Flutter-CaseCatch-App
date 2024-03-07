@@ -162,21 +162,5 @@ class ChatController extends GetxController {
 //
 //
 
-  @override
-  void onInit() {
-    super.onInit();
-    getUsers();
-  }
-
-  var isUsersLoading = false.obs;
-
-  getUsers() {
-    isUsersLoading(true);
-    FirebaseFirestore.instance
-        .collection('lawyers')
-        .snapshots()
-        .listen((event) {
-      isUsersLoading(false);
-    });
-  }
+ 
 }

@@ -1,5 +1,4 @@
 import 'package:catch_case/user_panel/constant-widgets/constant_appbar.dart';
-import 'package:catch_case/user_panel/constant-widgets/constant_textfield2.dart';
 import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:catch_case/user_panel/view/lawyers-view/about-view/about_view.dart';
 import 'package:catch_case/user_panel/view/lawyers-view/widgets/lawyers_button.dart';
@@ -204,7 +203,7 @@ class _AllLawyersViewState extends State<AllLawyersView> {
                                                 style: kBody4Black,
                                               ),
                                               Text(
-                                                'Free',
+                                                e['price']??'Free',
                                                 style: kBody444DarkBlue,
                                               ),
                                               SizedBox(
@@ -223,6 +222,7 @@ class _AllLawyersViewState extends State<AllLawyersView> {
                                                           experience:
                                                               e['experience'],
                                                           address: e['address'],
+                                                          practice: e['practice'],
                                                           contact:
                                                               e['contact'])))
                                             ],

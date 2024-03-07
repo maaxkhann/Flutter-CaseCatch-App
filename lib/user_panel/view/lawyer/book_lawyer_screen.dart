@@ -1,9 +1,9 @@
+import 'package:catch_case/user_panel/view/lawyer/widgets/date_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -13,7 +13,9 @@ import '../lawyers-view/confirm-booking-view/confirm_booking_view.dart';
 
 class LawyerBookingScreen extends StatefulWidget {
   final String lawyerId;
-  const LawyerBookingScreen({super.key, required this.lawyerId});
+  final String name;
+  final String image;
+  const LawyerBookingScreen({super.key, required this.lawyerId, required this.name, required this.image});
 
   @override
   State<LawyerBookingScreen> createState() => _LawyerBookingScreenState();
@@ -100,14 +102,15 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
       //
       //
       await FirebaseFirestore.instance
-          .collection('lawyers')
-          .doc(widget.lawyerId)
+          
           .collection('appointments')
           .doc(myId)
           .set({
         'caseId': myId,
         'userId': uid,
         'lawyerId': widget.lawyerId,
+        'lawyerImage': widget.image,
+        'lawyerName': widget.name,
         'name': userName,
         'image': image,
         'caseType': caseType,
@@ -253,60 +256,7 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
               const SizedBox(
                 height: 8,
               ),
-              TextField(
-                controller: dateController,
-                readOnly: true,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: MediaQuery.of(context).size.width * 0.030,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(
-                      color: Colors.black45,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(
-                      color: Colors.black,
-                    ),
-                  ),
-                  hintText: "Select a date",
-                  focusColor: Colors.black,
-                  hintStyle: const TextStyle(
-                    color: Color(0xFF828A89),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  prefixIcon: const Icon(
-                    Icons.calendar_today_rounded,
-                    color: Colors.black,
-                  ),
-                  border: const OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.black,
-                    ),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(16),
-                    ),
-                  ),
-                ),
-                onTap: () async {
-                  DateTime? pickedDate = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(1900),
-                    lastDate: DateTime(2100),
-                  );
-                  if (pickedDate != null) {
-                    setState(() {
-                      dateController.text =
-                          DateFormat('dd-MM-yyyy').format(pickedDate);
-                    });
-                  }
-                },
-              ),
+              DatePicker(controller: dateController),
               10.heightBox,
               const Text(
                 'Select a time',
@@ -404,7 +354,7 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
                   width: Get.size.width,
                   padding: const EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
-                    color: Colors.amber,
+                    color: Colors.blue.shade300,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Center(

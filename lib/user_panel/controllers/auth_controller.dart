@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -118,7 +117,8 @@ class AuthController extends GetxController {
             .set(userModel.toJson());
         progressDialog.dismiss();
         Fluttertoast.showToast(msg: 'Sign Up Successfully');
-        Get.off(() => const LoginView());
+              Get.off(() => const BottomNavigationBarWidget());
+
       }
     } on FirebaseAuthException catch (e) {
       progressDialog.dismiss();

@@ -6,8 +6,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import '../authentication/notification_screen.dart';
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -17,7 +15,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  LawyerProfileController profileController = Get.put(LawyerProfileController());
+  LawyerProfileController profileController =
+      Get.put(LawyerProfileController());
   @override
   Widget build(BuildContext context) {
     User? lawyer = _auth.currentUser;
@@ -98,15 +97,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   }).toList() ??
                                   []);
                         }),
-                    IconButton(
-                      onPressed: () {
-                        Get.to(() => const UserNotificationScreen());
-                      },
-                      icon: const Icon(
-                        Icons.notification_add,
-                        color: Colors.black,
-                      ),
-                    ),
                   ],
                 ),
                 10.heightBox,
@@ -137,7 +127,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 16.heightBox,
-               
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -158,7 +147,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                
                 const SizedBox(height: 8),
                 _buildAppointmentsStream(lawyer!.uid),
               ],
@@ -170,14 +158,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildAppointmentsStream(String lawyerId) {
-    
     // DateTime now = DateTime.now();
     // DateTime tomorrow = DateTime(now.year, now.month, now.day + 1);
     String date = DateFormat('dd-MM-yyyy').format(DateTime.now());
     return StreamBuilder(
       stream: FirebaseFirestore.instance
-          .collection('lawyers')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection('appointments')
           .where('lawyerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .where(
@@ -189,7 +174,6 @@ class _HomeScreenState extends State<HomeScreen> {
       //
 
       builder: (context, snapshot) {
-        
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Padding(
             padding: EdgeInsets.only(top: 188),
@@ -219,7 +203,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemCount: snapshot.data?.docs.length ?? 0,
                 physics: const BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
-                  
                   final appointment = snapshot.data!.docs[index];
 
                   return Column(

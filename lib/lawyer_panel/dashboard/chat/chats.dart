@@ -34,7 +34,7 @@ class _ChatsState extends State<Chats> {
                   children: [
                     IconButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        // Navigator.pop(context);
                       },
                       icon: Container(
                         height: 30,

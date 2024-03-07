@@ -180,7 +180,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                         ),
                       ),
                       Text(
-                        'Appealed',
+                        'Cancelled',
                         style: TextStyle(
                           fontSize: 12,
                         ),
@@ -230,9 +230,9 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                       const SingleChildScrollView(
                         physics: BouncingScrollPhysics(),
                         child: CasesTab(
-                          status: 'appealed',
+                          status: 'cancelled',
                           text: Text(
-                            'Appealed',
+                            'Cancelled',
                             style: TextStyle(color: Colors.blue),
                           ),
                         ),
@@ -390,10 +390,9 @@ class CasesTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
-          .collection('lawyers')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection('appointments')
+         .collection('appointments')
           .where('status', isEqualTo: status)
+          .where('lawyerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
