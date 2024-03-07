@@ -1,4 +1,5 @@
 import 'package:catch_case/lawyer_panel/controllers/profile_controller.dart';
+import 'package:catch_case/lawyer_panel/dashboard/all_schedule.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -127,10 +128,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 16.heightBox,
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       'Today\'s Schedule',
                       style: TextStyle(
                         color: Colors.black,
@@ -138,11 +139,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    Text(
-                      "View all",
-                      style: TextStyle(
-                        color: Colors.amber,
-                        fontSize: 13,
+                    GestureDetector(
+                      onTap: () {
+                        Get.to(() => const AllScheduleScreen());
+                      },
+                      child: const Text(
+                        "View all",
+                        style: TextStyle(
+                          color: Colors.amber,
+                          fontSize: 13,
+                        ),
                       ),
                     ),
                   ],

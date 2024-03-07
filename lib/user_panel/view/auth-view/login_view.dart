@@ -153,28 +153,28 @@ class _LoginViewState extends State<LoginView> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: Get.height * 0.02,
-              ),
-              Center(
-                child: Text(
-                  'Sign In using',
-                  style: kBody4DarkBlue,
-                ),
-              ),
-              SizedBox(
-                height: Get.height * 0.01,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset('assets/images/intro-auth/google.png'),
-                  SizedBox(
-                    width: Get.width * 0.02,
-                  ),
-                  Image.asset('assets/images/intro-auth/facebook.png')
-                ],
-              ),
+              // SizedBox(
+              //   height: Get.height * 0.02,
+              // ),
+              // Center(
+              //   child: Text(
+              //     'Sign In using',
+              //     style: kBody4DarkBlue,
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: Get.height * 0.01,
+              // ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     Image.asset('assets/images/intro-auth/google.png'),
+              //     SizedBox(
+              //       width: Get.width * 0.02,
+              //     ),
+              //     Image.asset('assets/images/intro-auth/facebook.png')
+              //   ],
+              // ),
               SizedBox(
                 height: Get.height * 0.01,
               ),

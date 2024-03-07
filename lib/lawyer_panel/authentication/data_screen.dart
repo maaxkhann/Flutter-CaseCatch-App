@@ -301,7 +301,7 @@ class _DataScreenState extends State<DataScreen> {
                     ),
                     10.heightBox,
                      const Text(
-                      'Specialization',
+                      'Practice Area',
                       style: TextStyle(
                         color: Color(0xFF3D3D3D),
                         fontSize: 14,
@@ -320,7 +320,7 @@ class _DataScreenState extends State<DataScreen> {
                         fillColor: const Color(0xffEEEEEE),
                         prefixIcon:
                             const Icon(Icons.category, color: Colors.black),
-                        hintText: 'Select Specialization',
+                        hintText: 'Select practice area',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(color: Colors.black),
@@ -337,7 +337,7 @@ class _DataScreenState extends State<DataScreen> {
                       value: _practice,
                       validator: (value) {
                         if (value == null) {
-                          return 'Please select a category';
+                          return 'Please select a practice area';
                         }
                         return null;
                       },
@@ -432,7 +432,7 @@ class _DataScreenState extends State<DataScreen> {
                                   password: password,
                                   email: email,
                                   category: _category.toString(),
-                                  practice: practices.toString(),
+                                  practice: _practice.toString(),
                                   address: address,
                                   experience: experience,
                                   date: date, context: context, price: price);

@@ -6,6 +6,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../constants/colors.dart';
+
 class AllLawyersView extends StatefulWidget {
   const AllLawyersView({super.key});
 
@@ -21,7 +23,15 @@ class _AllLawyersViewState extends State<AllLawyersView> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: const ConstantAppBar(text: 'Lawyers'),
+        appBar: AppBar(
+          backgroundColor: kButtonColor,
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          title: Text(
+            'Lawyers',
+            style: kHead2White,
+          ),
+        ),
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: Get.width * 0.02),
@@ -67,7 +77,7 @@ class _AllLawyersViewState extends State<AllLawyersView> {
                                 searchText = value;
                               });
                             }),
-                            SizedBox(height: 12,),
+                            const SizedBox(height: 12,),
                 StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection('lawyers')
