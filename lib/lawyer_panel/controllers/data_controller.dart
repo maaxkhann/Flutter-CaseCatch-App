@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart' as Path;
 import 'package:uuid/uuid.dart';
 
@@ -40,6 +41,7 @@ class DataController extends GetxController {
         .add(data!);
     await FirebaseFirestore.instance.collection('chats').doc(chatRoomId).set({
       'lastMessage': lastMessage,
+      'timeStamp': DateFormat.Hm().format(DateTime.now()),
       'name': name,
       'image': image,
       'fcmToken': fcmToken,
@@ -49,9 +51,8 @@ class DataController extends GetxController {
 
     isMessageSending(false);
   }
-  // 
-  // 
-  
+  //
+  //
 
 //
 //
@@ -66,17 +67,17 @@ class DataController extends GetxController {
         .orderBy('timeStamp', descending: false)
         .snapshots();
   }
+
   //
   //
-   Future<String> getUserProfileImage(String userId) async {
+  Future<String> getUserProfileImage(String userId) async {
     Reference ref =
         FirebaseStorage.instance.ref().child('profile_images/$userId.png');
     String downloadURL = await ref.getDownloadURL();
     return downloadURL;
   }
-  // 
-  // 
-
+  //
+  //
 
   Future<void> createNotification({
     required String userId,
@@ -85,22 +86,23 @@ class DataController extends GetxController {
     try {
       var uuid = const Uuid();
       var myId = uuid.v6();
-       User? user = auth.currentUser;
-    String uid = user!.uid;
- DocumentSnapshot<Map<String, dynamic>> document=await FirebaseFirestore.instance
+      User? user = auth.currentUser;
+      String uid = user!.uid;
+      DocumentSnapshot<Map<String, dynamic>> document = await FirebaseFirestore
+          .instance
           .collection('lawyers')
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .get();
-    final data = document.data()!;
-      String userName = data['name'] ;
-    String userProfileImage = await getUserProfileImage(uid);
+      final data = document.data()!;
+      String userName = data['name'];
+      String userProfileImage = await getUserProfileImage(uid);
 
       await FirebaseFirestore.instance
           .collection('notifications')
           .doc(myId)
           .set({
         'notificationUid': myId,
-        'userId': userId,
+        'uId': userId,
         'image': userProfileImage,
         'message': message,
         'name': userName,
@@ -120,10 +122,10 @@ class DataController extends GetxController {
         .where('userId', isEqualTo: uuidToRetrieve)
         .snapshots();
   }
-// 
-// 
+//
+//
 
- Future<void> deleteNotification(String id) async {
+  Future<void> deleteNotification(String id) async {
     try {
       await FirebaseFirestore.instance
           .collection('notifications')
@@ -134,6 +136,7 @@ class DataController extends GetxController {
       Get.snackbar('Error', 'Error deleting document: $e');
     }
   }
+
   //
   //
   Future<String> uploadImageToFirebase(File file) async {

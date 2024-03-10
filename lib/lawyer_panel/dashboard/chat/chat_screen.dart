@@ -1,14 +1,9 @@
-import 'dart:io';
-
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-
 import '../../../user_panel/constants/colors.dart';
 import '../../../user_panel/constants/textstyles.dart';
 import '../../controllers/data_controller.dart';
@@ -144,9 +139,6 @@ class _ChatState extends State<Chat> {
                                   messageWidget = textMessageISent(data[index]);
                                   break;
 
-                                case 'iSentImage':
-                                  messageWidget = imageSent(data[index]);
-                                  break;
                                 case 'iSentReply':
                                   messageWidget =
                                       sentReplyTextToText(data[index]);
@@ -158,9 +150,6 @@ class _ChatState extends State<Chat> {
                                       textMessageIReceived(data[index]);
                                   break;
 
-                                case 'iSentImage':
-                                  messageWidget = imageReceived(data[index]);
-                                  break;
                                 case 'iSentReply':
                                   messageWidget =
                                       receivedReplyTextToText(data[index]);
@@ -235,77 +224,6 @@ class _ChatState extends State<Chat> {
                               token: widget.fcmToken);
                         },
                         messageBarColor: Colors.grey.shade100,
-                        actions: [
-                          InkWell(
-                            child: Icon(
-                              Icons.add,
-                              color: Colors.black,
-                              size: 24.r,
-                            ),
-                            onTap: () {
-                              openMediaDialog();
-                            },
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 6.w, right: 6.w),
-                            child: InkWell(
-                              child: Icon(
-                                Icons.camera_alt,
-                                color: Colors.green,
-                                size: 24.r,
-                              ),
-                              onTap: () async {
-                                final ImagePicker _picker = ImagePicker();
-                                final XFile? image = await _picker.pickImage(
-                                    source: ImageSource.camera);
-                                if (image != null) {
-                                  // Navigator.pop(context);
-
-                                  dataController.isMessageSending(true);
-
-                                  String imageUrl = await dataController
-                                      .uploadImageToFirebase(File(image.path));
-
-                                  Map<String, dynamic> data = {
-                                    'type': 'iSentImage',
-                                    'message': imageUrl,
-                                    'timeStamp': DateTime.now(),
-                                    'uid': myUid
-                                  };
-                                  DocumentSnapshot<Map<String, dynamic>>
-                                      document = await FirebaseFirestore
-                                          .instance
-                                          .collection('lawyers')
-                                          .doc(FirebaseAuth
-                                              .instance.currentUser!.uid)
-                                          .get();
-                                  final userData = document.data()!;
-                                  String userName = userData['name'];
-                                  String userImage = userData['image'];
-                                  String fcmToken = userData['fcmToken'];
-                                  dataController.sendMessageToFirebase(
-                                      data: data,
-                                      userId: widget.groupId.toString(),
-                                      otherUserId: widget.uid.toString(),
-                                      lastMessage: 'Image',
-                                      name: userName,
-                                      image: userImage,
-                                      fcmToken: fcmToken);
-
-                                  dataController.createNotification(
-                                    userId: widget.uid.toString(),
-                                    message: 'sent you an image',
-                                  );
-
-                                  LocalNotificationService.sendNotification(
-                                      title: 'New message from $userName',
-                                      message: '$userName sent you an image',
-                                      token: widget.fcmToken);
-                                }
-                              },
-                            ),
-                          ),
-                        ],
                       ),
                     ),
                   ],
@@ -398,125 +316,6 @@ class _ChatState extends State<Chat> {
           ],
         ),
       ],
-    );
-  }
-
-  imageSent(DocumentSnapshot doc) {
-    String message = '';
-
-    try {
-      message = doc.get('message');
-    } catch (e) {
-      message = '';
-    }
-
-    return Container(
-      margin: const EdgeInsets.only(right: 20, top: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                width: screenwidth * 0.42,
-                height: screenheight * 0.18,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black),
-                    borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(18),
-                        topLeft: Radius.circular(18),
-                        bottomLeft: Radius.circular(18)),
-                    image: DecorationImage(
-                        image: NetworkImage(message), fit: BoxFit.fill)),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  right: 0,
-                ),
-                child: Text(
-                  DateFormat.Hm().format(doc.get('timeStamp').toDate()),
-                  style: const TextStyle(color: Colors.black),
-                ),
-              )
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  imageReceived(DocumentSnapshot doc) {
-    String message = '';
-    try {
-      message = doc.get('message');
-    } catch (e) {
-      message = '';
-    }
-    return Container(
-      margin: const EdgeInsets.only(top: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 12),
-                child: widget.image!.isEmpty
-                    ? const CircleAvatar(
-                        backgroundColor: Colors.blue,
-                        child: Icon(
-                          Icons.person,
-                          color: Colors.white,
-                        ),
-                      )
-                    : CircleAvatar(
-                        backgroundImage: NetworkImage(widget.image!),
-                      ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(left: 20),
-                width: screenwidth * 0.42,
-                height: screenheight * 0.18,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black),
-                    borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(18),
-                        topLeft: Radius.circular(18),
-                        bottomRight: Radius.circular(18)),
-                    image: DecorationImage(
-                        image: NetworkImage(message), fit: BoxFit.fill)),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 60,
-                ),
-                child: Text(
-                  DateFormat.Hm().format(doc.get('timeStamp').toDate()),
-                  style: const TextStyle(color: Colors.black),
-                ),
-              )
-            ],
-          ),
-        ],
-      ),
     );
   }
 
@@ -776,126 +575,6 @@ class _ChatState extends State<Chat> {
           ),
         ],
       ),
-    );
-  }
-
-  void openMediaDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Choose'),
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              InkWell(
-                onTap: () async {
-                  final ImagePicker _picker = ImagePicker();
-                  final XFile? image =
-                      await _picker.pickImage(source: ImageSource.camera);
-                  if (image != null) {
-                    Navigator.pop(context);
-
-                    dataController.isMessageSending(true);
-
-                    String imageUrl = await dataController
-                        .uploadImageToFirebase(File(image.path));
-
-                    Map<String, dynamic> data = {
-                      'type': 'iSentImage',
-                      'message': imageUrl,
-                      'timeStamp': DateTime.now(),
-                      'uid': myUid
-                    };
-                    DocumentSnapshot<Map<String, dynamic>> document =
-                        await FirebaseFirestore.instance
-                            .collection('lawyers')
-                            .doc(FirebaseAuth.instance.currentUser!.uid)
-                            .get();
-                    final userData = document.data()!;
-                    String userName = userData['name'];
-                    String userImage = userData['image'];
-                    String fcmToken = userData['fcmToken'];
-                    dataController.sendMessageToFirebase(
-                        data: data,
-                        userId: widget.groupId.toString(),
-                        otherUserId: widget.uid.toString(),
-                        lastMessage: 'Image',
-                        name: userName,
-                        image: userImage,
-                        fcmToken: fcmToken);
-
-                    dataController.createNotification(
-                      userId: widget.uid.toString(),
-                      message: 'sent you an image',
-                    );
-
-                    LocalNotificationService.sendNotification(
-                        title: 'New message from $userName',
-                        message: '$userName sent you an image',
-                        token: widget.fcmToken);
-                  }
-                },
-                child: const Icon(
-                  Icons.camera_alt,
-                  size: 30,
-                ),
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              InkWell(
-                  onTap: () async {
-                    final ImagePicker _picker = ImagePicker();
-                    final XFile? image =
-                        await _picker.pickImage(source: ImageSource.gallery);
-                    if (image != null) {
-                      Navigator.pop(context);
-                      dataController.isMessageSending(true);
-
-                      String imageUrl = await dataController
-                          .uploadImageToFirebase(File(image.path));
-
-                      Map<String, dynamic> data = {
-                        'type': 'iSentImage',
-                        'message': imageUrl,
-                        'timeStamp': DateTime.now(),
-                        'uid': myUid
-                      };
-                      DocumentSnapshot<Map<String, dynamic>> document =
-                          await FirebaseFirestore.instance
-                              .collection('lawyers')
-                              .doc(FirebaseAuth.instance.currentUser!.uid)
-                              .get();
-                      final userData = document.data()!;
-                      String userName = userData['name'];
-                      String userImage = userData['image'];
-                      String fcmToken = userData['fcmToken'];
-                      dataController.sendMessageToFirebase(
-                          data: data,
-                          userId: widget.groupId.toString(),
-                          otherUserId: widget.uid.toString(),
-                          lastMessage: 'Image',
-                          name: userName,
-                          image: userImage,
-                          fcmToken: fcmToken);
-
-                      dataController.createNotification(
-                        userId: widget.uid.toString(),
-                        message: 'sent you an image',
-                      );
-
-                      LocalNotificationService.sendNotification(
-                          title: 'New message from $userName',
-                          message: '$userName sent you an image',
-                          token: widget.fcmToken);
-                    }
-                  },
-                  child: const Icon(Icons.image)),
-            ],
-          ),
-        );
-      },
     );
   }
 }

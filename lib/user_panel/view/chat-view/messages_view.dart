@@ -82,107 +82,173 @@ class _MessageViewState extends State<MessageView> {
                         },
                       ),
                     ),
-                    // Image.asset(
-                    //   'assets/filter.png',
-                    //   height: 20,
-                    //   width: 20,
-                    // ),
                   ],
                 ),
               ),
               const SizedBox(height: 10),
               StreamBuilder(
                   stream: FirebaseFirestore.instance
-                      .collection('lawyers')
-                      .orderBy('name')
-                      // .where( 'groupId' ,isEqualTo: FirebaseAuth.instance.currentUser!.uid )
-                      .startAt([searchText.toUpperCase()]).endAt(
-                          ['$searchText\uf8ff']).snapshots(),
+                      .collection('chats')
+                      .orderBy('timeStamp', descending: true)
+                      .snapshots(),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                          child: Padding(
-                        padding: EdgeInsets.only(top: 233),
-                        child: CircularProgressIndicator(),
-                      ));
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else if (!snapshot.hasData ||
-                        snapshot.data!.docs.isEmpty) {
-                      return Center(
-                          child: Padding(
-                        padding: const EdgeInsets.only(top: 233),
-                        child: Text(
-                          'No lawyer Registered yet',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.amber.shade700),
-                        ),
-                      ));
-                    } else {
-                      return Column(
-                          children: snapshot.data?.docs.map((e) {
-                                String fcmToken = '';
-                                try {
-                                  fcmToken = e['fcmToken'];
-                                } catch (e) {
-                                  fcmToken = '';
-                                }
-                                return Column(
-                                  children: [
-                                    Card(
-                                      shadowColor: Colors.black,
-                                      color: Colors.white,
-                                      elevation: 13,
-                                      child: Container(
-                                        padding: const EdgeInsets.only(left: 6),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(14),
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (!snapshot.hasData) {
+                      return Container();
+                    }
+                    QuerySnapshot chatSnapshot = snapshot.data as QuerySnapshot;
+                    return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: chatSnapshot.docs.length,
+                        itemBuilder: (context, index) {
+                          final chatData = snapshot.data?.docs[index].data()
+                              as Map<String, dynamic>;
+                          dynamic group = chatData['group'];
+                          List<dynamic> groupIds = group.toList();
+
+                          String targetUserId1 = groupIds[0];
+                          String targetUserId2 =
+                              groupIds.length > 1 ? groupIds[1] : "";
+                          groupIds
+                              .remove(FirebaseAuth.instance.currentUser!.uid);
+                          return targetUserId1 ==
+                                      FirebaseAuth.instance.currentUser!.uid ||
+                                  targetUserId2 ==
+                                      FirebaseAuth.instance.currentUser!.uid
+                              ? FutureBuilder(
+                                  future: FirebaseFirestore.instance
+                                      .collection('lawyers')
+                                      .doc(groupIds[0])
+                                      .get(),
+                                  builder: (context, userData) {
+                                    if (userData.hasError ||
+                                        !userData.hasData ||
+                                        !userData.data!.exists) {
+                                      return const SizedBox();
+                                    }
+                                    final targetUser = userData.data;
+                                    if (targetUser == null) {
+                                      return const SizedBox();
+                                    }
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: ListTile(
+                                        tileColor: Colors.grey.shade100,
+                                        onTap: () {
+                                          Get.to(() => Chat(
+                                                fcmToken:
+                                                    targetUser['fcmToken'],
+                                                name: targetUser['name'],
+                                                image: targetUser['image'],
+                                                uid: targetUser['lawyerId'],
+                                                groupId: FirebaseAuth
+                                                    .instance.currentUser!.uid,
+                                              ));
+                                        },
+                                        contentPadding: EdgeInsets.zero,
+                                        leading: CircleAvatar(
+                                          radius: 30,
+                                          backgroundImage:
+                                              NetworkImage(targetUser['image']),
                                         ),
-                                        child: ListTile(
-                                          onTap: () {
-                                            Get.to(() => Chat(
-                                                  fcmToken: fcmToken,
-                                                  groupId: FirebaseAuth.instance
-                                                      .currentUser!.uid,
-                                                  name: e['name'],
-                                                  image: e['image'],
-                                                  uid: e['lawyerId'],
-                                                ));
-                                          },
-                                          contentPadding: EdgeInsets.zero,
-                                          leading: CircleAvatar(
-                                            radius: 30,
-                                            backgroundImage:
-                                                NetworkImage(e['image']),
+                                        title: Text(
+                                          targetUser['name'],
+                                          style: const TextStyle(
+                                            fontSize: 17,
                                           ),
-                                          title: Text(
-                                            e['name'],
+                                        ),
+                                        subtitle: Text(
+                                          chatData['lastMessage'],
+                                          // style: GoogleFonts.poppins(),
+                                        ),
+                                        trailing: Padding(
+                                          padding: const EdgeInsets.only(
+                                            right: 10,
+                                          ),
+                                          child: Text(
+                                            chatData['timeStamp'],
                                             // style: GoogleFonts.poppins(),
-                                          ),
-                                          subtitle: const Text('Hi There'
-                                              // style: GoogleFonts.poppins(),
-                                              ),
-                                          trailing: const Padding(
-                                            padding: EdgeInsets.only(
-                                              right: 10,
-                                            ),
-                                            child: Text(
-                                              '10:03 AM',
-                                              // style: GoogleFonts.poppins(),
-                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                );
-                              }).toList() ??
-                              []);
-                    }
+                                    );
+                                  })
+                              : const SizedBox();
+                          // return ListView(
+                          //     shrinkWrap: true,
+                          //     physics: const NeverScrollableScrollPhysics(),
+                          //     scrollDirection: Axis.vertical,
+                          //     children: snapshot.data?.docs.map((e) {
+                          //           String fcmToken = '';
+
+                          //           try {
+                          //             fcmToken = e['fcmToken'];
+                          //           } catch (e) {
+                          //             fcmToken = '';
+                          //           }
+                          //           return Column(
+                          //             children: [
+                          //               Card(
+                          //                 shadowColor: Colors.black,
+                          //                 color: Colors.white,
+                          //                 elevation: 13,
+                          //                 child: Container(
+                          //                   padding: const EdgeInsets.only(
+                          //                       left: 6),
+                          //                   decoration: BoxDecoration(
+                          //                     color: Colors.white,
+                          //                     borderRadius:
+                          //                         BorderRadius.circular(14),
+                          //                   ),
+                          //                   child: ListTile(
+                          //                     onTap: () {
+                          //                       Get.to(() => Chat(
+                          //                             fcmToken: fcmToken,
+                          //                             name: e['username'],
+                          //                             image: e['image'],
+                          //                             uid: e['userId'],
+                          //                             groupId: FirebaseAuth
+                          //                                 .instance
+                          //                                 .currentUser!
+                          //                                 .uid,
+                          //                           ));
+                          //                     },
+                          //                     contentPadding: EdgeInsets.zero,
+                          //                     leading: CircleAvatar(
+                          //                       radius: 30,
+                          //                       backgroundImage:
+                          //                           NetworkImage(e['image']),
+                          //                     ),
+                          //                     title: Text(
+                          //                       e['username'],
+                          //                       style: const TextStyle(
+                          //                         fontSize: 17,
+                          //                       ),
+                          //                     ),
+                          //                     subtitle: const Text(
+                          //                       'Hi There!',
+                          //                       // style: GoogleFonts.poppins(),
+                          //                     ),
+                          //                     trailing: const Padding(
+                          //                       padding: EdgeInsets.only(
+                          //                         right: 10,
+                          //                       ),
+                          //                       child: Text(
+                          //                         '10:03 AM',
+                          //                         // style: GoogleFonts.poppins(),
+                          //                       ),
+                          //                     ),
+                          //                   ),
+                          //                 ),
+                          //               ),
+                          //             ],
+                          //           );
+                          //         }).toList() ??
+                          //         []);
+                        });
                   }),
             ],
           ),
