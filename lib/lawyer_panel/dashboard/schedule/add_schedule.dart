@@ -1,7 +1,9 @@
+import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -52,31 +54,13 @@ class _AddScheduleScreenState extends State<AddScheduleScreen>
                 Row(
                   children: [
                     IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Container(
-                        height: 30,
-                        width: 30,
-                        decoration: const BoxDecoration(
-                          color: Colors.black,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.arrow_back_ios_new,
-                          color: Colors.white,
-                        ),
-                      ),
+                        onPressed: () => Get.back(),
+                        icon: const Icon(Icons.arrow_back_ios)),
+                    SizedBox(
+                      width: Get.width * 0.15,
                     ),
-                    SizedBox(width: Get.width * .22),
-                    const Text(
-                      'Availablity',
-                      style: TextStyle(
-                        color: Color(0xFF3D3D3D),
-                        fontSize: 22,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    Text('Availability',
+                        textAlign: TextAlign.center, style: kHead2Black),
                   ],
                 ),
                 const SizedBox(
@@ -105,8 +89,8 @@ class _AddScheduleScreenState extends State<AddScheduleScreen>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const SizedBox(
-                              height: 24,
+                            SizedBox(
+                              height: 15.h,
                             ),
                             const Text(
                               'Add hours of your availability',
@@ -116,20 +100,24 @@ class _AddScheduleScreenState extends State<AddScheduleScreen>
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            const SizedBox(
-                              height: 12,
+                            SizedBox(
+                              height: 10.h,
                             ),
                             for (var day in lawyerSchedule.keys)
                               ListTile(
                                 title: Text(day),
-                                subtitle: Row(
-                                  children: [
-                                    for (var hour in lawyerSchedule[day]!)
-                                      Expanded(
-                                          child: Text(
-                                        '$hour  ',
-                                      )),
-                                  ],
+                                subtitle: Flexible(
+                                  fit: FlexFit.loose,
+                                  child: Row(
+                                    children: [
+                                      for (var hour in lawyerSchedule[day]!)
+                                        Expanded(
+                                            child: Text(
+                                          '$hour  ',
+                                          maxLines: 8,
+                                        )),
+                                    ],
+                                  ),
                                 ),
                                 trailing: ElevatedButton(
                                   onPressed: () async {
@@ -138,8 +126,8 @@ class _AddScheduleScreenState extends State<AddScheduleScreen>
                                   child: const Text('Select Hours'),
                                 ),
                               ),
-                            const SizedBox(
-                              height: 16,
+                            SizedBox(
+                              height: 14.h,
                             ),
                             Center(
                               child: GestureDetector(
@@ -148,29 +136,20 @@ class _AddScheduleScreenState extends State<AddScheduleScreen>
                                   await updateSchedule();
                                 },
                                 child: Container(
-                                  height: 50,
+                                  padding: EdgeInsets.all(14.r),
                                   width: double.infinity,
                                   decoration: BoxDecoration(
                                     color: Colors.amber,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
-                                  child: const Center(
-                                    child: Text(
-                                      'Save Changes',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
+                                  child: Center(
+                                    child: Text('Save Changes',
+                                        textAlign: TextAlign.center,
+                                        style: kBody1White),
                                   ),
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                              height: 22,
-                            )
                           ],
                         ),
                       ),
@@ -208,31 +187,23 @@ class _AddScheduleScreenState extends State<AddScheduleScreen>
                               ],
                             ),
                           ),
-                          const SizedBox(
-                            height: 133,
+                          SizedBox(
+                            height: Get.height * 0.15,
                           ),
                           GestureDetector(
                             onTap: () {
                               authController.setUserAlwaysAvailable();
                             },
                             child: Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 6),
-                              height: 46,
+                              padding: EdgeInsets.all(14.r),
                               decoration: BoxDecoration(
                                 color: Colors.amber,
                                 borderRadius: BorderRadius.circular(5),
                               ),
-                              child: const Center(
-                                child: Text(
-                                  'Set always available',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
+                              child: Center(
+                                child: Text('Set always available',
+                                    textAlign: TextAlign.center,
+                                    style: kBody2White),
                               ),
                             ),
                           ),
@@ -265,7 +236,7 @@ class _AddScheduleScreenState extends State<AddScheduleScreen>
             ),
           ),
           content: Container(
-            height: 266,
+            height: Get.height * 0.5,
             child: StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
                 return SingleChildScrollView(

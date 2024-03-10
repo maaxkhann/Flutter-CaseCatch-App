@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -15,7 +16,11 @@ class LawyerBookingScreen extends StatefulWidget {
   final String lawyerId;
   final String name;
   final String image;
-  const LawyerBookingScreen({super.key, required this.lawyerId, required this.name, required this.image});
+  const LawyerBookingScreen(
+      {super.key,
+      required this.lawyerId,
+      required this.name,
+      required this.image});
 
   @override
   State<LawyerBookingScreen> createState() => _LawyerBookingScreenState();
@@ -68,6 +73,7 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
     controllers?.forEach((controller) => controller.dispose());
     super.dispose();
   }
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController caseTypeController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
@@ -75,8 +81,6 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
   final TextEditingController cnicController = TextEditingController();
   TimeOfDay selectedTime = TimeOfDay.now();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  
 
   void bookAppointment({
     required String caseType,
@@ -102,7 +106,6 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
       //
       //
       await FirebaseFirestore.instance
-          
           .collection('appointments')
           .doc(myId)
           .set({
@@ -120,9 +123,8 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
         'status': 'ongoing',
       });
 
-
       showQuestionsDialog();
-      Get.snackbar('Success', 'You have successfully booked a lawyer');
+      Fluttertoast.showToast(msg: 'Booking successful');
 
       EasyLoading.dismiss();
     } catch (e) {
@@ -376,7 +378,8 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
       ),
     );
   }
-   void showQuestionsDialog() {
+
+  void showQuestionsDialog() {
     if (currentStep < (questionSets?.length ?? 0)) {
       List<List<TextEditingController>> allControllers = List.generate(
           questionSets!.length,
@@ -447,5 +450,4 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
       Get.to(() => const ConfirmBookingView());
     }
   }
-
 }

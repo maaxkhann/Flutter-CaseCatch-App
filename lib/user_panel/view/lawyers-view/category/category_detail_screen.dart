@@ -215,22 +215,21 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                                                 height: Get.height * 0.01,
                                               ),
                                               LawyersButton(
-                                                
                                                   buttonText: 'Book Now',
                                                   onTap: () => Get.to(() =>
                                                       AboutView(
-                                                          fcmToken: fcmToken,
-                                                          uid: e['lawyerId'],
-                                                          image: e['image'],
-                                                          name: e['name'],
-                                                          category:
-                                                              e['category'],
-                                                          experience:
-                                                              e['experience'],
-                                                          address: e['address'],
-                                                          practice: e['practice'],
-                                                          contact:
-                                                              e['contact'])))
+                                                        fcmToken: fcmToken,
+                                                        uid: e['lawyerId'],
+                                                        image: e['image'],
+                                                        name: e['name'],
+                                                        category: e['category'],
+                                                        experience:
+                                                            e['experience'],
+                                                        address: e['address'],
+                                                        practice: e['practice'],
+                                                        contact: e['contact'],
+                                                        bio: e['bio'],
+                                                      )))
                                             ],
                                           )
                                         ],
@@ -239,7 +238,6 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                                   ],
                                 ),
                               );
-                            
                             } else {
                               return const SizedBox();
                             }

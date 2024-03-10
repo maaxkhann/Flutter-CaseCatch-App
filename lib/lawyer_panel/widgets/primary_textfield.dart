@@ -11,7 +11,9 @@ class PrimaryTextField extends StatelessWidget {
       {super.key,
       required this.prefixIcon,
       required this.controller,
-      required this.text, this.suffixIcon, this.obsecure=false});
+      required this.text,
+      this.suffixIcon,
+      this.obsecure = false});
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +28,15 @@ class PrimaryTextField extends StatelessWidget {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(
-            color: Colors.black45, 
-          ),
-        ), focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(
-            color: Colors.black, 
+            color: Colors.black45,
           ),
         ),
-        
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(
+            color: Colors.black,
+          ),
+        ),
         hintText: text,
         hintStyle: const TextStyle(
           color: Color(0xFF828A89),

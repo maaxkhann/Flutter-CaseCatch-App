@@ -42,42 +42,42 @@ class _AllLawyersViewState extends State<AllLawyersView> {
                 ),
                 // const ConstantTextField2(
                 //     prefixIcon: Icons.search, suffixIcon: Icons.settings),
-                     TextFormField(
-                            controller: searchController,
-                            cursorColor: Colors.amber,
-                            decoration: InputDecoration(
-                              hintText: 'Search for lawyers',
-                              border: InputBorder.none,
-                              prefixIcon: (searchText.isEmpty)
-                                  ? const Icon(Icons.search)
-                                  : IconButton(
-                                      icon: const Icon(Icons.clear),
-                                      onPressed: () {
-                                        searchText = '';
-                                        searchController.clear();
-                                        setState(() {});
-                                      },
-                                    ),
-                                     focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(Get.width * 0.02),
-          borderSide: const BorderSide(color: Color(0xFFA7A7A7)),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(Get.width * 0.02),
-          borderSide: const BorderSide(color: Color(0xFFA7A7A7)),
-        ),
-
-                              hintStyle: const TextStyle(
-                                fontSize: 14,
-                              ),
-                            
+                TextFormField(
+                    controller: searchController,
+                    cursorColor: Colors.amber,
+                    decoration: InputDecoration(
+                      hintText: 'Search for lawyers',
+                      border: InputBorder.none,
+                      prefixIcon: (searchText.isEmpty)
+                          ? const Icon(Icons.search)
+                          : IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                searchText = '';
+                                searchController.clear();
+                                setState(() {});
+                              },
                             ),
-                            onChanged: (value) {
-                              setState(() {
-                                searchText = value;
-                              });
-                            }),
-                            const SizedBox(height: 12,),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(Get.width * 0.02),
+                        borderSide: const BorderSide(color: Color(0xFFA7A7A7)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(Get.width * 0.02),
+                        borderSide: const BorderSide(color: Color(0xFFA7A7A7)),
+                      ),
+                      hintStyle: const TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        searchText = value;
+                      });
+                    }),
+                const SizedBox(
+                  height: 12,
+                ),
                 StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection('lawyers')
@@ -136,8 +136,8 @@ class _AllLawyersViewState extends State<AllLawyersView> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
-                                      width: Get.width*.17,
-                                      height: Get.height*.1,
+                                      width: Get.width * .17,
+                                      height: Get.height * .1,
                                       decoration: ShapeDecoration(
                                         image: DecorationImage(
                                           image: NetworkImage(e['image']),
@@ -213,7 +213,7 @@ class _AllLawyersViewState extends State<AllLawyersView> {
                                                 style: kBody4Black,
                                               ),
                                               Text(
-                                                e['price']??'Free',
+                                                e['price'] ?? 'Free',
                                                 style: kBody444DarkBlue,
                                               ),
                                               SizedBox(
@@ -223,18 +223,18 @@ class _AllLawyersViewState extends State<AllLawyersView> {
                                                   buttonText: 'Book Now',
                                                   onTap: () => Get.to(() =>
                                                       AboutView(
-                                                          fcmToken: fcmToken,
-                                                          uid: e['lawyerId'],
-                                                          image: e['image'],
-                                                          name: e['name'],
-                                                          category:
-                                                              e['category'],
-                                                          experience:
-                                                              e['experience'],
-                                                          address: e['address'],
-                                                          practice: e['practice'],
-                                                          contact:
-                                                              e['contact'])))
+                                                        fcmToken: fcmToken,
+                                                        uid: e['lawyerId'],
+                                                        image: e['image'],
+                                                        name: e['name'],
+                                                        category: e['category'],
+                                                        experience:
+                                                            e['experience'],
+                                                        address: e['address'],
+                                                        practice: e['practice'],
+                                                        contact: e['contact'],
+                                                        bio: e['bio'],
+                                                      )))
                                             ],
                                           )
                                         ],
@@ -250,7 +250,6 @@ class _AllLawyersViewState extends State<AllLawyersView> {
                         );
                       }
                     }),
-             
               ],
             ),
           ),

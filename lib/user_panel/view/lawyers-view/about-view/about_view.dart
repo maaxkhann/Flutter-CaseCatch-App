@@ -7,6 +7,7 @@ import 'package:catch_case/user_panel/view/lawyers-view/about-view/review_view.d
 import 'package:catch_case/user_panel/view/lawyers-view/all_lawyers_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../chat-view/chat_screen.dart';
@@ -17,6 +18,7 @@ class AboutView extends StatefulWidget {
   final String name;
   final String category;
   final String experience;
+  final String bio;
   final String? fcmToken;
   final String? uid;
   final String address;
@@ -29,6 +31,7 @@ class AboutView extends StatefulWidget {
       required this.name,
       required this.category,
       required this.experience,
+      required this.bio,
       this.fcmToken,
       this.uid,
       required this.address,
@@ -90,10 +93,10 @@ class _AboutViewState extends State<AboutView> {
                             style: kHead2Black,
                           ),
                           const Spacer(),
-                          Text(
-                            '4.7',
-                            style: kBody1MediumBlue,
-                          ),
+                          // Text(
+                          //   '4.7',
+                          //   style: kBody1MediumBlue,
+                          // ),
                           InkWell(
                             onTap: () => Get.to(() => const ReviewScreen()),
                             child: const Icon(
@@ -110,27 +113,27 @@ class _AboutViewState extends State<AboutView> {
                             'Area of practice',
                             style: kBody2Black,
                           ),
-                          Text(
-                            '198 Reviews',
-                            style: kBody3Grey,
-                          ),
+                          // Text(
+                          //   '198 Reviews',
+                          //   style: kBody3Grey,
+                          // ),
                         ],
                       ),
                       SizedBox(
-                        height: Get.height * 0.015,
+                        height: 2.h,
                       ),
                       Row(
                         children: [
-                          Container(
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6),
-                                border: Border.all(color: kMediumBlue)),
-                            child: Text(
-                              widget.category,
-                              style: kBody3DarkBlue,
-                            ),
-                          ),
+                          // Container(
+                          //   padding: const EdgeInsets.all(6),
+                          //   decoration: BoxDecoration(
+                          //       borderRadius: BorderRadius.circular(6),
+                          //       border: Border.all(color: kMediumBlue)),
+                          //   child: Text(
+                          //     widget.category,
+                          //     style: kBody3DarkBlue,
+                          //   ),
+                          // ),
                           Container(
                             margin: const EdgeInsets.only(left: 4),
                             padding: const EdgeInsets.all(6),
@@ -168,7 +171,7 @@ class _AboutViewState extends State<AboutView> {
                         height: Get.height * 0.01,
                       ),
                       Text(
-                        'This passionate lawyer dedicated their life to fighting for justice and advocating for their clients rights.',
+                        widget.bio ?? '',
                         style: kBody3DarkBlue,
                       ),
                       SizedBox(
@@ -319,7 +322,6 @@ class _AboutViewState extends State<AboutView> {
                               style: kBody1MediumBlue,
                             )),
                       ),
-                      
                     ],
                   ),
                 ),

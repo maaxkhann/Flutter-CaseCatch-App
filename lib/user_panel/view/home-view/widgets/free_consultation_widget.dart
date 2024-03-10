@@ -9,7 +9,9 @@ import '../../lawyers-view/about-view/about_view.dart';
 import '../../lawyers-view/widgets/lawyers_button.dart';
 
 class FreeConsultaionScreen extends StatefulWidget {
-  const FreeConsultaionScreen({super.key, });
+  const FreeConsultaionScreen({
+    super.key,
+  });
 
   @override
   State<FreeConsultaionScreen> createState() => _FreeConsultaionScreenState();
@@ -214,22 +216,21 @@ class _FreeConsultaionScreenState extends State<FreeConsultaionScreen> {
                                                 height: Get.height * 0.01,
                                               ),
                                               LawyersButton(
-                                                
                                                   buttonText: 'Book Now',
                                                   onTap: () => Get.to(() =>
                                                       AboutView(
-                                                          fcmToken: fcmToken,
-                                                          uid: e['lawyerId'],
-                                                          image: e['image'],
-                                                          name: e['name'],
-                                                          category:
-                                                              e['category'],
-                                                          experience:
-                                                              e['experience'],
-                                                          address: e['address'],
-                                                          practice: e['practice'],
-                                                          contact:
-                                                              e['contact'])))
+                                                        fcmToken: fcmToken,
+                                                        uid: e['lawyerId'],
+                                                        image: e['image'],
+                                                        name: e['name'],
+                                                        category: e['category'],
+                                                        experience:
+                                                            e['experience'],
+                                                        address: e['address'],
+                                                        practice: e['practice'],
+                                                        contact: e['contact'],
+                                                        bio: e['bio'],
+                                                      )))
                                             ],
                                           )
                                         ],
@@ -238,7 +239,6 @@ class _FreeConsultaionScreenState extends State<FreeConsultaionScreen> {
                                   ],
                                 ),
                               );
-                            
                             } else {
                               return const SizedBox();
                             }

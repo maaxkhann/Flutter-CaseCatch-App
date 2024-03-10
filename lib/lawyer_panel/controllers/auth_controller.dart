@@ -36,8 +36,10 @@ class LawyerAuthController extends GetxController {
     required String category,
     required String address,
     required String experience,
+    required String bio,
     required String date,
-    required String price, required String practice,
+    required String price,
+    required String practice,
   }) async {
     ProgressDialog progressDialog = ProgressDialog(context,
         title: const Text('Signing Up'), message: const Text('Please wait'));
@@ -55,8 +57,11 @@ class LawyerAuthController extends GetxController {
           category: category,
           address: address,
           experience: experience,
+          bio: bio,
           image: uploadImage,
-          date: date, price:price, practice: practice );
+          date: date,
+          price: price,
+          practice: practice);
 
       if (userCredential.user != null) {
         await _firestore

@@ -9,6 +9,7 @@ class AccountModel {
   final String category;
   final String address;
   final String experience;
+  final String bio;
   final String image;
   final String date;
   final String price;
@@ -23,6 +24,7 @@ class AccountModel {
     required this.category,
     required this.address,
     required this.experience,
+    required this.bio,
     required this.image,
     required this.date,
     required this.price,
@@ -38,6 +40,7 @@ class AccountModel {
         'category': category,
         'address': address,
         'experience': experience,
+        'bio': bio,
         'image': image,
         'date': date,
         'price': price,
@@ -56,6 +59,7 @@ class AccountModel {
       category: data["category"],
       address: data["address"],
       experience: data["experience"],
+      bio: data["bio"],
       image: data["image"],
       date: data["date"],
       price: data["price"],

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:catch_case/lawyer_panel/controllers/auth_controller.dart';
 import 'package:catch_case/lawyer_panel/controllers/profile_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -31,9 +32,9 @@ class _DataScreenState extends State<DataScreen> {
   String imageaddress = "";
   String imagetoUpload = "";
   String imageUploaded = "";
- 
- final practices = <String>[
-   'Family matters',
+
+  final practices = <String>[
+    'Family matters',
     'Corporate buisness',
     'Immigration case',
     'Tax case'
@@ -56,12 +57,13 @@ class _DataScreenState extends State<DataScreen> {
   TextEditingController specialController = TextEditingController();
   TextEditingController experienceController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  TextEditingController barController = TextEditingController();
+  TextEditingController bioController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   LawyerAuthController authController = Get.put(LawyerAuthController());
-  LawyerProfileController profileController = Get.put(LawyerProfileController());
+  LawyerProfileController profileController =
+      Get.put(LawyerProfileController());
   @override
   Widget build(BuildContext context) {
     const Color defaultButtonColor = Colors.amber;
@@ -126,8 +128,8 @@ class _DataScreenState extends State<DataScreen> {
                                       const Color.fromARGB(255, 231, 231, 231),
                                   image: authController.image == null
                                       ? const DecorationImage(
-                                          image:
-                                              AssetImage('assets/images/lawyer/lawyer.png'))
+                                          image: AssetImage(
+                                              'assets/images/lawyer/lawyer.png'))
                                       : DecorationImage(
                                           image: FileImage(
                                             File(authController.image!.path)
@@ -300,7 +302,7 @@ class _DataScreenState extends State<DataScreen> {
                           .toList(),
                     ),
                     10.heightBox,
-                     const Text(
+                    const Text(
                       'Practice Area',
                       style: TextStyle(
                         color: Color(0xFF3D3D3D),
@@ -375,7 +377,6 @@ class _DataScreenState extends State<DataScreen> {
                         controller: priceController,
                         text: 'Enter your Price '),
                     10.heightBox,
-                 
                     const Text(
                       'Experience',
                       style: TextStyle(
@@ -394,6 +395,27 @@ class _DataScreenState extends State<DataScreen> {
                         ),
                         controller: experienceController,
                         text: 'Enter your experience'),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    const Text(
+                      'About',
+                      style: TextStyle(
+                        color: Color(0xFF3D3D3D),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    PrimaryTextField(
+                        prefixIcon: const Icon(
+                          Icons.person,
+                          color: Colors.black,
+                        ),
+                        controller: bioController,
+                        text: 'Enter your bio'),
                     36.heightBox,
                     Center(
                       child: InkWell(
@@ -406,21 +428,22 @@ class _DataScreenState extends State<DataScreen> {
                             String date = dateController.text.trim();
                             String address = addressController.text.trim();
                             String password = passwordController.text.trim();
+                            String bio = bioController.text.trim();
                             String experience =
                                 experienceController.text.trim();
 
                             if (name.isEmpty ||
                                 email.isEmpty ||
+                                authController.image == null ||
                                 address.isEmpty ||
                                 contact.isEmpty ||
                                 _categories.isEmpty ||
-                                practices.isEmpty ||
+                                _practice == null ||
                                 experience.isEmpty ||
+                                bio.isEmpty ||
                                 password.isEmpty) {
-                              Get.snackbar(
-                                "Error",
-                                "Please enter all details",
-                              );
+                              Fluttertoast.showToast(
+                                  msg: 'Please enter all details');
                             } else {
                               profileController
                                   .uploadProfile(email, email, imagetoUpload)
@@ -435,7 +458,10 @@ class _DataScreenState extends State<DataScreen> {
                                   practice: _practice.toString(),
                                   address: address,
                                   experience: experience,
-                                  date: date, context: context, price: price);
+                                  bio: bio,
+                                  date: date,
+                                  context: context,
+                                  price: price);
                             }
                           } catch (e) {
                             Get.snackbar('Error', e.toString());

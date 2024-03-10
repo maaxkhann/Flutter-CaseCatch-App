@@ -1,6 +1,10 @@
+import 'package:catch_case/user_panel/constants/colors.dart';
+import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -27,32 +31,13 @@ class _CasesState extends State<Cases> {
                 child: Row(
                   children: [
                     IconButton(
-                      onPressed: () {
-                        // Navigator.pop(context);
-                      },
-                      icon: Container(
-                        height: 30,
-                        width: 30,
-                        decoration: const BoxDecoration(
-                          color: Colors.black,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.arrow_back_ios_new,
-                          color: Colors.white,
-                        ),
-                      ),
+                        onPressed: () => Get.back(),
+                        icon: const Icon(Icons.arrow_back_ios)),
+                    SizedBox(
+                      width: Get.width * 0.15,
                     ),
-                    SizedBox(width: Get.width * .3),
-                    const Text(
-                      'Cases',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Color(0xFF1A1A1A),
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                    Text('Cases',
+                        textAlign: TextAlign.center, style: kHead2Black),
                   ],
                 ),
               ),
@@ -68,7 +53,7 @@ class _CasesState extends State<Cases> {
                           height: Get.height * .108,
                           width: Get.width * .446,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(12.r),
                             color: Colors.blue[900],
                           ),
                           child: Column(
@@ -88,13 +73,7 @@ class _CasesState extends State<Cases> {
                                   5.widthBox,
                                 ],
                               ),
-                              const Text(
-                                'Ongoing',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                ),
-                              ),
+                              Text('Ongoing', style: kHead2White),
                             ],
                           ),
                         ),
@@ -122,14 +101,8 @@ class _CasesState extends State<Cases> {
                                   5.widthBox,
                                 ],
                               ),
-                              const Center(
-                                child: Text(
-                                  'Cancelled',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                  ),
-                                ),
+                              Center(
+                                child: Text('Cancelled', style: kHead2White),
                               ),
                             ],
                           ),
@@ -159,19 +132,13 @@ class _CasesState extends State<Cases> {
                                   buildCasesStream('pending'),
                                   const Icon(
                                     Icons.lock_clock,
-                                    color: Colors.white,
+                                    color: kWhite,
                                   ),
                                   5.widthBox,
                                 ],
                               ),
-                              const Center(
-                                child: Text(
-                                  'Pending',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                  ),
-                                ),
+                              Center(
+                                child: Text('Pending', style: kHead2White),
                               ),
                             ],
                           ),
@@ -195,19 +162,13 @@ class _CasesState extends State<Cases> {
                                   buildCasesStream('completed'),
                                   const Icon(
                                     Icons.done_all,
-                                    color: Colors.white,
+                                    color: kWhite,
                                   ),
                                   5.widthBox,
                                 ],
                               ),
-                              const Center(
-                                child: Text(
-                                  'Completed',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                  ),
-                                ),
+                              Center(
+                                child: Text('Completed', style: kHead2White),
                               ),
                             ],
                           ),
@@ -215,29 +176,9 @@ class _CasesState extends State<Cases> {
                       ],
                     ),
                     16.heightBox,
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'All cases',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        // Text(
-                        //   "View all",
-                        //   style: TextStyle(
-                        //     color: Colors.amber,
-                        //     fontSize: 13,
-                        //   ),
-                        // ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text('All cases', style: kHead2Black)),
                     StreamBuilder(
                         stream: FirebaseFirestore.instance
                             .collection('appointments')
@@ -249,22 +190,17 @@ class _CasesState extends State<Cases> {
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return const Padding(
-                              padding: EdgeInsets.only(top: 99),
-                              child: CircularProgressIndicator(),
+                            return Padding(
+                              padding: EdgeInsets.only(top: 50.h),
+                              child: const CircularProgressIndicator(),
                             );
                           } else if (!snapshot.hasData ||
                               snapshot.data!.docs.isEmpty) {
                             return Padding(
                               padding: const EdgeInsets.only(top: 166),
-                              child: Text(
-                                'You have not any client yet',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.amber.shade700),
-                              ),
+                              child: Text('You have not any client yet',
+                                  textAlign: TextAlign.center,
+                                  style: kBody1Black),
                             );
                           } else {
                             return ListView.builder(
@@ -289,96 +225,53 @@ class _CasesState extends State<Cases> {
                                               ));
                                         },
                                         child: Container(
-                                          width: Get.size.width,
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 12, horizontal: 12),
-                                          margin: const EdgeInsets.symmetric(
-                                              vertical: 6),
-                                          height: Get.height * .12,
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 12.h, horizontal: 12.w),
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: 6.h),
                                           decoration: ShapeDecoration(
                                             shape: RoundedRectangleBorder(
                                               side: const BorderSide(
                                                   color: Colors.black38),
                                               borderRadius:
-                                                  BorderRadius.circular(8),
+                                                  BorderRadius.circular(8.r),
                                             ),
                                           ),
                                           child: Row(
                                             children: [
-                                              // Image.asset(
-                                              //   'assets/images/case.png',
-                                              // ),
-                                              // const SizedBox(
-                                              //   width: 12,
-                                              // ),
                                               Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
                                                     children: [
-                                                      const Text(
-                                                        'Cnic no.  ',
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            color:
-                                                                Colors.black54),
-                                                      ),
-                                                      Text(
-                                                        ':  ${data['cnic']}',
-                                                        style: const TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 13,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
-                                                      ),
+                                                      Text('Cnic no ',
+                                                          style: kBody3Grey),
+                                                      Text(':  ${data['cnic']}',
+                                                          style: kBody3Black),
                                                     ],
                                                   ),
-                                                  const SizedBox(
-                                                    height: 6,
+                                                  SizedBox(
+                                                    height: 6.h,
                                                   ),
                                                   Row(
                                                     children: [
-                                                      const Text(
-                                                        'Case Type ',
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            color:
-                                                                Colors.black54),
-                                                      ),
+                                                      Text('Case Type ',
+                                                          style: kBody3Grey),
                                                       Text(
-                                                        ': ${data['caseType']}',
-                                                        style: const TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 13,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
-                                                      ),
+                                                          ': ${data['caseType']}',
+                                                          style: kBody3Black),
                                                     ],
                                                   ),
-                                                  const SizedBox(
-                                                    height: 6,
+                                                  SizedBox(
+                                                    height: 6.h,
                                                   ),
                                                   Row(
                                                     children: [
-                                                      const Text(
-                                                        'Client name ',
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            color:
-                                                                Colors.black54),
-                                                      ),
-                                                      Text(
-                                                        ': ${data['name']}',
-                                                        style: const TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 13,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
-                                                      ),
+                                                      Text('Client name ',
+                                                          style: kBody3Grey),
+                                                      Text(': ${data['name']}',
+                                                          style: kBody3Black),
                                                     ],
                                                   ),
                                                 ],
@@ -412,14 +305,8 @@ class _CasesState extends State<Cases> {
       builder: (context, snapshot) {
         return Column(
           children: [
-            Text(
-              snapshot.data?.docs.length.toString() ?? '',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            Text(snapshot.data?.docs.length.toString() ?? '',
+                style: kHead1White),
           ],
         );
       },

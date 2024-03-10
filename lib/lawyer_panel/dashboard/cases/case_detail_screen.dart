@@ -1,5 +1,7 @@
 import 'package:catch_case/lawyer_panel/controllers/profile_controller.dart';
+import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -26,301 +28,175 @@ class CaseDetailScreen extends StatefulWidget {
 }
 
 class _CaseDetailScreenState extends State<CaseDetailScreen> {
-  LawyerProfileController profileController = Get.put(LawyerProfileController());
+  LawyerProfileController profileController =
+      Get.put(LawyerProfileController());
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 38,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 6),
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
+    return SafeArea(
+      child: Scaffold(
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                      onPressed: () => Get.back(),
+                      icon: const Icon(Icons.arrow_back_ios)),
+                  SizedBox(
+                    width: Get.width * 0.13,
+                  ),
+                  Text('Case details',
+                      textAlign: TextAlign.center, style: kHead2Black),
+                ],
+              ),
+              10.heightBox,
+              Text('Petitoner & advocate', style: kBody1Black2),
+              SizedBox(
+                height: 8.h,
+              ),
+              Container(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
+                  margin: EdgeInsets.symmetric(vertical: 6.h),
+                  decoration: ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                      side: const BorderSide(color: Colors.black38),
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text('Petitioner name :  ', style: kBody2MediumBlue),
+                          Text(
+                            widget.name,
+                            style: kBody2Black,
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 6.h,
+                      ),
+                      Row(
+                        children: [
+                          Text('Cnic number :  ', style: kBody2MediumBlue),
+                          Text(widget.cnic, style: kBody2Black),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 6.h,
+                      ),
+                      Row(
+                        children: [
+                          Text('Date :  ', style: kBody2MediumBlue),
+                          Text(widget.date, style: kBody2Black),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 6.h,
+                      ),
+                      Row(
+                        children: [
+                          Text('Time :  ', style: kBody2MediumBlue),
+                          Text(widget.time, style: kBody2Black),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 6.h,
+                      ),
+                      Row(
+                        children: [
+                          Text('Case Type :  ', style: kBody2MediumBlue),
+                          Text(widget.caseType, style: kBody2Black),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 6,
+                      ),
+                      Row(
+                        children: [
+                          Text('Status :  ', style: kBody2MediumBlue),
+                          Text(widget.status.toString(), style: kBody2Black),
+                        ],
+                      ),
+                    ],
+                  )),
+              SizedBox(
+                height: Get.height * 0.1,
+              ),
+              Center(
+                child: GestureDetector(
+                  onTap: () {
+                    profileController.updateCaseStatus(
+                        status: 'completed', caseId: widget.caseId.toString());
                   },
-                  icon: Container(
-                    height: 30,
-                    width: 30,
-                    decoration: const BoxDecoration(
-                      color: Colors.black,
-                      shape: BoxShape.circle,
+                  child: Container(
+                    padding: EdgeInsets.all(14.r),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Icon(
-                      Icons.arrow_back_ios_new,
-                      color: Colors.white,
+                    child: Center(
+                      child: Text('Completed',
+                          textAlign: TextAlign.center, style: kBody1White),
                     ),
                   ),
                 ),
-                SizedBox(width: Get.width * .2),
-                const Text(
-                  'Case details',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Color(0xFF1A1A1A),
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
+              ),
+              SizedBox(
+                height: 22.h,
+              ),
+              Center(
+                child: GestureDetector(
+                  onTap: () {
+                    profileController.updateCaseStatus(
+                        status: 'pending', caseId: widget.caseId.toString());
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(14.r),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.amber,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Center(
+                      child: Text('Pending',
+                          textAlign: TextAlign.center, style: kBody1White),
+                    ),
                   ),
                 ),
-              ],
-            ),
+              ),
+              SizedBox(
+                height: 22.h,
+              ),
+              Center(
+                child: GestureDetector(
+                  onTap: () {
+                    profileController.updateCaseStatus(
+                        status: 'cancelled', caseId: widget.caseId.toString());
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(14.r),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Center(
+                      child: Text('Cancelled',
+                          textAlign: TextAlign.center, style: kBody1White),
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
-          16.heightBox,
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            child: Column(
-              children: [
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Petitoner & advocate',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                Container(
-                    width: Get.size.width,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 14),
-                    margin: const EdgeInsets.symmetric(vertical: 6),
-                    decoration: ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                        side: const BorderSide(color: Colors.black38),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            const Text(
-                              'Petitioner name :  ',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            Text(
-                              widget.name,
-                              style: const TextStyle(
-                                  fontSize: 13, color: Colors.black54),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 6,
-                        ),
-                        Row(
-                          children: [
-                            const Text(
-                              'Cnic number :  ',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            Text(
-                              widget.cnic,
-                              style: const TextStyle(
-                                  fontSize: 13, color: Colors.black54),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 6,
-                        ),
-                        Row(
-                          children: [
-                            const Text(
-                              'Date :  ',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            Text(
-                              widget.date,
-                              style: const TextStyle(
-                                  fontSize: 13, color: Colors.black54),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 6,
-                        ),
-                        Row(
-                          children: [
-                            const Text(
-                              'Time :  ',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            Text(
-                              widget.time,
-                              style: const TextStyle(
-                                  fontSize: 13, color: Colors.black54),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 6,
-                        ),
-                        Row(
-                          children: [
-                            const Text(
-                              'Case Type :  ',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            Text(
-                              widget.caseType,
-                              style: const TextStyle(
-                                  fontSize: 13, color: Colors.black54),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 6,
-                        ),
-                        Row(
-                          children: [
-                            const Text(
-                              'Status :  ',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            Text(
-                              widget.status.toString(),
-                              style: const TextStyle(
-                                  fontSize: 13, color: Colors.black54),
-                            ),
-                          ],
-                        ),
-                      ],
-                    )),
-                const SizedBox(
-                  height: 78,
-                ),
-                Center(
-                  child: GestureDetector(
-                    onTap: () {
-                      profileController.updateCaseStatus(
-                          status: 'completed',
-                          caseId: widget.caseId.toString());
-                    },
-                    child: Container(
-                      height: 50,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Completed',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 26,
-                ),
-                Center(
-                  child: GestureDetector(
-                    onTap: () {
-                      profileController.updateCaseStatus(
-                          status: 'pending', caseId: widget.caseId.toString());
-                    },
-                    child: Container(
-                      height: 50,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.amber,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Pending',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 26,
-                ),
-                Center(
-                  child: GestureDetector(
-                    onTap: () {
-                      profileController.updateCaseStatus(
-                          status: 'cancelled', caseId: widget.caseId.toString());
-                    },
-                    child: Container(
-                      height: 50,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Cancelled',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-              ],
-            ),
-          )
-        ],
+        ),
       ),
     );
   }

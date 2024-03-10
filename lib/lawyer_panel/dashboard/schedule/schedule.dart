@@ -1,8 +1,11 @@
 // ignore_for_file: sized_box_for_whitespace, avoid_unnecessary_containers
 
+import 'package:catch_case/user_panel/constants/colors.dart';
+import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -32,12 +35,12 @@ class _ScheduleScreenState extends State<ScheduleScreen>
       context: context,
       initialDate: selectedDate,
       firstDate: DateTime(2022),
-      lastDate: DateTime(2025),
+      lastDate: DateTime(2060),
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        loadAppointments(); // Load appointments for the selected date
+        loadAppointments();
       });
     }
   }
@@ -68,7 +71,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
       child: Scaffold(
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 11.2),
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -76,67 +79,46 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Schedule',
-                          style: TextStyle(
-                            color: Color(0xFF3D3D3D),
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Text(
-                          DateFormat.MMMd().format(DateTime.now()),
-                          style: const TextStyle(
-                            color: Color(0xFF474747),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
+                    const Text(
+                      'Schedule',
+                      style: TextStyle(
+                        color: Color(0xFF3D3D3D),
+                        fontSize: 22,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     GestureDetector(
                       onTap: () {
                         Get.to(() => const AddScheduleScreen());
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6),
-                        height: 38,
+                        padding: EdgeInsets.all(10.r),
                         decoration: BoxDecoration(
                           color: Colors.amber,
                           borderRadius: BorderRadius.circular(5),
                         ),
-                        child: const Center(
-                          child: Text(
-                            'Fix your schedule',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                        child: Center(
+                          child: Text('Fix your schedule',
+                              textAlign: TextAlign.center, style: kBody2White),
                         ),
                       ),
                     )
                   ],
                 ),
-                const SizedBox(
-                  height: 26,
-                ),
-                DatePicker(
-                  onDateChanged: (dateTime) {
-                    selectedDate = dateTime;
+                // const SizedBox(
+                //   height: 26,
+                // ),
+                // DatePicker(
+                //   onDateChanged: (dateTime) {
+                //     selectedDate = dateTime;
 
-                    setState(() {});
-                  },
-                  initialDate: selectedDate,
-                ),
+                //     setState(() {});
+                //   },
+                //   initialDate: selectedDate,
+                // ),
 
-                const SizedBox(
-                  height: 28,
+                SizedBox(
+                  height: 18.h,
                 ),
 // )           ,     const Text(
 //                   '03 Appointments',
@@ -150,39 +132,39 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                 Container(
                   child: TabBar(
                     controller: tabController,
-                    labelPadding: const EdgeInsets.only(right: 12, left: 0),
+                    labelPadding: EdgeInsets.only(right: 12.w, left: 0),
                     labelColor: Colors.black,
                     unselectedLabelColor: Colors.grey,
                     indicatorColor: Colors.amber,
                     tabs: const [
-                      Text(
-                        'All',
-                        style: TextStyle(
-                          fontSize: 12,
-                        ),
-                      ),
+                      // Text(
+                      //   'All',
+                      //   style: TextStyle(
+                      //     fontSize: 12,
+                      //   ),
+                      // ),
                       Text(
                         'Ongoing',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 13,
                         ),
                       ),
                       Text(
                         'Pending',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 13,
                         ),
                       ),
                       Text(
                         'Completed',
                         style: TextStyle(
-                          fontSize: 11,
+                          fontSize: 13,
                         ),
                       ),
                       Text(
                         'Cancelled',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 13,
                         ),
                       ),
                     ],
@@ -190,13 +172,13 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                 ),
                 Container(
                   width: double.maxFinite,
-                  height: Get.height * .65,
+                  height: Get.height * .75,
                   child: TabBarView(
                     controller: tabController,
                     children: [
-                      SingleChildScrollView(
-                          physics: const BouncingScrollPhysics(),
-                          child: _buildAppointmentsStream(lawyer!.uid)),
+                      // SingleChildScrollView(
+                      //     physics: const BouncingScrollPhysics(),
+                      //     child: _buildAppointmentsStream(lawyer!.uid)),
                       SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
                         child: CasesTab(
@@ -248,136 +230,136 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     );
   }
 
-  Widget _buildAppointmentsStream(String lawyerId) {
-    String formattedDate = DateFormat('dd-MM-yyyy').format(selectedDate);
+  // Widget _buildAppointmentsStream(String lawyerId) {
+  //   String formattedDate = DateFormat('dd-MM-yyyy').format(selectedDate);
 
-    return StreamBuilder(
-      stream: FirebaseFirestore.instance
-          .collection('lawyers')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection('appointments')
-          .where('lawyerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-          .where('date', isEqualTo: formattedDate)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Padding(
-            padding: EdgeInsets.only(top: 188),
-            child: CircularProgressIndicator(),
-          );
-        } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return Padding(
-            padding: const EdgeInsets.only(top: 188),
-            child: Text(
-              'You have not any client yet',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.amber.shade700),
-            ),
-          );
-        } else {
-          return Column(
-            children: [
-              const SizedBox(
-                height: 12,
-              ),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: snapshot.data?.docs.length ?? 0,
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: (context, index) {
-                  final appointment = snapshot.data!.docs[index];
+  //   return StreamBuilder(
+  //     stream: FirebaseFirestore.instance
+  //         .collection('lawyers')
+  //         .doc(FirebaseAuth.instance.currentUser!.uid)
+  //         .collection('appointments')
+  //         .where('lawyerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+  //         .where('date', isEqualTo: formattedDate)
+  //         .snapshots(),
+  //     builder: (context, snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return const Padding(
+  //           padding: EdgeInsets.only(top: 188),
+  //           child: CircularProgressIndicator(),
+  //         );
+  //       } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+  //         return Padding(
+  //           padding: const EdgeInsets.only(top: 188),
+  //           child: Text(
+  //             'You have not any client yet',
+  //             textAlign: TextAlign.center,
+  //             style: TextStyle(
+  //                 fontSize: 16,
+  //                 fontWeight: FontWeight.w400,
+  //                 color: Colors.amber.shade700),
+  //           ),
+  //         );
+  //       } else {
+  //         return Column(
+  //           children: [
+  //             const SizedBox(
+  //               height: 12,
+  //             ),
+  //             ListView.builder(
+  //               shrinkWrap: true,
+  //               itemCount: snapshot.data?.docs.length ?? 0,
+  //               physics: const BouncingScrollPhysics(),
+  //               itemBuilder: (context, index) {
+  //                 final appointment = snapshot.data!.docs[index];
 
-                  return Column(
-                    children: [
-                      const SizedBox(
-                        height: 6,
-                      ),
-                      Card(
-                        elevation: 12,
-                        shadowColor: Colors.black,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 14),
-                          width: Get.size.width,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 28,
-                                    backgroundImage: NetworkImage(
-                                      appointment['image'],
-                                    ),
-                                  ),
-                                  10.widthBox,
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        appointment['name'],
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        '${appointment['caseType']}',
-                                        style: const TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.black54),
-                                      ),
-                                    ],
-                                  ),
-                                  3.widthBox,
-                                ],
-                              ),
-                              10.heightBox,
-                              Center(
-                                child: Container(
-                                  height: Get.height * .05,
-                                  width: Get.width * .7,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(
-                                      color: Colors.black26,
-                                    ),
-                                  ),
-                                  child: const Center(
-                                    child: Text(
-                                      'Date Boxes',
-                                      style: TextStyle(
-                                        color: Color(0xFF848484),
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ],
-          );
-        }
-      },
-    );
-  }
+  //                 return Column(
+  //                   children: [
+  //                     const SizedBox(
+  //                       height: 6,
+  //                     ),
+  //                     Card(
+  //                       elevation: 12,
+  //                       shadowColor: Colors.black,
+  //                       child: Container(
+  //                         padding: const EdgeInsets.symmetric(
+  //                             horizontal: 14, vertical: 14),
+  //                         width: Get.size.width,
+  //                         decoration: BoxDecoration(
+  //                           borderRadius: BorderRadius.circular(10),
+  //                           color: Colors.white,
+  //                         ),
+  //                         child: Column(
+  //                           crossAxisAlignment: CrossAxisAlignment.start,
+  //                           children: [
+  //                             Row(
+  //                               children: [
+  //                                 CircleAvatar(
+  //                                   radius: 28,
+  //                                   backgroundImage: NetworkImage(
+  //                                     appointment['image'],
+  //                                   ),
+  //                                 ),
+  //                                 10.widthBox,
+  //                                 Column(
+  //                                   crossAxisAlignment:
+  //                                       CrossAxisAlignment.start,
+  //                                   children: [
+  //                                     Text(
+  //                                       appointment['name'],
+  //                                       style: const TextStyle(
+  //                                         color: Colors.black,
+  //                                         fontSize: 14,
+  //                                         fontWeight: FontWeight.w500,
+  //                                       ),
+  //                                     ),
+  //                                     Text(
+  //                                       '${appointment['caseType']}',
+  //                                       style: const TextStyle(
+  //                                           fontSize: 12,
+  //                                           color: Colors.black54),
+  //                                     ),
+  //                                   ],
+  //                                 ),
+  //                                 3.widthBox,
+  //                               ],
+  //                             ),
+  //                             10.heightBox,
+  //                             Center(
+  //                               child: Container(
+  //                                 height: Get.height * .05,
+  //                                 width: Get.width * .7,
+  //                                 decoration: BoxDecoration(
+  //                                   color: Colors.white,
+  //                                   borderRadius: BorderRadius.circular(8),
+  //                                   border: Border.all(
+  //                                     color: Colors.black26,
+  //                                   ),
+  //                                 ),
+  //                                 child: const Center(
+  //                                   child: Text(
+  //                                     'Date Boxes',
+  //                                     style: TextStyle(
+  //                                       color: Color(0xFF848484),
+  //                                       fontSize: 16,
+  //                                     ),
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           ],
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 );
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       }
+  //     },
+  //   );
+  // }
 }
 
 class CasesTab extends StatelessWidget {
@@ -390,7 +372,7 @@ class CasesTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
-         .collection('appointments')
+          .collection('appointments')
           .where('status', isEqualTo: status)
           .where('lawyerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .snapshots(),
@@ -403,20 +385,14 @@ class CasesTab extends StatelessWidget {
         } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return Padding(
             padding: const EdgeInsets.only(top: 188),
-            child: Text(
-              'You have not any $status cases yet',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.amber.shade700),
-            ),
+            child: Text('You have not any $status cases yet',
+                textAlign: TextAlign.center, style: kBody1Black),
           );
         } else {
           return Column(
             children: [
-              const SizedBox(
-                height: 12,
+              SizedBox(
+                height: 10.h,
               ),
               ListView.builder(
                 shrinkWrap: true,
@@ -427,19 +403,16 @@ class CasesTab extends StatelessWidget {
 
                   return Column(
                     children: [
-                      const SizedBox(
-                        height: 6,
-                      ),
+                      SizedBox(height: 4.h),
                       Card(
-                        elevation: 12,
-                        shadowColor: Colors.black,
+                        elevation: 2,
+                        shadowColor: kBlack,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 14),
-                          width: Get.size.width,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 12.w, vertical: 12.h),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
+                            color: kWhite,
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -447,7 +420,7 @@ class CasesTab extends StatelessWidget {
                               Row(
                                 children: [
                                   CircleAvatar(
-                                    radius: 28,
+                                    radius: 25.r,
                                     backgroundImage: NetworkImage(
                                       appointment['image'],
                                     ),
@@ -457,19 +430,11 @@ class CasesTab extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        appointment['name'],
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
+                                      Text(appointment['name'],
+                                          style: kBody2Black),
                                       Text(
                                         '${appointment['caseType']}',
-                                        style: const TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.black54),
+                                        style: kBody2MediumBlue,
                                       ),
                                     ],
                                   ),
@@ -479,11 +444,10 @@ class CasesTab extends StatelessWidget {
                               10.heightBox,
                               Center(
                                 child: Container(
-                                  height: Get.height * .05,
-                                  width: Get.width * .7,
+                                  padding: EdgeInsets.all(10.r),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
+                                    borderRadius: BorderRadius.circular(8.r),
                                     border: Border.all(
                                       color: Colors.black26,
                                     ),
