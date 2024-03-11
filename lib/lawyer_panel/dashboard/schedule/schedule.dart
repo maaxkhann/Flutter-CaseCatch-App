@@ -29,6 +29,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
 
   DateTime selectedDate = DateTime.now();
 
+
   @override
   Widget build(BuildContext context) {
     User? lawyer = _auth.currentUser;

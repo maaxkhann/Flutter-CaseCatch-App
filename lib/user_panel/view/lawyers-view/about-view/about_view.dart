@@ -306,7 +306,7 @@ class _AboutViewState extends State<AboutView> {
                         padding:
                             EdgeInsets.symmetric(horizontal: Get.width * 0.04),
                         child: ConstantButton(
-                            buttonText: 'Book now for free',
+                            buttonText: 'Book now',
                             onTap: () => Get.to(() => LawyerBookingScreen(
                                   lawyerId: widget.uid.toString(),
                                   name: widget.name,
