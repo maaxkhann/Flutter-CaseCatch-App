@@ -130,7 +130,7 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
     } catch (e) {
       EasyLoading.dismiss();
 
-      Get.snackbar('Error', e.toString());
+      Fluttertoast.showToast(msg: 'Something went wrong');
     }
   }
 
@@ -334,10 +334,7 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
                   //
 
                   if (caseType.isEmpty || date.isEmpty || time.isEmpty) {
-                    Get.snackbar(
-                      "Error",
-                      "Please enter all details",
-                    );
+                    Fluttertoast.showToast(msg: 'Please enter all details');
                   } else {
                     bookAppointment(
                         caseType: caseType,
@@ -379,7 +376,7 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
     );
   }
 
-  void showQuestionsDialog() {
+  void showQuestionsDialog() async {
     if (currentStep < (questionSets?.length ?? 0)) {
       List<List<TextEditingController>> allControllers = List.generate(
           questionSets!.length,
@@ -421,7 +418,7 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
                 ),
                 actions: [
                   TextButton(
-                    onPressed: () {
+                    onPressed: () async {
                       setState(() {
                         if (currentStep < (questionSets?.length ?? 0) - 1) {
                           currentStep++;
@@ -430,7 +427,10 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
                           allControllers[currentStep]
                               .forEach((controller) => controller.clear());
                           Navigator.of(context).pop();
-                          Get.to(() => const ConfirmBookingView());
+
+                          // Store questions and answers in Firestore
+                          storeQuestionsAndAnswers(
+                              enteredValues, questionSets![currentStep]);
                         }
                       });
                     },
@@ -448,6 +448,35 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
       currentStep = 0;
       controllers?.forEach((controller) => controller.clear());
       Get.to(() => const ConfirmBookingView());
+    }
+  }
+
+  void storeQuestionsAndAnswers(
+      List<List<String>> enteredValues, List<String> questions) async {
+    try {
+      EasyLoading.show(status: 'Storing Data');
+      User? user = _auth.currentUser;
+      String uid = user!.uid;
+      var uuid = const Uuid();
+      var myId = uuid.v6();
+
+      // Store questions and answers in Firestore
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('questions')
+          .doc(myId)
+          .set({
+        'questions': questions, // Store questions
+        'answers': enteredValues[currentStep], // Store answers
+        // You can add more data if needed
+      });
+
+      Fluttertoast.showToast(msg: 'Data stored successfully');
+      EasyLoading.dismiss();
+    } catch (e) {
+      EasyLoading.dismiss();
+      Fluttertoast.showToast(msg: 'Failed to store data');
     }
   }
 }

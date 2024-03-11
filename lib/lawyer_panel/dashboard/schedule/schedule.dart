@@ -34,8 +34,8 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
-      firstDate: DateTime(2022),
-      lastDate: DateTime(2060),
+      firstDate: DateTime(2023),
+      lastDate: DateTime(2080),
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
@@ -105,17 +105,17 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                     )
                   ],
                 ),
-                // const SizedBox(
-                //   height: 26,
-                // ),
-                // DatePicker(
-                //   onDateChanged: (dateTime) {
-                //     selectedDate = dateTime;
+                const SizedBox(
+                  height: 26,
+                ),
+                DatePicker(
+                  onDateChanged: (dateTime) {
+                    selectedDate = dateTime;
 
-                //     setState(() {});
-                //   },
-                //   initialDate: selectedDate,
-                // ),
+                    setState(() {});
+                  },
+                  initialDate: selectedDate,
+                ),
 
                 SizedBox(
                   height: 18.h,
