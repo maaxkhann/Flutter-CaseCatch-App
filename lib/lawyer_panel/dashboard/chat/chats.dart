@@ -98,6 +98,8 @@ class _ChatsState extends State<Chats> {
                 StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection('chats')
+                      .orderBy('timeStamp', descending: true)
+
                         .snapshots(),
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {

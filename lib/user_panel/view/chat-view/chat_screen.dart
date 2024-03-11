@@ -278,13 +278,26 @@ class _ChatState extends State<Chat> {
                 BubbleSpecialOne(
                     text: message,
                     color: Colors.grey.shade300,
-                    textStyle: kBody3Black),
+                    textStyle: const TextStyle(
+                        fontSize: 13,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400)),
               ],
             ),
             Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 70, top: 5),
+                  padding: const EdgeInsets.only(left: 62, top: 5),
+                  child: Text(
+                    DateFormat.MMMd().format(doc.get('timeStamp').toDate()),
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 5),
                   child: Text(
                     DateFormat.Hm().format(doc.get('timeStamp').toDate()),
                     style: const TextStyle(color: Colors.black),
@@ -305,10 +318,25 @@ class _ChatState extends State<Chat> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         BubbleSpecialOne(
-            text: message, color: Colors.blue, textStyle: kBody3LightBlue),
+            text: message,
+            color: Colors.amber,
+            textStyle: const TextStyle(
+                fontSize: 13,
+                color: Color(0xFFF6FAFC),
+                fontWeight: FontWeight.w400)),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: Text(
+                DateFormat.MMMd().format(doc.get('timeStamp').toDate()),
+                style: const TextStyle(color: Colors.black),
+              ),
+            ),
+            const SizedBox(
+              width: 8,
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 5, right: 20),
               child: Text(
@@ -319,6 +347,140 @@ class _ChatState extends State<Chat> {
           ],
         ),
       ],
+    );
+  }
+
+  imageSent(DocumentSnapshot doc) {
+    String message = '';
+
+    try {
+      message = doc.get('message');
+    } catch (e) {
+      message = '';
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(right: 20, top: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                width: screenwidth * 0.42,
+                height: screenheight * 0.18,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
+                    borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(18),
+                        topLeft: Radius.circular(18),
+                        bottomLeft: Radius.circular(18)),
+                    image: DecorationImage(
+                        image: NetworkImage(message), fit: BoxFit.fill)),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Text(
+                  DateFormat.MMMd().format(doc.get('timeStamp').toDate()),
+                  style: const TextStyle(color: Colors.black),
+                ),
+              ),
+              const SizedBox(
+                width: 8,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Text(
+                  DateFormat.Hm().format(doc.get('timeStamp').toDate()),
+                  style: const TextStyle(color: Colors.black),
+                ),
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  imageReceived(DocumentSnapshot doc) {
+    String message = '';
+    try {
+      message = doc.get('message');
+    } catch (e) {
+      message = '';
+    }
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 12),
+                child: widget.image!.isEmpty
+                    ? const CircleAvatar(
+                        backgroundColor: Colors.blue,
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.white,
+                        ),
+                      )
+                    : CircleAvatar(
+                        backgroundImage: NetworkImage(widget.image!),
+                      ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(left: 20),
+                width: screenwidth * 0.42,
+                height: screenheight * 0.18,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
+                    borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(18),
+                        topLeft: Radius.circular(18),
+                        bottomRight: Radius.circular(18)),
+                    image: DecorationImage(
+                        image: NetworkImage(message), fit: BoxFit.fill)),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 62, top: 5),
+                child: Text(
+                  DateFormat.MMMd().format(doc.get('timeStamp').toDate()),
+                  style: const TextStyle(color: Colors.black),
+                ),
+              ),
+              const SizedBox(
+                width: 8,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Text(
+                  DateFormat.Hm().format(doc.get('timeStamp').toDate()),
+                  style: const TextStyle(color: Colors.black),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 
@@ -350,9 +512,9 @@ class _ChatState extends State<Chat> {
                 child: Text(
                   "You replied to ${widget.name}",
                   style: const TextStyle(
-                    color: Colors.green,
+                    color: Colors.black87,
                     fontWeight: FontWeight.w500,
-                    fontSize: 16,
+                    fontSize: 15,
                   ),
                 ),
               )
@@ -364,29 +526,13 @@ class _ChatState extends State<Chat> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Container(
-                margin: const EdgeInsets.only(left: 17),
-                width: screenwidth * 0.43,
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      bottomRight: Radius.circular(18),
-                      bottomLeft: Radius.circular(18),
-                      topRight: Radius.circular(18),
-                      topLeft: Radius.circular(18),
-                    ),
-                    color: Colors.grey.shade300),
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Text(
-                    reply,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
+              BubbleSpecialOne(
+                  text: reply,
+                  color: Colors.green,
+                  textStyle: const TextStyle(
+                      fontSize: 13,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400)),
               Padding(
                 padding: const EdgeInsets.only(
                   left: 10,
@@ -407,13 +553,26 @@ class _ChatState extends State<Chat> {
             children: [
               BubbleSpecialOne(
                   text: message,
-                  color: Colors.blue,
-                  textStyle: kBody3LightBlue),
+                  color: Colors.amber,
+                  textStyle: const TextStyle(
+                      fontSize: 13,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400)),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Text(
+                  DateFormat.MMMd().format(doc.get('timeStamp').toDate()),
+                  style: const TextStyle(color: Colors.black),
+                ),
+              ),
+              const SizedBox(
+                width: 8,
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 2),
                 child: Text(
@@ -454,7 +613,7 @@ class _ChatState extends State<Chat> {
                 child: Text(
                   "Replied to you ",
                   style: TextStyle(
-                    color: Colors.amber,
+                    color: Colors.black87,
                     fontWeight: FontWeight.w500,
                     fontSize: 16,
                   ),
@@ -475,29 +634,13 @@ class _ChatState extends State<Chat> {
                   color: const Color(0xff918F8F),
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.only(left: 0),
-                width: screenwidth * 0.4,
-                // height: screenheight * 0.06,
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      bottomRight: Radius.circular(18),
-                      bottomLeft: Radius.circular(18),
-                      topRight: Radius.circular(18),
-                      topLeft: Radius.circular(18),
-                    ),
-                    color: Colors.blue.shade400),
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Text(
-                    reply,
-                    style: const TextStyle(
+              BubbleSpecialOne(
+                  text: reply,
+                  color: Colors.red,
+                  textStyle: const TextStyle(
+                      fontSize: 13,
                       color: Colors.white,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-              ),
+                      fontWeight: FontWeight.w400)),
             ],
           ),
           SizedBox(
@@ -522,13 +665,26 @@ class _ChatState extends State<Chat> {
               BubbleSpecialOne(
                   text: message,
                   color: Colors.grey.shade300,
-                  textStyle: kBody3Black),
+                  textStyle: const TextStyle(
+                      fontSize: 13,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400)),
             ],
           ),
           Row(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 73, top: 2),
+                padding: const EdgeInsets.only(left: 62, top: 5),
+                child: Text(
+                  DateFormat.MMMd().format(doc.get('timeStamp').toDate()),
+                  style: const TextStyle(color: Colors.black),
+                ),
+              ),
+              const SizedBox(
+                width: 8,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
                 child: Text(
                   DateFormat.Hm().format(doc.get('timeStamp').toDate()),
                   style: const TextStyle(color: Colors.black),

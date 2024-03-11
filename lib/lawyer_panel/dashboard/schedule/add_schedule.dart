@@ -112,9 +112,12 @@ class _AddScheduleScreenState extends State<AddScheduleScreen>
                                     children: [
                                       for (var hour in lawyerSchedule[day]!)
                                         Expanded(
-                                            child: Text(
-                                          '$hour  ',
-                                          maxLines: 8,
+                                            child: Container(
+                                          height: 66,
+                                          child: Text(
+                                            '$hour  ',
+                                            maxLines: 8,
+                                          ),
                                         )),
                                     ],
                                   ),
