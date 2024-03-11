@@ -25,7 +25,7 @@ class _FreeConsultaionScreenState extends State<FreeConsultaionScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: const ConstantAppBar(text: 'Free Consultation'),
+        appBar: const ConstantAppBar(text: 'All lawyers'),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14),
           child: SingleChildScrollView(
@@ -69,13 +69,11 @@ class _FreeConsultaionScreenState extends State<FreeConsultaionScreen> {
                         searchText = value;
                       });
                     }),
-                22.heightBox,
                 const SizedBox(height: 10),
                 StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection('lawyers')
                         .orderBy('name')
-                        .where('price', isEqualTo: '')
                         .startAt([searchText.toUpperCase()]).endAt(
                             ['$searchText\uf8ff']).snapshots(),
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -104,6 +102,7 @@ class _FreeConsultaionScreenState extends State<FreeConsultaionScreen> {
                         return ListView.builder(
                           shrinkWrap: true,
                           physics: const BouncingScrollPhysics(),
+                          padding: EdgeInsets.zero,
                           itemCount: snapshot.data?.docs.length ?? 0,
                           itemBuilder: (context, index) {
                             final e = snapshot.data!.docs[index];

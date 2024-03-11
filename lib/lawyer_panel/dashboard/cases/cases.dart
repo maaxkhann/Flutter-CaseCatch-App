@@ -191,7 +191,7 @@ class _CasesState extends State<Cases> {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return Padding(
-                              padding: EdgeInsets.only(top: 50.h),
+                              padding: EdgeInsets.only(top: 200.h),
                               child: const CircularProgressIndicator(),
                             );
                           } else if (!snapshot.hasData ||
@@ -211,7 +211,10 @@ class _CasesState extends State<Cases> {
                                   final data = snapshot.data!.docs[index];
 
                                   return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
+                                      Text(data['date'],
+                                          style: const TextStyle(fontSize: 17,fontWeight: FontWeight.w500)),
                                       GestureDetector(
                                         onTap: () {
                                           Get.to(() => CaseDetailScreen(

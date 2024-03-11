@@ -440,6 +440,7 @@ class _DataScreenState extends State<DataScreen> {
                                 _categories.isEmpty ||
                                 _practice == null ||
                                 experience.isEmpty ||
+                                price.isEmpty ||
                                 bio.isEmpty ||
                                 password.isEmpty) {
                               Fluttertoast.showToast(
