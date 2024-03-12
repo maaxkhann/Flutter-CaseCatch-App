@@ -1,11 +1,11 @@
 import 'package:catch_case/user_panel/constant-widgets/constant_button.dart';
 import 'package:catch_case/user_panel/constant-widgets/constant_textfield.dart';
-import 'package:catch_case/user_panel/constants/colors.dart';
 import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:catch_case/user_panel/view/auth-view/forgot_password_view.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+
 import '../controllers/auth_controller.dart';
 import 'data_screen.dart';
 
@@ -25,6 +25,13 @@ class _SigninScreenState extends State<SigninScreen> {
   bool loading = false;
 
   @override
+  void dispose() {
+    super.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -32,7 +39,7 @@ class _SigninScreenState extends State<SigninScreen> {
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: Get.width * 0.04,
-              vertical: Get.height * 0.02,
+              vertical: Get.height * 0.03,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +61,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   style: kHead2Black,
                 ),
                 SizedBox(
-                  height: Get.height * 0.015,
+                  height: Get.height * 0.018,
                 ),
                 Text(
                   'Email',
@@ -66,7 +73,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   prefixIcon: Icons.email,
                 ),
                 SizedBox(
-                  height: Get.height * 0.02,
+                  height: Get.height * 0.024,
                 ),
                 Text(
                   'Password',
@@ -127,57 +134,57 @@ class _SigninScreenState extends State<SigninScreen> {
                         authController.loginUser(context, email, password);
                       }
                     }),
-                SizedBox(
-                  height: Get.height * 0.01,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        endIndent: Get.width * 0.02,
-                        thickness: 0.5,
-                        color: kBlack,
-                      ),
-                    ),
-                    Text(
-                      'OR',
-                      style: kBody4Dark,
-                    ),
-                    Expanded(
-                      child: Divider(
-                        indent: Get.width * 0.02,
-                        thickness: 0.5,
-                        color: kBlack,
-                      ),
-                    ),
-                  ],
-                ),
-                // SizedBox(
-                //   height: Get.height * 0.02,
-                // ),
-                // Center(
-                //   child: Text(
-                //     'Sign In using',
-                //     style: kBody4DarkBlue,
-                //   ),
-                // ),
                 // SizedBox(
                 //   height: Get.height * 0.01,
                 // ),
                 // Row(
                 //   mainAxisAlignment: MainAxisAlignment.center,
                 //   children: [
-                //     Image.asset('assets/images/intro-auth/google.png'),
-                //     SizedBox(
-                //       width: Get.width * 0.02,
+                //     Expanded(
+                //       child: Divider(
+                //         endIndent: Get.width * 0.02,
+                //         thickness: 0.5,
+                //         color: kBlack,
+                //       ),
                 //     ),
-                //     Image.asset('assets/images/intro-auth/facebook.png')
+                //     Text(
+                //       'OR',
+                //       style: kBody4Dark,
+                //     ),
+                //     Expanded(
+                //       child: Divider(
+                //         indent: Get.width * 0.02,
+                //         thickness: 0.5,
+                //         color: kBlack,
+                //       ),
+                //     ),
                 //   ],
                 // ),
-                SizedBox(
-                  height: Get.height * 0.01,
-                ),
+                // // SizedBox(
+                // //   height: Get.height * 0.02,
+                // // ),
+                // // Center(
+                // //   child: Text(
+                // //     'Sign In using',
+                // //     style: kBody4DarkBlue,
+                // //   ),
+                // // ),
+                // // SizedBox(
+                // //   height: Get.height * 0.01,
+                // // ),
+                // // Row(
+                // //   mainAxisAlignment: MainAxisAlignment.center,
+                // //   children: [
+                // //     Image.asset('assets/images/intro-auth/google.png'),
+                // //     SizedBox(
+                // //       width: Get.width * 0.02,
+                // //     ),
+                // //     Image.asset('assets/images/intro-auth/facebook.png')
+                // //   ],
+                // // ),
+                // SizedBox(
+                //   height: Get.height * 0.01,
+                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

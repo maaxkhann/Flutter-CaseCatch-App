@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:catch_case/lawyer_panel/controllers/auth_controller.dart';
 import 'package:catch_case/lawyer_panel/controllers/profile_controller.dart';
 import 'package:catch_case/user_panel/constant-widgets/constant_button.dart';
@@ -9,9 +10,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
-import 'package:velocity_x/velocity_x.dart';
-
-import '../widgets/primary_textfield.dart';
 import 'signin_screen.dart';
 
 class DataScreen extends StatefulWidget {
@@ -22,15 +20,6 @@ class DataScreen extends StatefulWidget {
 }
 
 class _DataScreenState extends State<DataScreen> {
-  bool loading = false;
-  bool _obscurePassword = true;
-
-  void _togglePasswordVisibility() {
-    setState(() {
-      _obscurePassword = !_obscurePassword;
-    });
-  }
-
   String imageaddress = "";
   String imagetoUpload = "";
   String imageUploaded = "";
@@ -104,7 +93,7 @@ class _DataScreenState extends State<DataScreen> {
                       ])),
                 ),
                 SizedBox(
-                  height: Get.height * 0.02,
+                  height: Get.height * 0.015,
                 ),
                 Text(
                   'Sign Up As Lawyer',
@@ -148,7 +137,7 @@ class _DataScreenState extends State<DataScreen> {
                   prefixIcon: Icons.person,
                 ),
                 SizedBox(
-                  height: Get.height * 0.02,
+                  height: 10.h,
                 ),
                 Text(
                   'Email',
@@ -160,7 +149,7 @@ class _DataScreenState extends State<DataScreen> {
                   prefixIcon: Icons.email,
                 ),
                 SizedBox(
-                  height: Get.height * 0.02,
+                  height: 10.h,
                 ),
                 Text(
                   'Password',
@@ -183,7 +172,7 @@ class _DataScreenState extends State<DataScreen> {
                       );
                     }),
                 SizedBox(
-                  height: Get.height * 0.02,
+                  height: 10.h,
                 ),
                 Text(
                   'Contact',
@@ -195,7 +184,7 @@ class _DataScreenState extends State<DataScreen> {
                   prefixIcon: Icons.call,
                 ),
                 SizedBox(
-                  height: Get.height * 0.02,
+                  height: 10.h,
                 ),
                 Text(
                   'Address',
@@ -207,7 +196,7 @@ class _DataScreenState extends State<DataScreen> {
                   prefixIcon: Icons.location_city,
                 ),
                 SizedBox(
-                  height: Get.height * 0.02,
+                  height: 10.h,
                 ),
                 Text(
                   'Specialization',
@@ -255,7 +244,7 @@ class _DataScreenState extends State<DataScreen> {
                       .toList(),
                 ),
                 SizedBox(
-                  height: Get.height * 0.02,
+                  height: 10.h,
                 ),
                 Text(
                   'Practice Area',
@@ -303,7 +292,7 @@ class _DataScreenState extends State<DataScreen> {
                       .toList(),
                 ),
                 SizedBox(
-                  height: Get.height * 0.02,
+                  height: 10.h,
                 ),
                 Text(
                   'Price',
@@ -324,7 +313,7 @@ class _DataScreenState extends State<DataScreen> {
                   prefixIcon: Icons.email,
                 ),
                 SizedBox(
-                  height: Get.height * 0.02,
+                  height: 10.h,
                 ),
                 Text(
                   'About',
@@ -351,10 +340,14 @@ class _DataScreenState extends State<DataScreen> {
                         String password = passwordController.text.trim();
                         String bio = bioController.text.trim();
                         String experience = experienceController.text.trim();
+                        if (authController.image == null) {
+                          Fluttertoast.showToast(
+                              msg: 'Please upload profile picture');
+                          return;
+                        }
 
                         if (name.isEmpty ||
                             email.isEmpty ||
-                            authController.image == null ||
                             address.isEmpty ||
                             contact.isEmpty ||
                             _category == null ||
@@ -409,42 +402,5 @@ class _DataScreenState extends State<DataScreen> {
         ),
       ),
     );
-  }
-
-  void showModal() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: Container(
-            width: double.infinity,
-            height: 300,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/tick.png',
-                  height: 100,
-                  width: 100,
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  'You have successfully created your lawyer account on Kanoon App. Now complete your KYC to start attending cases.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-
-    // Future.delayed(const Duration(seconds: 4), () {
-    //   Navigator.push(
-    //       context, MaterialPageRoute(builder: (_) => const DegreeData()));
-    // });
   }
 }

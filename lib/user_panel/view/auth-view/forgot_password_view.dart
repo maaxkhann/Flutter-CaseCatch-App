@@ -1,9 +1,12 @@
+import 'package:catch_case/lawyer_panel/controllers/auth_controller.dart';
 import 'package:catch_case/user_panel/constant-widgets/constant_button.dart';
 import 'package:catch_case/user_panel/constant-widgets/constant_textfield.dart';
 import 'package:catch_case/user_panel/constants/textstyles.dart';
-import 'package:catch_case/user_panel/view/auth-view/verify_otp_view.dart';
+import 'package:catch_case/user_panel/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});
@@ -14,6 +17,7 @@ class ForgotPasswordView extends StatefulWidget {
 
 class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   final emailController = TextEditingController();
+  LawyerAuthController authController = Get.put(LawyerAuthController());
   @override
   void dispose() {
     super.dispose();
@@ -50,8 +54,8 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 style: kBody1DarkBlue,
               )),
               Text(
-                'Type your email and we shall send you a verification code to your account to reset password.',
-                style: kBody4Blue2,
+                'Type your email and we shall send you an email to your account to reset password.',
+                style: kBody2DarkBlue,
                 textAlign: TextAlign.center,
               ),
               SizedBox(
@@ -70,9 +74,15 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 height: Get.height * 0.04,
               ),
               ConstantButton(
-                  buttonText: 'Get OTP',
+                  buttonText: 'Submit',
                   onTap: () {
-                    Get.to(() => const VerifyOtpView());
+                    if (emailController.text.isEmpty) {
+                      Fluttertoast.showToast(msg: 'Please enter email');
+                    } else {
+                      authController
+                          .resetmypassword(emailController.text.trim());
+                    }
+                    //   Get.to(() => const VerifyOtpView());
                   })
             ],
           ),

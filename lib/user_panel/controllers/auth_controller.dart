@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,7 +30,7 @@ class AuthController extends GetxController {
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 100);
     if (pickedFile != null) {
       _image = XFile(pickedFile.path);
-      uploadProfilePicture();
+      //  uploadProfilePicture();
       isLoading.value = false;
     }
   }
@@ -41,7 +42,7 @@ class AuthController extends GetxController {
         await picker.pickImage(source: ImageSource.camera, imageQuality: 100);
     if (pickedFile != null) {
       _image = XFile(pickedFile.path);
-      uploadProfilePicture();
+      //   uploadProfilePicture();
 
       isLoading.value = false;
     }
@@ -52,8 +53,8 @@ class AuthController extends GetxController {
       context: context,
       builder: (context) {
         return AlertDialog(
-          content: Container(
-            height: 120,
+          content: SizedBox(
+            height: 120.h,
             child: Column(
               children: [
                 ListTile(
@@ -93,7 +94,6 @@ class AuthController extends GetxController {
     required String name,
     required String password,
     required BuildContext context,
-
   }) async {
     ProgressDialog progressDialog = ProgressDialog(context,
         title: const Text('Signing Up'), message: const Text('Please wait'));
@@ -117,8 +117,7 @@ class AuthController extends GetxController {
             .set(userModel.toJson());
         progressDialog.dismiss();
         Fluttertoast.showToast(msg: 'Sign Up Successfully');
-              Get.off(() => const BottomNavigationBarWidget());
-
+        Get.off(() => const LoginView());
       }
     } on FirebaseAuthException catch (e) {
       progressDialog.dismiss();
@@ -140,7 +139,8 @@ class AuthController extends GetxController {
       Fluttertoast.showToast(msg: 'Something went wrong');
     }
   }
-Future<void> loginUser(
+
+  Future<void> loginUser(
       BuildContext context, String email, String password) async {
     ProgressDialog progressDialog = ProgressDialog(context,
         title: const Text('Signing In'), message: const Text('Please wait'));
@@ -151,7 +151,7 @@ Future<void> loginUser(
       if (userCredential.user != null) {
         progressDialog.dismiss();
         Fluttertoast.showToast(msg: 'Login Successfully');
-    
+
         Get.off(() => const BottomNavigationBarWidget());
       }
     } on FirebaseAuthException catch (e) {
@@ -174,15 +174,14 @@ Future<void> loginUser(
       Fluttertoast.showToast(msg: 'Something went wrong');
     }
   }
- 
 
   Future<void> resetmypassword(String email) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       Get.snackbar('Success', 'Check your email for Password Reset Link');
-      Get.to(() => const LoginView());
+      Get.back();
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      Get.snackbar('Error', 'Something went wrong');
     }
   }
 

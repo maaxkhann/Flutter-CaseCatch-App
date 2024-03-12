@@ -7,7 +7,9 @@ import 'package:catch_case/user_panel/controllers/auth_controller.dart';
 import 'package:catch_case/user_panel/view/auth-view/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -201,13 +203,27 @@ class _SignUpViewState extends State<SignUpView> {
                   onTap: () {
                     String name = nameController.text.trim();
                     String email = emailController.text.trim();
-
                     String password = passwordController.text.trim();
-                    authController.createUser(
-                        email: email,
-                        name: name,
-                        password: password,
-                        context: context);
+                    String confirmPassword =
+                        confirmPasswordController.text.trim();
+                    if ((authController.image == null)) {
+                      Fluttertoast.showToast(
+                          msg: 'Please select profile picture');
+                      return;
+                    }
+                    if (name.isEmpty ||
+                        email.isEmpty ||
+                        password.isEmpty ||
+                        confirmPassword.isEmpty) {
+                      Fluttertoast.showToast(msg: 'Please fill all fields');
+                      return;
+                    } else {
+                      authController.createUser(
+                          email: email,
+                          name: name,
+                          password: password,
+                          context: context);
+                    }
                   }),
               // SizedBox(
               //   height: Get.height * 0.01,

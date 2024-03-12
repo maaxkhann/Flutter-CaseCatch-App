@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -70,7 +71,7 @@ class LawyerAuthController extends GetxController {
             .set(accountModel.toJson());
         progressDialog.dismiss();
         Fluttertoast.showToast(msg: 'Sign Up Successfully');
-        Get.off(() => const Dashboard());
+        Get.off(() => const SigninScreen());
       }
     } on FirebaseAuthException catch (e) {
       progressDialog.dismiss();
@@ -181,7 +182,7 @@ class LawyerAuthController extends GetxController {
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 100);
     if (pickedFile != null) {
       _image = XFile(pickedFile.path);
-      uploadProfilePicture();
+      //   uploadProfilePicture();
       isLoading.value = false;
     }
   }
@@ -193,7 +194,7 @@ class LawyerAuthController extends GetxController {
         await picker.pickImage(source: ImageSource.camera, imageQuality: 100);
     if (pickedFile != null) {
       _image = XFile(pickedFile.path);
-      uploadProfilePicture();
+      //  uploadProfilePicture();
 
       isLoading.value = false;
     }
@@ -204,8 +205,8 @@ class LawyerAuthController extends GetxController {
       context: context,
       builder: (context) {
         return AlertDialog(
-          content: Container(
-            height: 120,
+          content: SizedBox(
+            height: 120.h,
             child: Column(
               children: [
                 ListTile(

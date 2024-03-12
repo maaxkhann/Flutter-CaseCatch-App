@@ -1,6 +1,5 @@
 import 'package:catch_case/user_panel/constant-widgets/constant_button.dart';
 import 'package:catch_case/user_panel/constant-widgets/constant_textfield.dart';
-import 'package:catch_case/user_panel/constants/colors.dart';
 import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:catch_case/user_panel/controllers/auth_controller.dart';
 import 'package:catch_case/user_panel/view/auth-view/forgot_password_view.dart';
@@ -34,12 +33,12 @@ class _LoginViewState extends State<LoginView> {
     return SafeArea(
       child: Scaffold(
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: Get.width * 0.04),
+          padding: EdgeInsets.symmetric(
+            horizontal: Get.width * 0.04,
+            vertical: Get.height * 0.03,
+          ),
           child: ListView(
             children: [
-              SizedBox(
-                height: Get.height * 0.02,
-              ),
               Center(
                 child: RichText(
                     text: TextSpan(
@@ -57,7 +56,7 @@ class _LoginViewState extends State<LoginView> {
                 style: kHead2Black,
               ),
               SizedBox(
-                height: Get.height * 0.015,
+                height: Get.height * 0.018,
               ),
               Text(
                 'Email',
@@ -69,7 +68,7 @@ class _LoginViewState extends State<LoginView> {
                 prefixIcon: Icons.email,
               ),
               SizedBox(
-                height: Get.height * 0.02,
+                height: Get.height * 0.024,
               ),
               Text(
                 'Password',
@@ -117,7 +116,7 @@ class _LoginViewState extends State<LoginView> {
                 ],
               ),
               SizedBox(
-                height: Get.height * 0.02,
+                height: Get.height * 0.03,
               ),
               ConstantButton(
                   buttonText: 'Login',
@@ -130,32 +129,32 @@ class _LoginViewState extends State<LoginView> {
                       authController.loginUser(context, email, password);
                     }
                   }),
-              SizedBox(
-                height: Get.height * 0.01,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Divider(
-                      endIndent: Get.width * 0.02,
-                      thickness: 0.5,
-                      color: kBlack,
-                    ),
-                  ),
-                  Text(
-                    'OR',
-                    style: kBody4Dark,
-                  ),
-                  Expanded(
-                    child: Divider(
-                      indent: Get.width * 0.02,
-                      thickness: 0.5,
-                      color: kBlack,
-                    ),
-                  ),
-                ],
-              ),
+              // SizedBox(
+              //   height: Get.height * 0.01,
+              // ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     Expanded(
+              //       child: Divider(
+              //         endIndent: Get.width * 0.02,
+              //         thickness: 0.5,
+              //         color: kBlack,
+              //       ),
+              //     ),
+              //     Text(
+              //       'OR',
+              //       style: kBody4Dark,
+              //     ),
+              //     Expanded(
+              //       child: Divider(
+              //         indent: Get.width * 0.02,
+              //         thickness: 0.5,
+              //         color: kBlack,
+              //       ),
+              //     ),
+              //   ],
+              // ),
               // SizedBox(
               //   height: Get.height * 0.02,
               // ),
@@ -178,9 +177,9 @@ class _LoginViewState extends State<LoginView> {
               //     Image.asset('assets/images/intro-auth/facebook.png')
               //   ],
               // ),
-              SizedBox(
-                height: Get.height * 0.01,
-              ),
+              // SizedBox(
+              //   height: Get.height * 0.01,
+              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

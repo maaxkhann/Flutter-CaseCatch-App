@@ -125,7 +125,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 await authController
                                     .resetmypassword(emailController.text);
                               }
-                            
                             },
                             child: Container(
                               height: 50,
