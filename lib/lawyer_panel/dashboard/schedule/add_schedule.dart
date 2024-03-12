@@ -18,8 +18,7 @@ class AddScheduleScreen extends StatefulWidget {
 }
 
 class _AddScheduleScreenState extends State<AddScheduleScreen>
-    with TickerProviderStateMixin {
-  late TabController tabController;
+     {
   LawyerAuthController authController = Get.put(LawyerAuthController());
   Map<String, List<String>> lawyerSchedule = {
     'Monday': [],
@@ -32,14 +31,7 @@ class _AddScheduleScreenState extends State<AddScheduleScreen>
   };
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  @override
-  void initState() {
-    tabController = TabController(length: 2, vsync: this);
-    super.initState();
-    tabController.addListener(() {
-      setState(() {});
-    });
-  }
+
 
   bool addSchedule = false;
 
@@ -66,26 +58,8 @@ class _AddScheduleScreenState extends State<AddScheduleScreen>
                 const SizedBox(
                   height: 22,
                 ),
-                TabBar(
-                    controller: tabController,
-                    indicatorColor: Colors.transparent,
-                    tabs: [
-                      TabBarItem(
-                        title: 'Specific hours',
-                        isSelected: tabController.index == 0,
-                        selectedColor: Colors.amber,
-                      ),
-                      TabBarItem(
-                        title: 'Always Available',
-                        isSelected: tabController.index == 1,
-                        selectedColor: Colors.amber,
-                      ),
-                    ]),
-                Expanded(
-                  child: TabBarView(
-                    controller: tabController,
-                    children: [
-                      SingleChildScrollView(
+              
+               SingleChildScrollView(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -156,65 +130,6 @@ class _AddScheduleScreenState extends State<AddScheduleScreen>
                           ],
                         ),
                       ),
-                      Column(
-                        children: [
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            width: Get.size.width,
-                            height: 58,
-                            decoration: ShapeDecoration(
-                              color: const Color(0xFFF5F5F5),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                            ),
-                            child: const Row(
-                              children: [
-                                Icon(
-                                  Icons.info_outline,
-                                  size: 17,
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  'setting yourself always available will let client \n choose anytime for appointment.',
-                                  style: TextStyle(
-                                    color: Color(0xFF696969),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: Get.height * 0.15,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              authController.setUserAlwaysAvailable();
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(14.r),
-                              decoration: BoxDecoration(
-                                color: Colors.amber,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Center(
-                                child: Text('Set always available',
-                                    textAlign: TextAlign.center,
-                                    style: kBody2White),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
               ],
             )));
   }
@@ -330,45 +245,3 @@ class _AddScheduleScreenState extends State<AddScheduleScreen>
   }
 }
 
-
-class TabBarItem extends StatelessWidget {
-  final String title;
-  final bool isSelected;
-  final Color selectedColor;
-
-  const TabBarItem({
-    super.key,
-    required this.title,
-    required this.isSelected,
-    required this.selectedColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: Get.size.width,
-      height: 42,
-      decoration: ShapeDecoration(
-        color: isSelected ? selectedColor : Colors.white,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(
-              width: 1,
-              color: isSelected ? Colors.white : const Color(0xFFB3B3B3)),
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        child: Text(
-          title,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: isSelected ? Colors.white : const Color(0xFFB3B3B3),
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-    );
-  }
-}
