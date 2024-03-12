@@ -8,7 +8,6 @@ import 'package:intl/intl.dart';
 import '../../../lawyer_panel/controllers/data_controller.dart';
 import '../../../lawyer_panel/dashboard/chat/notification.dart';
 import '../../../user_panel/constants/colors.dart';
-import '../../../user_panel/constants/textstyles.dart';
 
 class Chat extends StatefulWidget {
   const Chat(
