@@ -54,7 +54,7 @@ class AuthController extends GetxController {
       builder: (context) {
         return AlertDialog(
           content: SizedBox(
-            height: 120.h,
+            height: 100.h,
             child: Column(
               children: [
                 ListTile(
