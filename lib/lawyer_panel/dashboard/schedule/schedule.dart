@@ -11,7 +11,6 @@ import 'package:velocity_x/velocity_x.dart';
 
 import '../../widgets/datepicker.dart';
 import '../cases/case_detail_screen.dart';
-import 'add_schedule.dart';
 
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({super.key});
@@ -28,7 +27,6 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   // DateTime selectedDateTime = DateTime.now();
 
   DateTime selectedDate = DateTime.now();
-
 
   @override
   Widget build(BuildContext context) {
@@ -171,12 +169,17 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                           child: _buildAppointmentsStream(lawyer!.uid)),
                       SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
-                        child: CasesTab(
-                          status: 'ongoing',
-                          text: Text(
-                            'Ongoing',
-                            style: TextStyle(color: Colors.purple.shade400),
-                          ),
+                        child: Column(
+                          children: [
+                            
+                            CasesTab(
+                              status: 'ongoing',
+                              text: Text(
+                                'Ongoing',
+                                style: TextStyle(color: Colors.purple.shade400),
+                              ), dateTime: selectedDate,
+                            ),
+                          ],
                         ),
                       ),
                       SingleChildScrollView(
@@ -186,27 +189,27 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                           text: Text(
                             'Pending',
                             style: TextStyle(color: Colors.red.shade400),
-                          ),
+                          ), dateTime: selectedDate,
                         ),
                       ),
-                      const SingleChildScrollView(
-                        physics: BouncingScrollPhysics(),
+                       SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
                         child: CasesTab(
                           status: 'completed',
-                          text: Text(
+                          text: const Text(
                             'Completed',
                             style: TextStyle(color: Colors.green),
-                          ),
+                          ), dateTime: selectedDate,
                         ),
                       ),
-                      const SingleChildScrollView(
-                        physics: BouncingScrollPhysics(),
+                       SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
                         child: CasesTab(
                           status: 'cancelled',
-                          text: Text(
+                          text: const Text(
                             'cancelled',
                             style: TextStyle(color: Colors.blue),
-                          ),
+                          ), dateTime: selectedDate,
                         ),
                       ),
                     ],
@@ -231,37 +234,38 @@ class _ScheduleScreenState extends State<ScheduleScreen>
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return    ListView.builder(
-                   itemCount: 4,
-                   shrinkWrap: true,
-                   itemBuilder: (context, index){
-                     return Shimmer.fromColors(
-                       baseColor: Colors.grey.shade300,
-                       highlightColor: Colors.grey.shade100,
-                       enabled: true,
-                       child: Column(
-                         children: [
-                           ListTile(
-                             leading:  Container(height: 50 , width: 50, color: Colors.white,),
-                             title:  Container(
-                               width: 100,
-                               height: 8.0,
-                               color: Colors.white,
-                             ),
-                             subtitle:  Container(
-                               width: double.infinity,
-                               height: 8.0,
-                               color: Colors.white,
-                             ),
-                           ),
-
-                         ],
-                       ),
-                     );
-                   },
-
-                  );
-
+          return ListView.builder(
+            itemCount: 4,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return Shimmer.fromColors(
+                baseColor: Colors.grey.shade300,
+                highlightColor: Colors.grey.shade100,
+                enabled: true,
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: Container(
+                        height: 50,
+                        width: 50,
+                        color: Colors.white,
+                      ),
+                      title: Container(
+                        width: 100,
+                        height: 8.0,
+                        color: Colors.white,
+                      ),
+                      subtitle: Container(
+                        width: double.infinity,
+                        height: 8.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
         } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return Padding(
             padding: const EdgeInsets.only(top: 188),
@@ -280,6 +284,8 @@ class _ScheduleScreenState extends State<ScheduleScreen>
               const SizedBox(
                 height: 12,
               ),
+              
+             
               ListView.builder(
                 shrinkWrap: true,
                 itemCount: snapshot.data?.docs.length ?? 0,
@@ -393,166 +399,178 @@ class _ScheduleScreenState extends State<ScheduleScreen>
 class CasesTab extends StatelessWidget {
   final String status;
   final Widget text;
+  final DateTime dateTime;
 
-  const CasesTab({super.key, required this.status, required this.text});
+  const CasesTab({super.key, required this.status, required this.text, required this.dateTime});
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: FirebaseFirestore.instance
-          .collection('appointments')
-          .where('status', isEqualTo: status)
-          .where('lawyerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return ListView.builder(
-                   itemCount: 4,
-                   shrinkWrap: true,
-                   itemBuilder: (context, index){
-                     return Shimmer.fromColors(
-                       baseColor: Colors.grey.shade300,
-                       highlightColor: Colors.grey.shade100,
-                       enabled: true,
-                       child: Column(
-                         children: [
-                           ListTile(
-                             leading:  Container(height: 50 , width: 50, color: Colors.white,),
-                             title:  Container(
-                               width: 100,
-                               height: 8.0,
-                               color: Colors.white,
-                             ),
-                             subtitle:  Container(
-                               width: double.infinity,
-                               height: 8.0,
-                               color: Colors.white,
-                             ),
-                           ),
 
-                         ],
-                       ),
-                     );
-                   },
-
-                  );
-
-        } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return Padding(
-            padding: const EdgeInsets.only(top: 188),
-            child: Text(
-              'You have not any $status cases yet',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.amber.shade700),
-            ),
-          );
-        } else {
-          return Column(
-            children: [
-              const SizedBox(
-                height: 12,
-              ),
-              ListView.builder(
+    String formattedDate = DateFormat('dd-MM-yyyy').format(dateTime);
+    return Column(
+      children: [
+        
+        StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('appointments')
+              .where('status', isEqualTo: status)
+              .where('date', isEqualTo: formattedDate)
+              .where('lawyerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return ListView.builder(
+                itemCount: 4,
                 shrinkWrap: true,
-                itemCount: snapshot.data?.docs.length ?? 0,
-                physics: const BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
-                  final appointment = snapshot.data!.docs[index];
-
-                  return Column(
-                    children: [
-                      const SizedBox(
-                        height: 6,
-                      ),
-                      Card(
-                        elevation: 12,
-                        shadowColor: Colors.black,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 14),
-                          width: Get.size.width,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade100,
+                    enabled: true,
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: Container(
+                            height: 50,
+                            width: 50,
                             color: Colors.white,
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 28,
-                                    backgroundImage: NetworkImage(
-                                      appointment['image'],
-                                    ),
-                                  ),
-                                  10.widthBox,
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        appointment['name'],
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        '${appointment['caseType']}',
-                                        style: const TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.black54),
-                                      ),
-                                    ],
-                                  ),
-                                  3.widthBox,
-                                ],
-                              ),
-                              10.heightBox,
-                              Center(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Get.to(() => CaseDetailScreen(
-                                          name: appointment['name'],
-                                          cnic: appointment['cnic'],
-                                          time: appointment['time'],
-                                          date: appointment['date'],
-                                          caseType: appointment['caseType'],
-                                          status: appointment['status'],
-                                          caseId: appointment['caseId'],
-                                        ));
-                                  },
-                                  child: Container(
-                                    height: Get.height * .05,
-                                    width: Get.width * .7,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(
-                                        color: Colors.black26,
-                                      ),
-                                    ),
-                                    child: Center(child: text),
-                                  ),
-                                ),
-                              ),
-                            ],
+                          title: Container(
+                            width: 100,
+                            height: 8.0,
+                            color: Colors.white,
+                          ),
+                          subtitle: Container(
+                            width: double.infinity,
+                            height: 8.0,
+                            color: Colors.white,
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   );
                 },
-              ),
-            ],
-          );
-        }
-      },
+              );
+            } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return Padding(
+                padding: const EdgeInsets.only(top: 188),
+                child: Text(
+                  'You have not any $status cases yet',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.amber.shade700),
+                ),
+              );
+            } else {
+              return Column(
+                children: [
+                  const SizedBox(
+                    height: 12,
+                  ),
+                
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data?.docs.length ?? 0,
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final appointment = snapshot.data!.docs[index];
+        
+                      return Column(
+                        children: [
+                          const SizedBox(
+                            height: 6,
+                          ),
+                          
+                          Card(
+                            elevation: 12,
+                            shadowColor: Colors.black,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 14),
+                              width: Get.size.width,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 28,
+                                        backgroundImage: NetworkImage(
+                                          appointment['image'],
+                                        ),
+                                      ),
+                                      10.widthBox,
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            appointment['name'],
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          Text(
+                                            '${appointment['caseType']}',
+                                            style: const TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.black54),
+                                          ),
+                                        ],
+                                      ),
+                                      3.widthBox,
+                                    ],
+                                  ),
+                                  10.heightBox,
+                                  Center(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Get.to(() => CaseDetailScreen(
+                                              name: appointment['name'],
+                                              cnic: appointment['cnic'],
+                                              time: appointment['time'],
+                                              date: appointment['date'],
+                                              caseType: appointment['caseType'],
+                                              status: appointment['status'],
+                                              caseId: appointment['caseId'],
+                                            ));
+                                      },
+                                      child: Container(
+                                        height: Get.height * .05,
+                                        width: Get.width * .7,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(8),
+                                          border: Border.all(
+                                            color: Colors.black26,
+                                          ),
+                                        ),
+                                        child: Center(child: text),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              );
+            }
+          },
+        ),
+      ],
     );
   }
 }

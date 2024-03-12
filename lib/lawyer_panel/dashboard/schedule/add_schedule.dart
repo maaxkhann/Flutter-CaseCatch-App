@@ -106,22 +106,22 @@ class _AddScheduleScreenState extends State<AddScheduleScreen>
                             for (var day in lawyerSchedule.keys)
                               ListTile(
                                 title: Text(day),
-                                subtitle: Flexible(
-                                  fit: FlexFit.loose,
-                                  child: Row(
-                                    children: [
-                                      for (var hour in lawyerSchedule[day]!)
-                                        Expanded(
-                                            child: Container(
-                                          height: 66,
-                                          child: Text(
-                                            '$hour  ',
-                                            maxLines: 8,
-                                          ),
-                                        )),
-                                    ],
-                                  ),
-                                ),
+                                // subtitle: Flexible(
+                                //   fit: FlexFit.loose,
+                                //   child: Row(
+                                //     children: [
+                                //       for (var hour in lawyerSchedule[day]!)
+                                //         Expanded(
+                                //             child: Container(
+                                //           height: 66,
+                                //           child: Text(
+                                //             '$hour  ',
+                                //             maxLines: 8,
+                                //           ),
+                                //         )),
+                                //     ],
+                                //   ),
+                                // ),
                                 trailing: ElevatedButton(
                                   onPressed: () async {
                                     await _selectHours(day);
@@ -329,6 +329,7 @@ class _AddScheduleScreenState extends State<AddScheduleScreen>
     }
   }
 }
+
 
 class TabBarItem extends StatelessWidget {
   final String title;
