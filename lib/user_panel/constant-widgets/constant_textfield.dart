@@ -27,6 +27,9 @@ class ConstantTextField extends StatelessWidget {
       maxLines: isExpand == true ? null : 1,
       obscureText: obscureText ?? false,
       decoration: InputDecoration(
+          contentPadding: EdgeInsets.symmetric(
+            vertical: Get.height * 0.02,
+          ),
           prefixIcon: Icon(prefixIcon, color: const Color(0xFFCFCFCF)),
           suffixIcon: InkWell(
             onTap: onTapSuffixIcon,

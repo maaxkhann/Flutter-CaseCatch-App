@@ -1,11 +1,13 @@
 import 'dart:io';
-
 import 'package:catch_case/lawyer_panel/controllers/auth_controller.dart';
 import 'package:catch_case/lawyer_panel/controllers/profile_controller.dart';
+import 'package:catch_case/user_panel/constant-widgets/constant_button.dart';
+import 'package:catch_case/user_panel/constant-widgets/constant_textfield.dart';
+import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 import 'package:velocity_x/velocity_x.dart';
 
@@ -62,53 +64,55 @@ class _DataScreenState extends State<DataScreen> {
   TextEditingController dateController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   LawyerAuthController authController = Get.put(LawyerAuthController());
+  ValueNotifier<bool> isPasswordVisible = ValueNotifier(false);
   LawyerProfileController profileController =
       Get.put(LawyerProfileController());
+
+  @override
+  void dispose() {
+    super.dispose();
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    contactController.dispose();
+    specialController.dispose();
+    experienceController.dispose();
+    bioController.dispose();
+    priceController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    const Color defaultButtonColor = Colors.amber;
-    const Color loadingButtonColor = Colors.grey;
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(
+              horizontal: Get.width * 0.04,
+              vertical: Get.height * 0.02,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                30.heightBox,
-                const Text(
-                  'Welcome Back',
-                  style: TextStyle(
-                    color: Color(0xFF3D3D3D),
-                    fontSize: 32,
-                    fontWeight: FontWeight.w500,
-                  ),
+                Center(
+                  child: RichText(
+                      text: TextSpan(
+                          text: 'Catch',
+                          style: kHead1DarkBlue,
+                          children: [
+                        TextSpan(text: 'Case', style: kHead1MediumBlue)
+                      ])),
                 ),
-                const SizedBox(
-                  height: 22,
+                SizedBox(
+                  height: Get.height * 0.02,
                 ),
-                const Text(
-                  'Create Account',
-                  style: TextStyle(
-                    color: Color(0xFF3D3D3D),
-                    fontSize: 24,
-                    fontWeight: FontWeight.w500,
-                  ),
+                Text(
+                  'Sign Up As Lawyer',
+                  style: kHead2Black,
                 ),
-                const SizedBox(
-                  height: 6,
+                SizedBox(
+                  height: Get.height * 0.015,
                 ),
-                const Text(
-                  'Let’s create account toghter',
-                  style: TextStyle(
-                    color: Color(0xFF828A89),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                20.heightBox,
                 Center(
                   child: Obx(
                     () => authController.isLoading.value
@@ -119,428 +123,285 @@ class _DataScreenState extends State<DataScreen> {
                             onTap: () async {
                               authController.pickImage(context);
                             },
-                            child: Container(
-                              height: 100,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(60),
-                                  color:
-                                      const Color.fromARGB(255, 231, 231, 231),
-                                  image: authController.image == null
-                                      ? const DecorationImage(
-                                          image: AssetImage(
-                                              'assets/images/lawyer/lawyer.png'))
-                                      : DecorationImage(
-                                          image: FileImage(
-                                            File(authController.image!.path)
-                                                .absolute,
-                                          ),
-                                          fit: BoxFit.cover)),
-                            ),
-                          ),
+                            child: authController.image == null
+                                ? CircleAvatar(
+                                    radius: 40.r,
+                                    backgroundImage: const AssetImage(
+                                        'assets/images/home/download.png'))
+                                : CircleAvatar(
+                                    radius: 40.r,
+                                    backgroundImage: FileImage(
+                                        File(authController.image!.path)),
+                                  )),
                   ),
                 ),
-                20.heightBox,
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Full Name',
-                      style: TextStyle(
-                        color: Color(0xFF3D3D3D),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    PrimaryTextField(
-                        prefixIcon: const Icon(
-                          Icons.person,
-                          color: Colors.black,
-                        ),
-                        controller: nameController,
-                        text: 'Enter your name'),
-                    10.heightBox,
-                    const Text(
-                      'Email',
-                      style: TextStyle(
-                        color: Color(0xFF3D3D3D),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    PrimaryTextField(
-                        prefixIcon: const Icon(
-                          Icons.email,
-                          color: Colors.black,
-                        ),
-                        controller: emailController,
-                        text: 'Enter your email'),
-                    10.heightBox,
-                    const Text(
-                      'Password',
-                      style: TextStyle(
-                        color: Color(0xFF3D3D3D),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    PrimaryTextField(
-                        obsecure: _obscurePassword,
-                        suffixIcon: IconButton(
-                          icon: Icon(_obscurePassword
-                              ? Icons.visibility
-                              : Icons.visibility_off),
-                          onPressed: _togglePasswordVisibility,
-                        ),
-                        prefixIcon: const Icon(
-                          Icons.password,
-                          color: Colors.black,
-                        ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                Text(
+                  'Name',
+                  style: kBody1Black,
+                ),
+                ConstantTextField(
+                  controller: nameController,
+                  hintText: 'Enter Name',
+                  prefixIcon: Icons.person,
+                ),
+                SizedBox(
+                  height: Get.height * 0.02,
+                ),
+                Text(
+                  'Email',
+                  style: kBody1Black,
+                ),
+                ConstantTextField(
+                  controller: emailController,
+                  hintText: 'Enter Email',
+                  prefixIcon: Icons.email,
+                ),
+                SizedBox(
+                  height: Get.height * 0.02,
+                ),
+                Text(
+                  'Password',
+                  style: kBody1Black,
+                ),
+                ValueListenableBuilder(
+                    valueListenable: isPasswordVisible,
+                    builder: (ctx, value, child) {
+                      return ConstantTextField(
                         controller: passwordController,
-                        text: 'Enter your password'),
-                    10.heightBox,
-                    const Text(
-                      'Contact',
-                      style: TextStyle(
-                        color: Color(0xFF3D3D3D),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    PrimaryTextField(
-                        prefixIcon: const Icon(
-                          Icons.phone,
-                          color: Colors.black,
-                        ),
-                        controller: contactController,
-                        text: 'Enter your contact'),
-                    10.heightBox,
-                    const Text(
-                      'Address',
-                      style: TextStyle(
-                        color: Color(0xFF3D3D3D),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    PrimaryTextField(
-                        prefixIcon: const Icon(
-                          Icons.location_pin,
-                          color: Colors.black,
-                        ),
-                        controller: addressController,
-                        text: 'Enter your address'),
-                    10.heightBox,
-                    const Text(
-                      'Specialization',
-                      style: TextStyle(
-                        color: Color(0xFF3D3D3D),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: MediaQuery.of(context).size.width * 0.030,
-                        ),
-                        filled: true,
-                        fillColor: const Color(0xffEEEEEE),
-                        prefixIcon:
-                            const Icon(Icons.category, color: Colors.black),
-                        hintText: 'Select Specialization',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.black),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.black),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.black),
-                        ),
-                      ),
-                      value: _category,
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Please select a category';
-                        }
-                        return null;
-                      },
-                      onChanged: (value) {
-                        setState(() {
-                          _category = value;
-                        });
-                      },
-                      items: _categories
-                          .map(
-                            (e) => DropdownMenuItem(
-                              value: e,
-                              child: Text(e),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                    10.heightBox,
-                    const Text(
-                      'Practice Area',
-                      style: TextStyle(
-                        color: Color(0xFF3D3D3D),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: MediaQuery.of(context).size.width * 0.030,
-                        ),
-                        filled: true,
-                        fillColor: const Color(0xffEEEEEE),
-                        prefixIcon:
-                            const Icon(Icons.category, color: Colors.black),
-                        hintText: 'Select practice area',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.black),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.black),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.black),
-                        ),
-                      ),
-                      value: _practice,
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Please select a practice area';
-                        }
-                        return null;
-                      },
-                      onChanged: (value) {
-                        setState(() {
-                          _practice = value;
-                        });
-                      },
-                      items: practices
-                          .map(
-                            (e) => DropdownMenuItem(
-                              value: e,
-                              child: Text(e),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                    10.heightBox,
-                    const Text(
-                      'Price optional',
-                      style: TextStyle(
-                        color: Color(0xFF3D3D3D),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    PrimaryTextField(
-                        prefixIcon: const Icon(
-                          Icons.numbers,
-                          color: Colors.black,
-                        ),
-                        controller: priceController,
-                        text: 'Enter your Price '),
-                    10.heightBox,
-                    const Text(
-                      'Experience',
-                      style: TextStyle(
-                        color: Color(0xFF3D3D3D),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    PrimaryTextField(
-                        prefixIcon: const Icon(
-                          Icons.numbers,
-                          color: Colors.black,
-                        ),
-                        controller: experienceController,
-                        text: 'Enter your experience'),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    const Text(
-                      'About',
-                      style: TextStyle(
-                        color: Color(0xFF3D3D3D),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    PrimaryTextField(
-                        prefixIcon: const Icon(
-                          Icons.person,
-                          color: Colors.black,
-                        ),
-                        controller: bioController,
-                        text: 'Enter your bio'),
-                    36.heightBox,
-                    Center(
-                      child: InkWell(
-                        onTap: () async {
-                          try {
-                            String name = nameController.text.trim();
-                            String email = emailController.text.trim();
-                            String contact = contactController.text.trim();
-                            String price = priceController.text.trim();
-                            String date = dateController.text.trim();
-                            String address = addressController.text.trim();
-                            String password = passwordController.text.trim();
-                            String bio = bioController.text.trim();
-                            String experience =
-                                experienceController.text.trim();
-
-                            if (name.isEmpty ||
-                                email.isEmpty ||
-                                authController.image == null ||
-                                address.isEmpty ||
-                                contact.isEmpty ||
-                                _categories.isEmpty ||
-                                _practice == null ||
-                                experience.isEmpty ||
-                                price.isEmpty ||
-                                bio.isEmpty ||
-                                password.isEmpty) {
-                              Fluttertoast.showToast(
-                                  msg: 'Please enter all details');
-                            } else {
-                              profileController
-                                  .uploadProfile(email, email, imagetoUpload)
-                                  .then((value) => imagetoUpload = value);
-
-                              await authController.signUpMethod(
-                                  name: name,
-                                  contact: contact,
-                                  password: password,
-                                  email: email,
-                                  category: _category.toString(),
-                                  practice: _practice.toString(),
-                                  address: address,
-                                  experience: experience,
-                                  bio: bio,
-                                  date: date,
-                                  context: context,
-                                  price: price);
-                            }
-                          } catch (e) {
-                            Get.snackbar('Error', e.toString());
-                          }
+                        hintText: 'Enter Password',
+                        obscureText: !isPasswordVisible.value,
+                        prefixIcon: Icons.lock,
+                        suffixIcon: value == true
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        onTapSuffixIcon: () {
+                          isPasswordVisible.value = !isPasswordVisible.value;
                         },
-                        child: Stack(
-                          children: [
-                            Container(
-                              height: 45,
-                              width: Get.size.width,
-                              decoration: BoxDecoration(
-                                color: loading
-                                    ? loadingButtonColor
-                                    : defaultButtonColor,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Center(
-                                child: Visibility(
-                                  visible: !loading,
-                                  child: const Text(
-                                    'Create Account',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            if (loading)
-                              const Positioned.fill(
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
+                      );
+                    }),
+                SizedBox(
+                  height: Get.height * 0.02,
+                ),
+                Text(
+                  'Contact',
+                  style: kBody1Black,
+                ),
+                ConstantTextField(
+                  controller: contactController,
+                  hintText: 'Enter contact Number',
+                  prefixIcon: Icons.call,
+                ),
+                SizedBox(
+                  height: Get.height * 0.02,
+                ),
+                Text(
+                  'Address',
+                  style: kBody1Black,
+                ),
+                ConstantTextField(
+                  controller: addressController,
+                  hintText: 'Enter Address',
+                  prefixIcon: Icons.location_city,
+                ),
+                SizedBox(
+                  height: Get.height * 0.02,
+                ),
+                Text(
+                  'Specialization',
+                  style: kBody1Black,
+                ),
+                DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.all(8.r),
+                    filled: true,
+                    fillColor: const Color(0xffEEEEEE),
+                    prefixIcon: const Icon(Icons.category, color: Colors.black),
+                    hintText: 'Select Specialization',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(Get.width * 0.02),
+                      borderSide: const BorderSide(color: Color(0xFFA7A7A7)),
                     ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 19,
-                ),
-                InkWell(
-                  onTap: () {
-                    Get.to(() => const SigninScreen());
-                  },
-                  child: const Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Don’t have an account? ',
-                        style: TextStyle(
-                          color: Color(0xFF828A89),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      Text(
-                        'Sign in',
-                        style: TextStyle(
-                          color: Color(0xFFFFC100),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(Get.width * 0.02),
+                      borderSide: const BorderSide(color: Color(0xFFA7A7A7)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(Get.width * 0.02),
+                      borderSide: const BorderSide(color: Color(0xFFA7A7A7)),
+                    ),
                   ),
+                  value: _category,
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select a category';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) {
+                    setState(() {
+                      _category = value;
+                    });
+                  },
+                  items: _categories
+                      .map(
+                        (e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e),
+                        ),
+                      )
+                      .toList(),
                 ),
-                const SizedBox(
-                  height: 20,
+                SizedBox(
+                  height: Get.height * 0.02,
+                ),
+                Text(
+                  'Practice Area',
+                  style: kBody1Black,
+                ),
+                DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.all(8.r),
+                    filled: true,
+                    fillColor: const Color(0xffEEEEEE),
+                    prefixIcon: const Icon(Icons.category, color: Colors.black),
+                    hintText: 'Select Practice Area',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(Get.width * 0.02),
+                      borderSide: const BorderSide(color: Color(0xFFA7A7A7)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(Get.width * 0.02),
+                      borderSide: const BorderSide(color: Color(0xFFA7A7A7)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(Get.width * 0.02),
+                      borderSide: const BorderSide(color: Color(0xFFA7A7A7)),
+                    ),
+                  ),
+                  value: _practice,
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select a practice area';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) {
+                    setState(() {
+                      _practice = value;
+                    });
+                  },
+                  items: practices
+                      .map(
+                        (e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e),
+                        ),
+                      )
+                      .toList(),
+                ),
+                SizedBox(
+                  height: Get.height * 0.02,
+                ),
+                Text(
+                  'Price',
+                  style: kBody1Black,
+                ),
+                ConstantTextField(
+                  controller: priceController,
+                  hintText: 'Enter Price',
+                  prefixIcon: Icons.email,
+                ),
+                SizedBox(
+                  height: Get.height * 0.02,
+                ),
+                Text('Experience', style: kBody1Black),
+                ConstantTextField(
+                  controller: experienceController,
+                  hintText: 'Enter Experience',
+                  prefixIcon: Icons.email,
+                ),
+                SizedBox(
+                  height: Get.height * 0.02,
+                ),
+                Text(
+                  'About',
+                  style: kBody1Black,
+                ),
+                ConstantTextField(
+                  controller: bioController,
+                  hintText: 'Enter Bio',
+                  prefixIcon: Icons.email,
+                ),
+                SizedBox(
+                  height: Get.height * 0.03,
+                ),
+                ConstantButton(
+                    buttonText: 'Create Account',
+                    onTap: () async {
+                      try {
+                        String name = nameController.text.trim();
+                        String email = emailController.text.trim();
+                        String contact = contactController.text.trim();
+                        String price = priceController.text.trim();
+                        String date = dateController.text.trim();
+                        String address = addressController.text.trim();
+                        String password = passwordController.text.trim();
+                        String bio = bioController.text.trim();
+                        String experience = experienceController.text.trim();
+
+                        if (name.isEmpty ||
+                            email.isEmpty ||
+                            authController.image == null ||
+                            address.isEmpty ||
+                            contact.isEmpty ||
+                            _category == null ||
+                            _practice == null ||
+                            experience.isEmpty ||
+                            price.isEmpty ||
+                            bio.isEmpty ||
+                            password.isEmpty) {
+                          Fluttertoast.showToast(
+                              msg: 'Please enter all details');
+                        } else {
+                          profileController
+                              .uploadProfile(email, email, imagetoUpload)
+                              .then((value) => imagetoUpload = value);
+
+                          await authController.signUpMethod(
+                              name: name,
+                              contact: contact,
+                              password: password,
+                              email: email,
+                              category: _category.toString(),
+                              practice: _practice.toString(),
+                              address: address,
+                              experience: experience,
+                              bio: bio,
+                              date: date,
+                              context: context,
+                              price: price);
+                        }
+                      } catch (e) {
+                        Fluttertoast.showToast(msg: 'Something went wrong');
+                      }
+                    }),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Already have an account?',
+                      style: kBody2DarkBlue,
+                    ),
+                    TextButton(
+                        onPressed: () => Get.off(() => const SigninScreen()),
+                        child: Text(
+                          'Login',
+                          style: kBody2MediumBlue,
+                        ))
+                  ],
                 ),
               ],
             ),
