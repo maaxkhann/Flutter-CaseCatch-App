@@ -20,7 +20,7 @@ class AboutView extends StatefulWidget {
   final String experience;
   final String bio;
   final String? fcmToken;
-  final String? uid;
+  final String? lawyerId;
   final String address;
   final String contact;
   final String practice;
@@ -33,7 +33,7 @@ class AboutView extends StatefulWidget {
       required this.experience,
       required this.bio,
       this.fcmToken,
-      this.uid,
+      this.lawyerId,
       required this.address,
       required this.contact,
       required this.practice});
@@ -245,7 +245,7 @@ class _AboutViewState extends State<AboutView> {
                                           .instance.currentUser!.uid,
                                       name: widget.name,
                                       image: widget.image,
-                                      uid: widget.uid,
+                                      lawyerId: widget.lawyerId,
                                     ));
                               },
                               child: Container(
@@ -272,7 +272,7 @@ class _AboutViewState extends State<AboutView> {
                             GestureDetector(
                               onTap: () async {
                                 Get.to(() => ScheduleScreen(
-                                      lawyerId: widget.uid.toString(),
+                                      lawyerId: widget.lawyerId.toString(),
                                     ));
                               },
                               child: Container(
@@ -308,7 +308,7 @@ class _AboutViewState extends State<AboutView> {
                         child: ConstantButton(
                             buttonText: 'Book now',
                             onTap: () => Get.to(() => LawyerBookingScreen(
-                                  lawyerId: widget.uid.toString(),
+                                  lawyerId: widget.lawyerId.toString(),
                                   name: widget.name,
                                   image: widget.image,
                                 ))),

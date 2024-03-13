@@ -3,6 +3,7 @@ import 'package:catch_case/lawyer_panel/dashboard/all_schedule.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -27,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -42,9 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: snapshot.data?.docs.map((e) {
                                     return Column(
                                       children: [
-                                        e["lawyerId"] ==
-                                                FirebaseAuth
-                                                    .instance.currentUser!.uid
+                                        e["lawyerId"] == lawyer!.uid
                                             ? Column(
                                                 children: [
                                                   Row(
@@ -64,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 .start,
                                                         children: [
                                                           const Text(
-                                                            'Hello ,',
+                                                            'Hello',
                                                             style: TextStyle(
                                                               color: Color(
                                                                   0xFF0C253F),
@@ -169,16 +168,14 @@ class _HomeScreenState extends State<HomeScreen> {
     String date = DateFormat('dd-MM-yyyy').format(DateTime.now());
     return StreamBuilder(
       stream: FirebaseFirestore.instance
+          .collection('lawyers')
+          .doc(lawyerId)
           .collection('appointments')
-          .where('lawyerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .where(
             'date',
             isEqualTo: date,
           )
           .snapshots(),
-      //
-      //
-
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Padding(
@@ -207,7 +204,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ListView.builder(
                 shrinkWrap: true,
                 itemCount: snapshot.data?.docs.length ?? 0,
-                physics: const BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
                   final appointment = snapshot.data!.docs[index];
 

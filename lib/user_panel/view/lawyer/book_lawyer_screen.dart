@@ -80,7 +80,6 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
   final TextEditingController timeController = TextEditingController();
   final TextEditingController cnicController = TextEditingController();
   TimeOfDay selectedTime = TimeOfDay.now();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   void bookAppointment({
     required String caseType,
@@ -91,10 +90,9 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
   }) async {
     try {
       EasyLoading.show(status: 'Processing');
-      User? user = _auth.currentUser;
-      String uid = user!.uid;
-      var uuid = const Uuid();
-      var myId = uuid.v6();
+
+      //   var uuid = const Uuid();
+      //    var myId = uuid.v6();
       DocumentSnapshot<Map<String, dynamic>> document = await FirebaseFirestore
           .instance
           .collection('users')
@@ -103,14 +101,20 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
       final data = document.data()!;
       String userName = data['username'];
       String image = data['image'];
-      //
-      //
-      await FirebaseFirestore.instance
+      var lawyerRef = FirebaseFirestore.instance
+          .collection('lawyers')
+          .doc(widget.lawyerId)
           .collection('appointments')
-          .doc(myId)
-          .set({
-        'caseId': myId,
-        'userId': uid,
+          .doc();
+      var userRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('appointments')
+          .doc();
+      await userRef.set({
+        'caseId': userRef.id,
+        'lawyerCaseId': lawyerRef.id,
+        'userId': FirebaseAuth.instance.currentUser!.uid,
         'lawyerId': widget.lawyerId,
         'lawyerImage': widget.image,
         'lawyerName': widget.name,
@@ -123,7 +127,23 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
         'status': 'ongoing',
       });
 
-      showQuestionsDialog(uid);
+      await lawyerRef.set({
+        'caseId': lawyerRef.id,
+        'userCaseId': userRef.id,
+        'userId': FirebaseAuth.instance.currentUser!.uid,
+        'lawyerId': widget.lawyerId,
+        'lawyerImage': widget.image,
+        'lawyerName': widget.name,
+        'name': userName,
+        'image': image,
+        'caseType': caseType,
+        'cnic': cnic,
+        'date': date,
+        'time': time,
+        'status': 'ongoing',
+      });
+
+      //   showQuestionsDialog(uid);
       Fluttertoast.showToast(msg: 'Booking successful');
 
       EasyLoading.dismiss();
@@ -330,8 +350,6 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
                   String time = timeController.text.trim();
                   String caseType = caseTypeController.text.trim();
                   String cnic = cnicController.text.trim();
-                  //
-                  //
 
                   if (caseType.isEmpty || date.isEmpty || time.isEmpty) {
                     Fluttertoast.showToast(msg: 'Please enter all details');

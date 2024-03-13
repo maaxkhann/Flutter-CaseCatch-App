@@ -143,7 +143,8 @@ class _MessageViewState extends State<MessageView> {
                                                     targetUser['fcmToken'],
                                                 name: targetUser['name'],
                                                 image: targetUser['image'],
-                                                uid: targetUser['lawyerId'],
+                                                lawyerId:
+                                                    targetUser['lawyerId'],
                                                 groupId: FirebaseAuth
                                                     .instance.currentUser!.uid,
                                               ));

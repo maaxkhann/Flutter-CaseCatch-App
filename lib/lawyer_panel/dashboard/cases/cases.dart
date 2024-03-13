@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -180,10 +181,9 @@ class _CasesState extends State<Cases> {
                         child: Text('All cases', style: kHead2Black)),
                     StreamBuilder(
                         stream: FirebaseFirestore.instance
+                            .collection('lawyers')
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
                             .collection('appointments')
-                            .where('lawyerId',
-                                isEqualTo:
-                                    FirebaseAuth.instance.currentUser!.uid)
                             .orderBy('date', descending: false)
                             .snapshots(),
                         builder: (context, snapshot) {
@@ -228,6 +228,7 @@ class _CasesState extends State<Cases> {
                                                 status: data['status'],
                                                 userId: data['userId'],
                                                 caseId: data['caseId'],
+                                                userCaseId: data['userCaseId'],
                                               ));
                                         },
                                         child: Container(
@@ -243,47 +244,52 @@ class _CasesState extends State<Cases> {
                                                   BorderRadius.circular(8.r),
                                             ),
                                           ),
-                                          child: Row(
-                                            children: [
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Text('Cnic no ',
-                                                          style: kBody3Grey),
-                                                      Text(':  ${data['cnic']}',
-                                                          style: kBody3Black),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 6.h,
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Text('Case Type ',
-                                                          style: kBody3Grey),
-                                                      Text(
-                                                          ': ${data['caseType']}',
-                                                          style: kBody3Black),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 6.h,
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Text('Client name ',
-                                                          style: kBody3Grey),
-                                                      Text(': ${data['name']}',
-                                                          style: kBody3Black),
-                                                    ],
-                                                  ),
-                                                ],
-                                              )
-                                            ],
-                                          ),
+                                          child: Row(children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text('Cnic no ',
+                                                        style: kBody3Grey),
+                                                    Text(':  ${data['cnic']}',
+                                                        style: kBody3Black),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 6.h,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text('Case Type ',
+                                                        style: kBody3Grey),
+                                                    Text(
+                                                        ': ${data['caseType']}',
+                                                        style: kBody3Black),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 6.h,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text('Client name ',
+                                                        style: kBody3Grey),
+                                                    Text(': ${data['name']}',
+                                                        style: kBody3Black),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            const Spacer(),
+                                            IconButton(
+                                                onPressed: () {
+                                                  deleteAppointment(
+                                                      context, data['caseId']);
+                                                },
+                                                icon: const Icon(Icons.delete))
+                                          ]),
                                         ),
                                       )
                                     ],
@@ -304,15 +310,48 @@ class _CasesState extends State<Cases> {
   Widget buildCasesStream(String status) {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
+          .collection('lawyers')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection('appointments')
-          .where('lawyerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          // .where('lawyerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .where('status', isEqualTo: status)
           .snapshots(),
       builder: (context, snapshot) {
-        return Column(
-          children: [
-            Text(snapshot.data?.docs.length.toString() ?? '',
-                style: kHead1White),
+        return Text(snapshot.data?.docs.length.toString() ?? '',
+            style: kHead1White);
+      },
+    );
+  }
+
+  void deleteAppointment(context, var id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirm Deletion"),
+          content: const Text("Are you sure you want to delete this item?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                await FirebaseFirestore.instance
+                    .collection('lawyers')
+                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                    .collection('appointments')
+                    .doc(id)
+                    .delete()
+                    .then((value) {
+                  Fluttertoast.showToast(msg: 'Deleted');
+                  Navigator.of(context).pop();
+                });
+              },
+              child: const Text("Delete"),
+            ),
           ],
         );
       },

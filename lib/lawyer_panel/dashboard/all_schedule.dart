@@ -63,14 +63,13 @@ class _AllScheduleScreenState extends State<AllScheduleScreen> {
               const SizedBox(height: 29),
               StreamBuilder(
                 stream: FirebaseFirestore.instance
+                    .collection('lawyers')
+                    .doc(FirebaseAuth.instance.currentUser!.uid)
                     .collection('appointments')
-                    .where('lawyerId',
-                        isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                    .orderBy('name')
-                    .startAt([searchText.toUpperCase()]).endAt(
-                        ['$searchText\uf8ff']).snapshots(),
-                //
-                //
+                    .snapshots(),
+                //  .orderBy('date')
+                //  .startAt([searchText.toUpperCase()]).endAt(
+                //     ['$searchText\uf8ff']).snapshots(),
 
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -100,7 +99,6 @@ class _AllScheduleScreenState extends State<AllScheduleScreen> {
                         ListView.builder(
                           shrinkWrap: true,
                           itemCount: snapshot.data?.docs.length ?? 0,
-                          physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
                             final appointment = snapshot.data!.docs[index];
 

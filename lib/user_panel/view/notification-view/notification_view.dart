@@ -1,10 +1,10 @@
 import 'package:catch_case/user_panel/constants/colors.dart';
 import 'package:catch_case/user_panel/constants/textstyles.dart';
-import 'package:catch_case/user_panel/view/notification-view/widgets/cancelled_notifications.dart';
-import 'package:catch_case/user_panel/view/notification-view/widgets/completed_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 class NotificationView extends StatelessWidget {
@@ -73,10 +73,14 @@ class CasesTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection('appointments')
           .where('status', isEqualTo: status)
           .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .snapshots(),
+
+      //  .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Padding(
@@ -98,9 +102,6 @@ class CasesTab extends StatelessWidget {
         } else {
           return Column(
             children: [
-              const SizedBox(
-                height: 12,
-              ),
               ListView.builder(
                 shrinkWrap: true,
                 itemCount: snapshot.data?.docs.length ?? 0,
@@ -110,16 +111,14 @@ class CasesTab extends StatelessWidget {
 
                   return Column(
                     children: [
-                      const SizedBox(
-                        height: 6,
-                      ),
                       Card(
                         child: Container(
-                          padding: const EdgeInsets.all(8),
+                          padding: EdgeInsets.all(10.r),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
                                     width: Get.width * .17,
@@ -137,7 +136,7 @@ class CasesTab extends StatelessWidget {
                                   ),
                                   Padding(
                                     padding:
-                                        EdgeInsets.only(left: Get.width * 0.03),
+                                        EdgeInsets.only(left: Get.width * 0.02),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -162,35 +161,16 @@ class CasesTab extends StatelessWidget {
                                     ),
                                   ),
                                   const Spacer(),
-                                  Text(
-                                    '4.7',
-                                    style: kBody2MediumBlue,
-                                  ),
-                                  const Icon(
-                                    Icons.star,
-                                    color: Colors.green,
-                                  )
+                                  IconButton(
+                                      onPressed: () async {
+                                        deleteAppointment(
+                                            context, appointment.id);
+                                      },
+                                      icon: const Icon(Icons.delete))
                                 ],
                               ),
                               SizedBox(
                                 height: Get.height * 0.008,
-                              ),
-                              Text(
-                                'Area of practice',
-                                style: kBody3DarkBlue,
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    appointment['caseType'],
-                                    style: kBody5DarkBlue,
-                                  ),
-                                  const Spacer(),
-                                  // LawyersButton(
-                                  //     buttonText: 'Message',
-                                  //     buttonColor: kButtonColor,
-                                  //     onTap: () => Get.to(() => const ChatView()))
-                                ],
                               ),
                             ],
                           ),
@@ -203,6 +183,41 @@ class CasesTab extends StatelessWidget {
             ],
           );
         }
+      },
+    );
+  }
+
+  void deleteAppointment(context, id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirm Deletion"),
+          content: const Text("Are you sure you want to delete this item?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                    .collection('appointments')
+                    .doc(id)
+                    .delete()
+                    .then((value) {
+                  Fluttertoast.showToast(msg: 'Deleted');
+                  Navigator.of(context).pop();
+                });
+              },
+              child: const Text("Delete"),
+            ),
+          ],
+        );
       },
     );
   }

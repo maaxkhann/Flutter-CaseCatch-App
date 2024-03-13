@@ -219,7 +219,7 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                                                   onTap: () => Get.to(() =>
                                                       AboutView(
                                                         fcmToken: fcmToken,
-                                                        uid: e['lawyerId'],
+                                                        lawyerId: e['lawyerId'],
                                                         image: e['image'],
                                                         name: e['name'],
                                                         category: e['category'],

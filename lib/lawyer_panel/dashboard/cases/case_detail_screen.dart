@@ -2,8 +2,11 @@ import 'package:catch_case/lawyer_panel/controllers/profile_controller.dart';
 import 'package:catch_case/lawyer_panel/dashboard/cases/questions_screen.dart';
 import 'package:catch_case/user_panel/constant-widgets/constant_button.dart';
 import 'package:catch_case/user_panel/constants/textstyles.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -15,7 +18,8 @@ class CaseDetailScreen extends StatefulWidget {
   final String caseType;
   final String? status;
   final String userId;
-  final String? caseId;
+  final String caseId;
+  final String? userCaseId;
   const CaseDetailScreen(
       {super.key,
       required this.name,
@@ -24,8 +28,9 @@ class CaseDetailScreen extends StatefulWidget {
       required this.date,
       required this.caseType,
       this.status,
-      this.caseId,
-      required this.userId});
+      required this.caseId,
+      required this.userId,
+      this.userCaseId});
 
   @override
   State<CaseDetailScreen> createState() => _CaseDetailScreenState();
@@ -145,9 +150,10 @@ class _CaseDetailScreenState extends State<CaseDetailScreen> {
                 Center(
                   child: GestureDetector(
                     onTap: () {
-                      profileController.updateCaseStatus(
-                          status: 'completed',
-                          caseId: widget.caseId.toString());
+                      updateCaseStatus('completed');
+                      // profileController.updateCaseStatus(
+                      //     status: 'completed',
+                      //     caseId: widget.caseId.toString());
                     },
                     child: Container(
                       padding: EdgeInsets.all(14.r),
@@ -169,8 +175,9 @@ class _CaseDetailScreenState extends State<CaseDetailScreen> {
                 Center(
                   child: GestureDetector(
                     onTap: () {
-                      profileController.updateCaseStatus(
-                          status: 'pending', caseId: widget.caseId.toString());
+                      updateCaseStatus('pending');
+                      // profileController.updateCaseStatus(
+                      //     status: 'pending', caseId: widget.caseId.toString());
                     },
                     child: Container(
                       padding: EdgeInsets.all(14.r),
@@ -192,9 +199,10 @@ class _CaseDetailScreenState extends State<CaseDetailScreen> {
                 Center(
                   child: GestureDetector(
                     onTap: () {
-                      profileController.updateCaseStatus(
-                          status: 'cancelled',
-                          caseId: widget.caseId.toString());
+                      updateCaseStatus('cancelled');
+                      // profileController.updateCaseStatus(
+                      //     status: 'cancelled',
+                      //     caseId: widget.caseId.toString());
                     },
                     child: Container(
                       padding: EdgeInsets.all(14.r),
@@ -216,5 +224,25 @@ class _CaseDetailScreenState extends State<CaseDetailScreen> {
         ),
       ),
     );
+  }
+
+  void updateCaseStatus(String status) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.userId)
+          .collection('appointments')
+          .doc(widget.userCaseId)
+          .update({'status': status});
+      await FirebaseFirestore.instance
+          .collection('lawyers')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('appointments')
+          .doc(widget.caseId)
+          .update({'status': status});
+      Fluttertoast.showToast(msg: 'Status Updated');
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'Something went wrong');
+    }
   }
 }

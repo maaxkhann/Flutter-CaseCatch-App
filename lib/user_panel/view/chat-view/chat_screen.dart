@@ -16,9 +16,9 @@ class Chat extends StatefulWidget {
       this.name,
       this.groupId,
       this.fcmToken,
-      this.uid});
+      this.lawyerId});
 
-  final String? image, name, groupId, fcmToken, uid;
+  final String? image, name, groupId, fcmToken, lawyerId;
 
   @override
   _ChatState createState() => _ChatState();
@@ -114,8 +114,8 @@ class _ChatState extends State<Chat> {
                       child: CircularProgressIndicator(),
                     )
                   : StreamBuilder<QuerySnapshot>(
-                      stream:
-                          dataController.getMessage(widget.groupId, widget.uid),
+                      stream: dataController.getMessage(
+                          widget.groupId, widget.lawyerId),
                       builder: (ctx, snapshot) {
                         if (!snapshot.hasData) {
                           return const Center(
@@ -129,7 +129,7 @@ class _ChatState extends State<Chat> {
                         return ListView.builder(
                           reverse: true,
                           itemBuilder: (ctx, index) {
-                            String messageUserId = data[index].get('uid');
+                            String messageUserId = data[index].get('lawyerId');
                             String messageType = data[index].get('type');
 
                             Widget messageWidget = Container();
@@ -189,7 +189,7 @@ class _ChatState extends State<Chat> {
                               'type': 'iSentText',
                               'message': message,
                               'timeStamp': DateTime.now(),
-                              'uid': myUid
+                              'lawyerId': myUid
                             };
 
                             if (replyText.length > 0) {
@@ -210,14 +210,14 @@ class _ChatState extends State<Chat> {
                             dataController.sendMessageToFirebase(
                                 data: data,
                                 userId: widget.groupId.toString(),
-                                otherUserId: widget.uid.toString(),
+                                otherUserId: widget.lawyerId.toString(),
                                 lastMessage: message,
                                 name: userName,
                                 image: userImage,
                                 fcmToken: fcmToken);
 
                             dataController.createNotification(
-                              userId: widget.uid.toString(),
+                              userId: widget.lawyerId.toString(),
                               message: message,
                             );
 
