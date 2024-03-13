@@ -14,69 +14,64 @@ class AllScheduleScreen extends StatefulWidget {
 }
 
 class _AllScheduleScreenState extends State<AllScheduleScreen> {
-  
   String searchText = "";
   TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return
-    
-     Scaffold(
+    return Scaffold(
       appBar: const ConstantAppBar(text: 'All Appointments'),
-       body: SingleChildScrollView(
-         child: Padding(
-           padding: const EdgeInsets.symmetric(horizontal: 10),
-           child: Column(
-             children: [
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Column(
+            children: [
               const SizedBox(
                 height: 24,
               ),
-               Container(
-                      height: 48,
-                      width: Get.size.width,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF6F7F9),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: TextFormField(
-                        controller: searchController,
-                        cursorColor: Colors.amber,
-                        decoration: InputDecoration(
-                          prefixIcon: (searchText.isEmpty)
-                              ? const Icon(Icons.search)
-                              : IconButton(
-                                  icon: const Icon(Icons.clear),
-                                  onPressed: () {
-                                    searchText = '';
-                                    searchController.clear();
-                                    setState(() {});
-                                  },
-                                ),
-                          hintText: 'Search by name',
-                          border: InputBorder.none,
-                          
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            searchText = value;
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 29),
-               StreamBuilder(
+              Container(
+                height: 48,
+                width: Get.size.width,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF6F7F9),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: TextFormField(
+                  controller: searchController,
+                  cursorColor: Colors.amber,
+                  decoration: InputDecoration(
+                    prefixIcon: (searchText.isEmpty)
+                        ? const Icon(Icons.search)
+                        : IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () {
+                              searchText = '';
+                              searchController.clear();
+                              setState(() {});
+                            },
+                          ),
+                    hintText: 'Search by name',
+                    border: InputBorder.none,
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      searchText = value;
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(height: 29),
+              StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('appointments')
-                    .where('lawyerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                     .orderBy('name')
-                            .startAt([searchText.toUpperCase()]).endAt(
-                                ['$searchText\uf8ff'])
-                   
-                    .snapshots(),
+                    .where('lawyerId',
+                        isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                    .orderBy('name')
+                    .startAt([searchText.toUpperCase()]).endAt(
+                        ['$searchText\uf8ff']).snapshots(),
                 //
                 //
-               
+
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Padding(
@@ -98,8 +93,8 @@ class _AllScheduleScreenState extends State<AllScheduleScreen> {
                       ),
                     );
                   } else {
-               //
-               
+                    //
+
                     return Column(
                       children: [
                         ListView.builder(
@@ -108,20 +103,21 @@ class _AllScheduleScreenState extends State<AllScheduleScreen> {
                           physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
                             final appointment = snapshot.data!.docs[index];
-               
+
                             return Column(
                               children: [
                                 GestureDetector(
                                   onTap: () {
-                                      Get.to(() => CaseDetailScreen(
-                                                name: appointment['name'],
-                                                cnic: appointment['cnic'],
-                                                time: appointment['time'],
-                                                date: appointment['date'],
-                                                caseType: appointment['caseType'],
-                                                status: appointment['status'],
-                                                caseId: appointment['caseId'],
-                                              ));
+                                    Get.to(() => CaseDetailScreen(
+                                          name: appointment['name'],
+                                          cnic: appointment['cnic'],
+                                          time: appointment['time'],
+                                          date: appointment['date'],
+                                          caseType: appointment['caseType'],
+                                          status: appointment['status'],
+                                          userId: appointment['userId'],
+                                          caseId: appointment['caseId'],
+                                        ));
                                   },
                                   child: Card(
                                     shadowColor: Colors.black,
@@ -167,11 +163,11 @@ class _AllScheduleScreenState extends State<AllScheduleScreen> {
                     );
                   }
                 },
-                   ),
-             ],
-           ),
-         ),
-       ),
-     );
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

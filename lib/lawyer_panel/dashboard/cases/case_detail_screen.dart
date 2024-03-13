@@ -1,4 +1,6 @@
 import 'package:catch_case/lawyer_panel/controllers/profile_controller.dart';
+import 'package:catch_case/lawyer_panel/dashboard/cases/questions_screen.dart';
+import 'package:catch_case/user_panel/constant-widgets/constant_button.dart';
 import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,6 +14,7 @@ class CaseDetailScreen extends StatefulWidget {
   final String date;
   final String caseType;
   final String? status;
+  final String userId;
   final String? caseId;
   const CaseDetailScreen(
       {super.key,
@@ -21,7 +24,8 @@ class CaseDetailScreen extends StatefulWidget {
       required this.date,
       required this.caseType,
       this.status,
-      this.caseId});
+      this.caseId,
+      required this.userId});
 
   @override
   State<CaseDetailScreen> createState() => _CaseDetailScreenState();
@@ -126,7 +130,15 @@ class _CaseDetailScreenState extends State<CaseDetailScreen> {
                     ],
                   )),
               SizedBox(
-                height: Get.height * 0.1,
+                height: Get.height * 0.08,
+              ),
+              ConstantButton(
+                  buttonText: 'Show Questions',
+                  onTap: () {
+                    Get.to(() => QuestionsScreen(userId: widget.userId));
+                  }),
+              SizedBox(
+                height: Get.height * 0.02,
               ),
               Center(
                 child: GestureDetector(

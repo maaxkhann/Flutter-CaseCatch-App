@@ -173,14 +173,14 @@ class _HomeViewState extends State<HomeView> {
                                                 fontSize: 10,
                                               ),
                                             ),
-                                            const Padding(
-                                              padding: EdgeInsets.only(
+                                            Padding(
+                                              padding: const EdgeInsets.only(
                                                 left: 60,
                                                 top: 10,
                                               ),
                                               child: Text(
-                                                'Free',
-                                                style: TextStyle(
+                                                e['price'],
+                                                style: const TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.w600,

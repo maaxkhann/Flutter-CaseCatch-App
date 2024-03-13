@@ -123,7 +123,7 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
         'status': 'ongoing',
       });
 
-      showQuestionsDialog();
+      showQuestionsDialog(uid);
       Fluttertoast.showToast(msg: 'Booking successful');
 
       EasyLoading.dismiss();
@@ -376,7 +376,7 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
     );
   }
 
-  void showQuestionsDialog() async {
+  void showQuestionsDialog(String uid) async {
     if (currentStep < (questionSets?.length ?? 0)) {
       List<List<TextEditingController>> allControllers = List.generate(
           questionSets!.length,
@@ -430,7 +430,7 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
 
                           // Store questions and answers in Firestore
                           storeQuestionsAndAnswers(
-                              enteredValues, questionSets![currentStep]);
+                              enteredValues, questionSets!, uid);
                         }
                       });
                     },
@@ -451,26 +451,27 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
     }
   }
 
-  void storeQuestionsAndAnswers(
-      List<List<String>> enteredValues, List<String> questions) async {
+  void storeQuestionsAndAnswers(List<List<String>> enteredValues,
+      List<List<String>> questions, String uid) async {
     try {
       EasyLoading.show(status: 'Storing Data');
-      User? user = _auth.currentUser;
-      String uid = user!.uid;
       var uuid = const Uuid();
-      var myId = uuid.v6();
 
-      // Store questions and answers in Firestore
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .collection('questions')
-          .doc(myId)
-          .set({
-        'questions': questions, // Store questions
-        'answers': enteredValues[currentStep], // Store answers
-        // You can add more data if needed
-      });
+      for (int i = 0; i < questions.length; i++) {
+        var myId = uuid.v6();
+
+        // Store questions and answers in Firestore
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid)
+            .collection('questions')
+            .doc(myId)
+            .set({
+          'questions': questions[i], // Store questions
+          'answers': enteredValues[i], // Store answers
+          // You can add more data if needed
+        });
+      }
 
       Fluttertoast.showToast(msg: 'Data stored successfully');
       EasyLoading.dismiss();

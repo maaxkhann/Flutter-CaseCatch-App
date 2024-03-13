@@ -171,7 +171,7 @@ class _AboutViewState extends State<AboutView> {
                         height: Get.height * 0.01,
                       ),
                       Text(
-                        widget.bio ?? '',
+                        widget.bio,
                         style: kBody3DarkBlue,
                       ),
                       SizedBox(

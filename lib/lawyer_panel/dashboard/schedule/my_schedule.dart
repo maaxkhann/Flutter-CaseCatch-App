@@ -1,13 +1,15 @@
 import 'package:catch_case/lawyer_panel/dashboard/schedule/add_schedule.dart';
 import 'package:catch_case/user_panel/constants/colors.dart';
+import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class MySchedule extends StatefulWidget {
   final String lawyerId;
-  const MySchedule({super.key, required this.lawyerId});
+  const MySchedule({Key? key, required this.lawyerId}) : super(key: key);
 
   @override
   State<MySchedule> createState() => _MyScheduleState();
@@ -21,52 +23,28 @@ class _MyScheduleState extends State<MySchedule> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: InkWell(
-                onTap: () {
-                  Get.back();
-                },
-                child: Container(
-                  height: 30,
-                  width: 30,
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.arrow_back_ios_new,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, color: kBlack),
+          onPressed: () {
+            Get.back();
+          },
         ),
         centerTitle: true,
-        title: const Text(
-          'Availability',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Color(0xFF1A1A1A),
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        title: Text('Availability',
+            textAlign: TextAlign.center, style: kHead2Black),
         actions: [
           ElevatedButton(
-              onPressed: () {
-                Get.to(() => const AddScheduleScreen());
-              },
-              child: const Text("Add schedule"))
+            onPressed: () {
+              Get.to(() => const AddScheduleScreen());
+            },
+            child: const Text("Add schedule"),
+          )
         ],
       ),
-      body: FutureBuilder<DocumentSnapshot>(
-        future: _getUserSchedule(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+      body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+        stream: _getUserSchedule(),
+        builder: (BuildContext context,
+            AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -75,57 +53,57 @@ class _MyScheduleState extends State<MySchedule> {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
 
-          if (!snapshot.hasData) {
+          if (!snapshot.hasData || snapshot.data!.data() == null) {
             return const Center(child: Text('No schedule found.'));
           }
 
-          Map<String, dynamic> lawyerData =
-              snapshot.data!.data() as Map<String, dynamic>;
-          Map<String, dynamic> lawyerSchedule = lawyerData['schedule'] ?? Map();
+          Map<String, dynamic> lawyerData = snapshot.data!.data()!;
+          Map<String, dynamic> lawyerSchedule =
+              lawyerData['availability'] ?? {};
 
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18),
-            child: Column(
-              children: [
-                const Divider(),
-                Text(lawyerData['available'] ?? ''),
-                for (var day in lawyerSchedule.keys)
-                  ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(bottom: 6),
-                      child: Text(
-                        day,
-                        style: const TextStyle(
-                          color: Color(0xFF1A1A1A),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
+            padding: EdgeInsets.symmetric(horizontal: 12.w),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const Divider(),
+                  for (var day in _weekDays)
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.h, vertical: 12.h),
+                      child: Row(
+                        children: [
+                          Center(child: Text(day, style: kBody1Black)),
+                          const Spacer(),
+                          StreamBuilder<bool>(
+                            stream: _getDayAvailability(day),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return Container(
+                                  padding: EdgeInsets.all(6.r),
+                                  decoration: BoxDecoration(
+                                    color: snapshot.data!
+                                        ? kButtonColor
+                                        : Colors.red,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text(
+                                    snapshot.data!
+                                        ? 'Available'
+                                        : 'Unavailable',
+                                    style: kBody2White,
+                                  ),
+                                );
+                              } else {
+                                return Container(); // Return empty container if no data yet
+                              }
+                            },
+                          ),
+                        ],
                       ),
                     ),
-                    contentPadding: EdgeInsets.zero,
-                    subtitle: Row(
-                      children: [
-                        for (var hour in lawyerSchedule[day]!)
-                          Expanded(
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 4),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 5),
-                              decoration: BoxDecoration(
-                                  color: kButtonColor,
-                                  borderRadius: BorderRadius.circular(4)),
-                              child: Center(
-                                  child: Text(
-                                hour + '  ',
-                                style: const TextStyle(
-                                    color: Colors.white, fontSize: 12),
-                              )),
-                            ),
-                          )
-                      ],
-                    ),
-                  ),
-              ],
+                ],
+              ),
             ),
           );
         },
@@ -133,11 +111,30 @@ class _MyScheduleState extends State<MySchedule> {
     );
   }
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> _getUserSchedule() async {
+  Stream<bool> _getDayAvailability(String day) {
+    return _firestore
+        .collection('lawyers')
+        .doc(widget.lawyerId)
+        .snapshots()
+        .map((snapshot) =>
+            (snapshot.data()!['availability'] ?? {})[day] ?? false);
+  }
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> _getUserSchedule() {
     User? user = _auth.currentUser;
     if (user != null) {
-      return await _firestore.collection('lawyers').doc(widget.lawyerId).get();
+      return _firestore.collection('lawyers').doc(widget.lawyerId).snapshots();
     }
-    throw Exception('User ont authenticated');
+    throw Exception('User not authenticated');
   }
+
+  final List<String> _weekDays = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
 }

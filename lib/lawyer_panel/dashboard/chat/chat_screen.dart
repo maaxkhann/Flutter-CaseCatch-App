@@ -4,10 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
 import '../../../user_panel/constants/colors.dart';
-import '../../../user_panel/constants/textstyles.dart';
 import '../../controllers/data_controller.dart';
-import '../../utils/AppColors.dart';
 import 'notification.dart';
 
 class Chat extends StatefulWidget {
@@ -235,7 +234,8 @@ class _ChatState extends State<Chat> {
       ),
     );
   }
- textMessageIReceived(DocumentSnapshot doc) {
+
+  textMessageIReceived(DocumentSnapshot doc) {
     String message = '';
     try {
       message = doc.get('message');
@@ -346,139 +346,139 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  imageSent(DocumentSnapshot doc) {
-    String message = '';
+  // imageSent(DocumentSnapshot doc) {
+  //   String message = '';
 
-    try {
-      message = doc.get('message');
-    } catch (e) {
-      message = '';
-    }
+  //   try {
+  //     message = doc.get('message');
+  //   } catch (e) {
+  //     message = '';
+  //   }
 
-    return Container(
-      margin: const EdgeInsets.only(right: 20, top: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                width: screenwidth * 0.42,
-                height: screenheight * 0.18,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black),
-                    borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(18),
-                        topLeft: Radius.circular(18),
-                        bottomLeft: Radius.circular(18)),
-                    image: DecorationImage(
-                        image: NetworkImage(message), fit: BoxFit.fill)),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Text(
-                  DateFormat.MMMd().format(doc.get('timeStamp').toDate()),
-                  style: const TextStyle(color: Colors.black),
-                ),
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 2),
-                child: Text(
-                  DateFormat.Hm().format(doc.get('timeStamp').toDate()),
-                  style: const TextStyle(color: Colors.black),
-                ),
-              )
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+  //   return Container(
+  //     margin: const EdgeInsets.only(right: 20, top: 10),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.end,
+  //       children: [
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.end,
+  //           children: [
+  //             Container(
+  //               width: screenwidth * 0.42,
+  //               height: screenheight * 0.18,
+  //               decoration: BoxDecoration(
+  //                   border: Border.all(color: Colors.black),
+  //                   borderRadius: const BorderRadius.only(
+  //                       topRight: Radius.circular(18),
+  //                       topLeft: Radius.circular(18),
+  //                       bottomLeft: Radius.circular(18)),
+  //                   image: DecorationImage(
+  //                       image: NetworkImage(message), fit: BoxFit.fill)),
+  //             ),
+  //           ],
+  //         ),
+  //         const SizedBox(
+  //           height: 5,
+  //         ),
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.end,
+  //           children: [
+  //             Padding(
+  //               padding: const EdgeInsets.only(top: 5),
+  //               child: Text(
+  //                 DateFormat.MMMd().format(doc.get('timeStamp').toDate()),
+  //                 style: const TextStyle(color: Colors.black),
+  //               ),
+  //             ),
+  //             const SizedBox(
+  //               width: 8,
+  //             ),
+  //             Padding(
+  //               padding: const EdgeInsets.only(top: 2),
+  //               child: Text(
+  //                 DateFormat.Hm().format(doc.get('timeStamp').toDate()),
+  //                 style: const TextStyle(color: Colors.black),
+  //               ),
+  //             )
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  imageReceived(DocumentSnapshot doc) {
-    String message = '';
-    try {
-      message = doc.get('message');
-    } catch (e) {
-      message = '';
-    }
-    return Container(
-      margin: const EdgeInsets.only(top: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 12),
-                child: widget.image!.isEmpty
-                    ? const CircleAvatar(
-                        backgroundColor: Colors.blue,
-                        child: Icon(
-                          Icons.person,
-                          color: Colors.white,
-                        ),
-                      )
-                    : CircleAvatar(
-                        backgroundImage: NetworkImage(widget.image!),
-                      ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(left: 20),
-                width: screenwidth * 0.42,
-                height: screenheight * 0.18,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black),
-                    borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(18),
-                        topLeft: Radius.circular(18),
-                        bottomRight: Radius.circular(18)),
-                    image: DecorationImage(
-                        image: NetworkImage(message), fit: BoxFit.fill)),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 62, top: 5),
-                child: Text(
-                  DateFormat.MMMd().format(doc.get('timeStamp').toDate()),
-                  style: const TextStyle(color: Colors.black),
-                ),
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Text(
-                  DateFormat.Hm().format(doc.get('timeStamp').toDate()),
-                  style: const TextStyle(color: Colors.black),
-                ),
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
+  // imageReceived(DocumentSnapshot doc) {
+  //   String message = '';
+  //   try {
+  //     message = doc.get('message');
+  //   } catch (e) {
+  //     message = '';
+  //   }
+  //   return Container(
+  //     margin: const EdgeInsets.only(top: 10),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.start,
+  //           children: [
+  //             Padding(
+  //               padding: const EdgeInsets.only(left: 12),
+  //               child: widget.image!.isEmpty
+  //                   ? const CircleAvatar(
+  //                       backgroundColor: Colors.blue,
+  //                       child: Icon(
+  //                         Icons.person,
+  //                         color: Colors.white,
+  //                       ),
+  //                     )
+  //                   : CircleAvatar(
+  //                       backgroundImage: NetworkImage(widget.image!),
+  //                     ),
+  //             ),
+  //             Container(
+  //               margin: const EdgeInsets.only(left: 20),
+  //               width: screenwidth * 0.42,
+  //               height: screenheight * 0.18,
+  //               decoration: BoxDecoration(
+  //                   border: Border.all(color: Colors.black),
+  //                   borderRadius: const BorderRadius.only(
+  //                       topRight: Radius.circular(18),
+  //                       topLeft: Radius.circular(18),
+  //                       bottomRight: Radius.circular(18)),
+  //                   image: DecorationImage(
+  //                       image: NetworkImage(message), fit: BoxFit.fill)),
+  //             ),
+  //           ],
+  //         ),
+  //         const SizedBox(
+  //           height: 5,
+  //         ),
+  //         Row(
+  //           children: [
+  //             Padding(
+  //               padding: const EdgeInsets.only(left: 62, top: 5),
+  //               child: Text(
+  //                 DateFormat.MMMd().format(doc.get('timeStamp').toDate()),
+  //                 style: const TextStyle(color: Colors.black),
+  //               ),
+  //             ),
+  //             const SizedBox(
+  //               width: 8,
+  //             ),
+  //             Padding(
+  //               padding: const EdgeInsets.only(top: 5),
+  //               child: Text(
+  //                 DateFormat.Hm().format(doc.get('timeStamp').toDate()),
+  //                 style: const TextStyle(color: Colors.black),
+  //               ),
+  //             )
+  //           ],
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
   sentReplyTextToText(DocumentSnapshot doc) {
     String message = '';

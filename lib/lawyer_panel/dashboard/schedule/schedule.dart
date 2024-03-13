@@ -171,13 +171,13 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                         physics: const BouncingScrollPhysics(),
                         child: Column(
                           children: [
-                            
                             CasesTab(
                               status: 'ongoing',
                               text: Text(
                                 'Ongoing',
                                 style: TextStyle(color: Colors.purple.shade400),
-                              ), dateTime: selectedDate,
+                              ),
+                              dateTime: selectedDate,
                             ),
                           ],
                         ),
@@ -189,27 +189,30 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                           text: Text(
                             'Pending',
                             style: TextStyle(color: Colors.red.shade400),
-                          ), dateTime: selectedDate,
+                          ),
+                          dateTime: selectedDate,
                         ),
                       ),
-                       SingleChildScrollView(
+                      SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
                         child: CasesTab(
                           status: 'completed',
                           text: const Text(
                             'Completed',
                             style: TextStyle(color: Colors.green),
-                          ), dateTime: selectedDate,
+                          ),
+                          dateTime: selectedDate,
                         ),
                       ),
-                       SingleChildScrollView(
+                      SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
                         child: CasesTab(
                           status: 'cancelled',
                           text: const Text(
                             'cancelled',
                             style: TextStyle(color: Colors.blue),
-                          ), dateTime: selectedDate,
+                          ),
+                          dateTime: selectedDate,
                         ),
                       ),
                     ],
@@ -284,8 +287,6 @@ class _ScheduleScreenState extends State<ScheduleScreen>
               const SizedBox(
                 height: 12,
               ),
-              
-             
               ListView.builder(
                 shrinkWrap: true,
                 itemCount: snapshot.data?.docs.length ?? 0,
@@ -355,6 +356,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                                           date: appointment['date'],
                                           caseType: appointment['caseType'],
                                           status: appointment['status'],
+                                          userId: appointment['userId'],
                                           caseId: appointment['caseId'],
                                         ));
                                   },
@@ -401,21 +403,24 @@ class CasesTab extends StatelessWidget {
   final Widget text;
   final DateTime dateTime;
 
-  const CasesTab({super.key, required this.status, required this.text, required this.dateTime});
+  const CasesTab(
+      {super.key,
+      required this.status,
+      required this.text,
+      required this.dateTime});
 
   @override
   Widget build(BuildContext context) {
-
     String formattedDate = DateFormat('dd-MM-yyyy').format(dateTime);
     return Column(
       children: [
-        
         StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('appointments')
               .where('status', isEqualTo: status)
               .where('date', isEqualTo: formattedDate)
-              .where('lawyerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+              .where('lawyerId',
+                  isEqualTo: FirebaseAuth.instance.currentUser!.uid)
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -469,20 +474,18 @@ class CasesTab extends StatelessWidget {
                   const SizedBox(
                     height: 12,
                   ),
-                
                   ListView.builder(
                     shrinkWrap: true,
                     itemCount: snapshot.data?.docs.length ?? 0,
                     physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
                       final appointment = snapshot.data!.docs[index];
-        
+
                       return Column(
                         children: [
                           const SizedBox(
                             height: 6,
                           ),
-                          
                           Card(
                             elevation: 12,
                             shadowColor: Colors.black,
@@ -540,6 +543,7 @@ class CasesTab extends StatelessWidget {
                                               date: appointment['date'],
                                               caseType: appointment['caseType'],
                                               status: appointment['status'],
+                                              userId: appointment['userId'],
                                               caseId: appointment['caseId'],
                                             ));
                                       },
@@ -548,7 +552,8 @@ class CasesTab extends StatelessWidget {
                                         width: Get.width * .7,
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                           border: Border.all(
                                             color: Colors.black26,
                                           ),

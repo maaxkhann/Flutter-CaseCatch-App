@@ -3,10 +3,8 @@ import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'case_detail_screen.dart';
@@ -19,7 +17,6 @@ class Cases extends StatefulWidget {
 }
 
 class _CasesState extends State<Cases> {
-   
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -213,13 +210,13 @@ class _CasesState extends State<Cases> {
                                   final data = snapshot.data!.docs[index];
 
                                   return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        
-                                        
-                                        data['date'],
-                                          style: const TextStyle(fontSize: 17,fontWeight: FontWeight.w500)),
+                                      Text(data['date'],
+                                          style: const TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.w500)),
                                       GestureDetector(
                                         onTap: () {
                                           Get.to(() => CaseDetailScreen(
@@ -229,6 +226,7 @@ class _CasesState extends State<Cases> {
                                                 date: data['date'],
                                                 caseType: data['caseType'],
                                                 status: data['status'],
+                                                userId: data['userId'],
                                                 caseId: data['caseId'],
                                               ));
                                         },

@@ -1,12 +1,14 @@
 import 'package:catch_case/user_panel/constants/colors.dart';
+import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class ScheduleScreen extends StatefulWidget {
-  final String lawyerId;
-  const ScheduleScreen({super.key, required this.lawyerId});
+  final String? lawyerId;
+  const ScheduleScreen({Key? key, this.lawyerId}) : super(key: key);
 
   @override
   State<ScheduleScreen> createState() => _ScheduleScreenState();
@@ -20,45 +22,23 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: InkWell(
-                onTap: () {
-                  Get.back();
-                },
-                child: Container(
-                  height: 30,
-                  width: 30,
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.arrow_back_ios_new,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, color: kBlack),
+          onPressed: () {
+            Get.back();
+          },
         ),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Lawyers Availability',
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Color(0xFF1A1A1A),
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
+          style: kHead2Black,
         ),
       ),
-      body: FutureBuilder<DocumentSnapshot>(
-        future: _getUserSchedule(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+      body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+        stream: _getUserSchedule(),
+        builder: (BuildContext context,
+            AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -67,63 +47,74 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
 
-          if (!snapshot.hasData ) {
-            return const Center(child: Text('No schedule found.'));
+          if (!snapshot.hasData ||
+              snapshot.data?.data()?['availability'] == null) {
+            return Center(
+                child: Text(
+              'No schedule found',
+              style: kHead2Black,
+            ));
           }
 
-          Map<String, dynamic> lawyerData =
-              snapshot.data!.data() as Map<String, dynamic>;
-          Map<String, dynamic> lawyerSchedule = lawyerData['schedule']??Map();
+          Map<String, dynamic> lawyerData = snapshot.data!.data()!;
+          Map<String, dynamic> lawyerSchedule =
+              (lawyerData['availability']) ?? {};
+
+          List<String> weekDays = [
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday',
+            'Sunday',
+          ];
+
+          Map<String, dynamic> rearrangedSchedule = {};
+          for (var day in weekDays) {
+            if (lawyerSchedule.containsKey(day)) {
+              rearrangedSchedule[day] = lawyerSchedule[day];
+            }
+          }
 
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18),
-            child: Column(
-              children: [
-                const Divider(),
-
-                Text(lawyerData['available']??''),
-
-
-
-                for (var day in lawyerSchedule.keys)
-                  ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(bottom: 6),
-                      child: Text(
-                        day,
-                        style: const TextStyle(
-                          color: Color(0xFF1A1A1A),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const Divider(),
+                  for (var day in rearrangedSchedule.keys)
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.h, vertical: 12.h),
+                      child: Row(
+                        children: [
+                          Center(child: Text(day, style: kBody1Black)),
+                          const Spacer(),
+                          Wrap(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(6.r),
+                                decoration: BoxDecoration(
+                                  color: rearrangedSchedule[day] == true
+                                      ? kButtonColor
+                                      : Colors.red,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                  rearrangedSchedule[day] == true
+                                      ? 'Available'
+                                      : 'Unavailable',
+                                  style: kBody2White,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                    contentPadding: EdgeInsets.zero,
-                    subtitle: Row(
-                      children: [
-                        for (var hour in lawyerSchedule[day]!)
-                          Expanded(
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 4),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 5),
-                              decoration: BoxDecoration(
-                                  color: kButtonColor,
-                                  borderRadius: BorderRadius.circular(4)),
-                              child: Center(
-                                  child: Text(
-                                hour + '  ',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12
-                                ),
-                              )),
-                            ),
-                          )
-                      ],
-                    ),
-                  ),
-              ],
+                ],
+              ),
             ),
           );
         },
@@ -131,11 +122,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     );
   }
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> _getUserSchedule() async {
+  Stream<DocumentSnapshot<Map<String, dynamic>>> _getUserSchedule() {
     User? user = _auth.currentUser;
     if (user != null) {
-      return await _firestore.collection('lawyers').doc(widget.lawyerId).get();
+      return _firestore.collection('lawyers').doc(widget.lawyerId).snapshots();
     }
-    throw Exception('User ont authenticated');
+    throw Exception('User not authenticated');
   }
 }

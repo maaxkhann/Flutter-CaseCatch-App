@@ -8,99 +8,110 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import '../../controllers/auth_controller.dart';
-
 class AddScheduleScreen extends StatefulWidget {
-  const AddScheduleScreen({super.key});
+  const AddScheduleScreen({Key? key});
 
   @override
   State<AddScheduleScreen> createState() => _AddScheduleScreenState();
 }
 
-class _AddScheduleScreenState extends State<AddScheduleScreen>
-     {
-  LawyerAuthController authController = Get.put(LawyerAuthController());
-  Map<String, List<String>> lawyerSchedule = {
-    'Monday': [],
-    'Tuesday': [],
-    'Wednesday': [],
-    'Thursday': [],
-    'Friday': [],
-    'Saturday': [],
-    'Sunday': [],
+class _AddScheduleScreenState extends State<AddScheduleScreen> {
+  Map<String, bool> lawyerAvailability = {
+    'Monday': false,
+    'Tuesday': false,
+    'Wednesday': false,
+    'Thursday': false,
+    'Friday': false,
+    'Saturday': false,
+    'Sunday': false,
   };
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-
-  bool addSchedule = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            child: Column(
-              children: [
-                44.heightBox,
-                Row(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              44.heightBox,
+              Row(
+                children: [
+                  IconButton(
+                      onPressed: () => Get.back(),
+                      icon: const Icon(Icons.arrow_back_ios)),
+                  SizedBox(
+                    width: Get.width * 0.15,
+                  ),
+                  Text('Availability',
+                      textAlign: TextAlign.center, style: kHead2Black),
+                ],
+              ),
+              const SizedBox(
+                height: 22,
+              ),
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    IconButton(
-                        onPressed: () => Get.back(),
-                        icon: const Icon(Icons.arrow_back_ios)),
                     SizedBox(
-                      width: Get.width * 0.15,
+                      height: 15.h,
                     ),
-                    Text('Availability',
-                        textAlign: TextAlign.center, style: kHead2Black),
-                  ],
-                ),
-                const SizedBox(
-                  height: 22,
-                ),
-              
-               SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    const Text(
+                      'Set your availability',
+                      style: TextStyle(
+                        color: Color(0xFF3D3D3D),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                      stream: _getUserSchedule(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+                              snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+
+                        if (snapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        }
+
+                        if (!snapshot.hasData ||
+                            snapshot.data!.data() == null) {
+                          return const Center(
+                              child: Text('No schedule found.'));
+                        }
+
+                        Map<String, dynamic> lawyerData =
+                            snapshot.data!.data()!;
+                        Map<String, dynamic> lawyerSchedule =
+                            (lawyerData['availability']
+                                    as Map<String, dynamic>) ??
+                                {};
+
+                        return Column(
                           children: [
-                            SizedBox(
-                              height: 15.h,
-                            ),
-                            const Text(
-                              'Add hours of your availability',
-                              style: TextStyle(
-                                color: Color(0xFF3D3D3D),
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10.h,
-                            ),
-                            for (var day in lawyerSchedule.keys)
+                            for (var day in lawyerAvailability.keys)
                               ListTile(
                                 title: Text(day),
-                                // subtitle: Flexible(
-                                //   fit: FlexFit.loose,
-                                //   child: Row(
-                                //     children: [
-                                //       for (var hour in lawyerSchedule[day]!)
-                                //         Expanded(
-                                //             child: Container(
-                                //           height: 66,
-                                //           child: Text(
-                                //             '$hour  ',
-                                //             maxLines: 8,
-                                //           ),
-                                //         )),
-                                //     ],
-                                //   ),
-                                // ),
-                                trailing: ElevatedButton(
-                                  onPressed: () async {
-                                    await _selectHours(day);
+                                trailing: Checkbox(
+                                  value: lawyerSchedule[day] ?? false,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      lawyerAvailability[day] = value ?? false;
+                                    });
+                                    _updateAvailability(day, value ?? false);
                                   },
-                                  child: const Text('Select Hours'),
                                 ),
                               ),
                             SizedBox(
@@ -110,7 +121,6 @@ class _AddScheduleScreenState extends State<AddScheduleScreen>
                               child: GestureDetector(
                                 onTap: () async {
                                   await saveLawyerSchedule();
-                                  await updateSchedule();
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(14.r),
@@ -128,82 +138,17 @@ class _AddScheduleScreenState extends State<AddScheduleScreen>
                               ),
                             ),
                           ],
-                        ),
-                      ),
-              ],
-            )));
-  }
-
-  Future<void> _selectHours(String day) async {
-    List<String> selectedHours = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        List<String> availableHours =
-            List.generate(12, (index) => '${index + 1} AM') +
-                List.generate(12, (index) => '${index + 1} PM');
-
-        List<String> selectedHours = [];
-
-        return AlertDialog(
-          title: Text(
-            'Select Available Hours for $day',
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          content: Container(
-            height: Get.height * 0.5,
-            child: StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-                return SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      for (var hour in availableHours)
-                        SwitchListTile(
-                          title: Text(hour),
-                          value: selectedHours.contains(hour),
-                          onChanged: (value) {
-                            setState(() {
-                              if (value) {
-                                selectedHours.add(hour);
-                              } else {
-                                selectedHours.remove(hour);
-                              }
-                            });
-                          },
-                        ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context, selectedHours);
-              },
-              child: const Text('Save'),
-            ),
-          ],
-        );
-      },
+        ),
+      ),
     );
-
-    if (selectedHours != null) {
-      setState(() {
-        lawyerSchedule[day] = selectedHours;
-      });
-      // await saveLawyerSchedule();
-    }
   }
 
   Future<void> saveLawyerSchedule() async {
@@ -214,34 +159,36 @@ class _AddScheduleScreenState extends State<AddScheduleScreen>
         await _firestore
             .collection('lawyers')
             .doc(user.uid)
-            .set({'schedule': lawyerSchedule}, SetOptions(merge: true));
+            .set({'availability': lawyerAvailability}, SetOptions(merge: true));
         EasyLoading.dismiss();
-        Fluttertoast.showToast(msg: 'Schedule saved successfully!');
+        Fluttertoast.showToast(msg: 'Availability saved successfully!');
       }
     } catch (error) {
       EasyLoading.dismiss();
 
-      print('Error saving schedule: $error');
       Get.snackbar('Error', error.toString());
     }
   }
 
-  //
-  //
-  Future<void> updateSchedule() async {
+  Stream<DocumentSnapshot<Map<String, dynamic>>> _getUserSchedule() {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      return _firestore.collection('lawyers').doc(user.uid).snapshots();
+    } else {
+      throw Exception('User not authenticated');
+    }
+  }
+
+  Future<void> _updateAvailability(String day, bool availability) async {
     try {
       User? user = _auth.currentUser;
       if (user != null) {
-        await _firestore
-            .collection('lawyers')
-            .doc(user.uid)
-            .update({'schedule': lawyerSchedule});
-        Fluttertoast.showToast(msg: 'Schedule updated successfully!');
+        await _firestore.collection('lawyers').doc(user.uid).update({
+          'availability.$day': availability,
+        });
       }
     } catch (error) {
-      print('Error saving schedule: $error');
-      Get.snackbar('Error', error.toString());
+      Get.snackbar('Error', 'Failed to update availability');
     }
   }
 }
-
