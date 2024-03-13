@@ -40,173 +40,178 @@ class _CaseDetailScreenState extends State<CaseDetailScreen> {
       child: Scaffold(
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                      onPressed: () => Get.back(),
-                      icon: const Icon(Icons.arrow_back_ios)),
-                  SizedBox(
-                    width: Get.width * 0.13,
-                  ),
-                  Text('Case details',
-                      textAlign: TextAlign.center, style: kHead2Black),
-                ],
-              ),
-              10.heightBox,
-              Text('Petitoner & advocate', style: kBody1Black2),
-              SizedBox(
-                height: 8.h,
-              ),
-              Container(
-                  padding:
-                      EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
-                  margin: EdgeInsets.symmetric(vertical: 6.h),
-                  decoration: ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                      side: const BorderSide(color: Colors.black38),
-                      borderRadius: BorderRadius.circular(8.r),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    IconButton(
+                        onPressed: () => Get.back(),
+                        icon: const Icon(Icons.arrow_back_ios)),
+                    SizedBox(
+                      width: Get.width * 0.13,
                     ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text('Petitioner name :  ', style: kBody2MediumBlue),
-                          Text(
-                            widget.name,
-                            style: kBody2Black,
-                          ),
-                        ],
+                    Text('Case details',
+                        textAlign: TextAlign.center, style: kHead2Black),
+                  ],
+                ),
+                10.heightBox,
+                Text('Petitoner & advocate', style: kBody1Black2),
+                SizedBox(
+                  height: 8.h,
+                ),
+                Container(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
+                    margin: EdgeInsets.symmetric(vertical: 6.h),
+                    decoration: ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                        side: const BorderSide(color: Colors.black38),
+                        borderRadius: BorderRadius.circular(8.r),
                       ),
-                      SizedBox(
-                        height: 6.h,
-                      ),
-                      Row(
-                        children: [
-                          Text('Cnic number :  ', style: kBody2MediumBlue),
-                          Text(widget.cnic, style: kBody2Black),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 6.h,
-                      ),
-                      Row(
-                        children: [
-                          Text('Date :  ', style: kBody2MediumBlue),
-                          Text(widget.date, style: kBody2Black),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 6.h,
-                      ),
-                      Row(
-                        children: [
-                          Text('Time :  ', style: kBody2MediumBlue),
-                          Text(widget.time, style: kBody2Black),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 6.h,
-                      ),
-                      Row(
-                        children: [
-                          Text('Case Type :  ', style: kBody2MediumBlue),
-                          Text(widget.caseType, style: kBody2Black),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 6,
-                      ),
-                      Row(
-                        children: [
-                          Text('Status :  ', style: kBody2MediumBlue),
-                          Text(widget.status.toString(), style: kBody2Black),
-                        ],
-                      ),
-                    ],
-                  )),
-              SizedBox(
-                height: Get.height * 0.08,
-              ),
-              ConstantButton(
-                  buttonText: 'Show Questions',
-                  onTap: () {
-                    Get.to(() => QuestionsScreen(userId: widget.userId));
-                  }),
-              SizedBox(
-                height: Get.height * 0.02,
-              ),
-              Center(
-                child: GestureDetector(
-                  onTap: () {
-                    profileController.updateCaseStatus(
-                        status: 'completed', caseId: widget.caseId.toString());
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(14.r),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Center(
-                      child: Text('Completed',
-                          textAlign: TextAlign.center, style: kBody1White),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text('Petitioner name :  ',
+                                style: kBody2MediumBlue),
+                            Text(
+                              widget.name,
+                              style: kBody2Black,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 6.h,
+                        ),
+                        Row(
+                          children: [
+                            Text('Cnic number :  ', style: kBody2MediumBlue),
+                            Text(widget.cnic, style: kBody2Black),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 6.h,
+                        ),
+                        Row(
+                          children: [
+                            Text('Date :  ', style: kBody2MediumBlue),
+                            Text(widget.date, style: kBody2Black),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 6.h,
+                        ),
+                        Row(
+                          children: [
+                            Text('Time :  ', style: kBody2MediumBlue),
+                            Text(widget.time, style: kBody2Black),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 6.h,
+                        ),
+                        Row(
+                          children: [
+                            Text('Case Type :  ', style: kBody2MediumBlue),
+                            Text(widget.caseType, style: kBody2Black),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 6,
+                        ),
+                        Row(
+                          children: [
+                            Text('Status :  ', style: kBody2MediumBlue),
+                            Text(widget.status.toString(), style: kBody2Black),
+                          ],
+                        ),
+                      ],
+                    )),
+                SizedBox(
+                  height: Get.height * 0.05,
+                ),
+                ConstantButton(
+                    buttonText: 'Show Questions',
+                    onTap: () {
+                      Get.to(() => QuestionsScreen(userId: widget.userId));
+                    }),
+                SizedBox(
+                  height: Get.height * 0.04,
+                ),
+                Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      profileController.updateCaseStatus(
+                          status: 'completed',
+                          caseId: widget.caseId.toString());
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(14.r),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Center(
+                        child: Text('Completed',
+                            textAlign: TextAlign.center, style: kBody1White),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 22.h,
-              ),
-              Center(
-                child: GestureDetector(
-                  onTap: () {
-                    profileController.updateCaseStatus(
-                        status: 'pending', caseId: widget.caseId.toString());
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(14.r),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.amber,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Center(
-                      child: Text('Pending',
-                          textAlign: TextAlign.center, style: kBody1White),
+                SizedBox(
+                  height: 22.h,
+                ),
+                Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      profileController.updateCaseStatus(
+                          status: 'pending', caseId: widget.caseId.toString());
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(14.r),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.amber,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Center(
+                        child: Text('Pending',
+                            textAlign: TextAlign.center, style: kBody1White),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 22.h,
-              ),
-              Center(
-                child: GestureDetector(
-                  onTap: () {
-                    profileController.updateCaseStatus(
-                        status: 'cancelled', caseId: widget.caseId.toString());
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(14.r),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Center(
-                      child: Text('Cancelled',
-                          textAlign: TextAlign.center, style: kBody1White),
+                SizedBox(
+                  height: 22.h,
+                ),
+                Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      profileController.updateCaseStatus(
+                          status: 'cancelled',
+                          caseId: widget.caseId.toString());
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(14.r),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Center(
+                        child: Text('Cancelled',
+                            textAlign: TextAlign.center, style: kBody1White),
+                      ),
                     ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),

@@ -419,20 +419,25 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
                 actions: [
                   TextButton(
                     onPressed: () async {
-                      setState(() {
-                        if (currentStep < (questionSets?.length ?? 0) - 1) {
-                          currentStep++;
-                        } else {
-                          currentStep = 0;
-                          allControllers[currentStep]
-                              .forEach((controller) => controller.clear());
-                          Navigator.of(context).pop();
+                      bool isEmpty = enteredValues[currentStep]
+                          .any((value) => value.isEmpty);
 
-                          // Store questions and answers in Firestore
-                          storeQuestionsAndAnswers(
-                              enteredValues, questionSets!, uid);
-                        }
-                      });
+                      if (isEmpty) {
+                        Fluttertoast.showToast(msg: 'Please fill all fields');
+                      } else {
+                        setState(() {
+                          if (currentStep < (questionSets?.length ?? 0) - 1) {
+                            currentStep++;
+                          } else {
+                            currentStep = 0;
+                            allControllers[currentStep]
+                                .forEach((controller) => controller.clear());
+                            Get.back();
+                            storeQuestionsAndAnswers(
+                                enteredValues, questionSets!, uid);
+                          }
+                        });
+                      }
                     },
                     child: Text(currentStep < (questionSets?.length ?? 0) - 1
                         ? 'Next'
@@ -460,24 +465,22 @@ class _LawyerBookingScreenState extends State<LawyerBookingScreen> {
       for (int i = 0; i < questions.length; i++) {
         var myId = uuid.v6();
 
-        // Store questions and answers in Firestore
         await FirebaseFirestore.instance
             .collection('users')
             .doc(uid)
             .collection('questions')
             .doc(myId)
             .set({
-          'questions': questions[i], // Store questions
-          'answers': enteredValues[i], // Store answers
-          // You can add more data if needed
+          'questions': questions[i],
+          'answers': enteredValues[i],
         });
       }
 
-      Fluttertoast.showToast(msg: 'Data stored successfully');
+      Fluttertoast.showToast(msg: 'Successful');
       EasyLoading.dismiss();
     } catch (e) {
       EasyLoading.dismiss();
-      Fluttertoast.showToast(msg: 'Failed to store data');
+      Fluttertoast.showToast(msg: 'Something went wrong');
     }
   }
 }
