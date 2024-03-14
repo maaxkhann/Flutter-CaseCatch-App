@@ -1,3 +1,4 @@
+import 'package:catch_case/lawyer_panel/dashboard/dashboard.dart';
 import 'package:catch_case/user_panel/constants/colors.dart';
 import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,23 +24,12 @@ class _CasesState extends State<Cases> {
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6),
-                child: Row(
-                  children: [
-                    IconButton(
-                        onPressed: () => Get.back(),
-                        icon: const Icon(Icons.arrow_back_ios)),
-                    SizedBox(
-                      width: Get.width * 0.15,
-                    ),
-                    Text('Cases',
-                        textAlign: TextAlign.center, style: kHead2Black),
-                  ],
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 6.w),
+                child: Text('Cases',
+                    textAlign: TextAlign.center, style: kHead2Black),
               ),
               16.heightBox,
               Padding(
@@ -190,7 +180,7 @@ class _CasesState extends State<Cases> {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return Padding(
-                              padding: EdgeInsets.only(top: 200.h),
+                              padding: EdgeInsets.only(top: 140.h),
                               child: const CircularProgressIndicator(),
                             );
                           } else if (!snapshot.hasData ||

@@ -16,6 +16,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String searchText = "";
+  TextEditingController searchController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   LawyerProfileController profileController =
       Get.put(LawyerProfileController());
@@ -26,7 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
             child: Column(
@@ -108,22 +109,29 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.grey,
                     ),
                   ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.search),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: TextFormField(
-                          cursorColor: Colors.amber,
-                          decoration: const InputDecoration(
-                            hintText: 'Search',
-                            border: InputBorder.none,
-                            focusColor: Colors.amber,
-                            hintStyle: TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                      ),
-                    ],
+                  child: TextFormField(
+                    cursorColor: Colors.amber,
+                    decoration: InputDecoration(
+                      prefixIcon: (searchText.isEmpty)
+                          ? const Icon(Icons.search)
+                          : IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                searchText = '';
+                                searchController.clear();
+                                setState(() {});
+                              },
+                            ),
+                      hintText: 'Search',
+                      border: InputBorder.none,
+                      focusColor: Colors.amber,
+                      hintStyle: const TextStyle(color: Colors.grey),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        searchText = value;
+                      });
+                    },
                   ),
                 ),
                 16.heightBox,
@@ -202,6 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return Column(
             children: [
               ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: snapshot.data?.docs.length ?? 0,
                 itemBuilder: (context, index) {

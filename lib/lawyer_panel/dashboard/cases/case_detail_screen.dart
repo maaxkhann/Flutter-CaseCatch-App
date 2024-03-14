@@ -1,5 +1,6 @@
 import 'package:catch_case/lawyer_panel/controllers/profile_controller.dart';
 import 'package:catch_case/lawyer_panel/dashboard/cases/questions_screen.dart';
+import 'package:catch_case/lawyer_panel/dashboard/dashboard.dart';
 import 'package:catch_case/user_panel/constant-widgets/constant_button.dart';
 import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -52,7 +53,7 @@ class _CaseDetailScreenState extends State<CaseDetailScreen> {
                 Row(
                   children: [
                     IconButton(
-                        onPressed: () => Get.back(),
+                        onPressed: () => Get.off(() => const Dashboard()),
                         icon: const Icon(Icons.arrow_back_ios)),
                     SizedBox(
                       width: Get.width * 0.13,

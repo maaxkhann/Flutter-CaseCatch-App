@@ -4,6 +4,7 @@ import 'package:catch_case/lawyer_panel/dashboard/schedule/my_schedule.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
@@ -27,6 +28,40 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   // DateTime selectedDateTime = DateTime.now();
 
   DateTime selectedDate = DateTime.now();
+  void deleteAppointment(context, var id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirm Deletion"),
+          content: const Text("Are you sure you want to delete this item?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                await FirebaseFirestore.instance
+                    .collection('lawyers')
+                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                    .collection('appointments')
+                    .doc(id)
+                    .delete()
+                    .then((value) {
+                  Fluttertoast.showToast(msg: 'Deleted');
+                  Navigator.of(context).pop();
+                });
+              },
+              child: const Text("Delete"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +103,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                     GestureDetector(
                       onTap: () {
                         Get.to(() => MySchedule(
-                              lawyerId: FirebaseAuth.instance.currentUser!.uid,
+                              lawyerId: lawyer!.uid,
                             ));
                       },
                       child: Container(
@@ -104,19 +139,9 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                   },
                   initialDate: selectedDate,
                 ),
-
                 const SizedBox(
                   height: 28,
                 ),
-// )           ,     const Text(
-//                   '03 Appointments',
-//                   style: TextStyle(
-//                     color: Colors.black,
-//                     fontSize: 22,
-//                     fontWeight: FontWeight.w600,
-//                   ),
-//                 ),
-//                 10.heightBox,
                 Container(
                   child: TabBar(
                     controller: tabController,
@@ -165,10 +190,8 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                     controller: tabController,
                     children: [
                       SingleChildScrollView(
-                          physics: const BouncingScrollPhysics(),
                           child: _buildAppointmentsStream(lawyer!.uid)),
                       SingleChildScrollView(
-                        physics: const BouncingScrollPhysics(),
                         child: Column(
                           children: [
                             CasesTab(
@@ -231,8 +254,10 @@ class _ScheduleScreenState extends State<ScheduleScreen>
 
     return StreamBuilder(
       stream: FirebaseFirestore.instance
+          .collection('lawyers')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection('appointments')
-          .where('lawyerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .orderBy('date')
           .where('date', isEqualTo: formattedDate)
           .snapshots(),
       builder: (context, snapshot) {
@@ -290,7 +315,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
               ListView.builder(
                 shrinkWrap: true,
                 itemCount: snapshot.data?.docs.length ?? 0,
-                physics: const BouncingScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   final appointment = snapshot.data!.docs[index];
 
@@ -343,6 +368,13 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                                     ],
                                   ),
                                   3.widthBox,
+                                  const Spacer(),
+                                  IconButton(
+                                      onPressed: () {
+                                        deleteAppointment(
+                                            context, appointment['caseId']);
+                                      },
+                                      icon: const Icon(Icons.delete))
                                 ],
                               ),
                               10.heightBox,
@@ -358,6 +390,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                                           status: appointment['status'],
                                           userId: appointment['userId'],
                                           caseId: appointment['caseId'],
+                                          userCaseId: appointment['userCaseId'],
                                         ));
                                   },
                                   child: Container(
@@ -416,11 +449,12 @@ class CasesTab extends StatelessWidget {
       children: [
         StreamBuilder(
           stream: FirebaseFirestore.instance
+              .collection('lawyers')
+              .doc(FirebaseAuth.instance.currentUser!.uid)
               .collection('appointments')
+              .orderBy('date')
               .where('status', isEqualTo: status)
               .where('date', isEqualTo: formattedDate)
-              .where('lawyerId',
-                  isEqualTo: FirebaseAuth.instance.currentUser!.uid)
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -530,6 +564,13 @@ class CasesTab extends StatelessWidget {
                                         ],
                                       ),
                                       3.widthBox,
+                                      const Spacer(),
+                                      IconButton(
+                                          onPressed: () {
+                                            deleteAppointment(
+                                                context, appointment['caseId']);
+                                          },
+                                          icon: const Icon(Icons.delete))
                                     ],
                                   ),
                                   10.heightBox,
@@ -545,6 +586,8 @@ class CasesTab extends StatelessWidget {
                                               status: appointment['status'],
                                               userId: appointment['userId'],
                                               caseId: appointment['caseId'],
+                                              userCaseId:
+                                                  appointment['userCaseId'],
                                             ));
                                       },
                                       child: Container(
@@ -576,6 +619,41 @@ class CasesTab extends StatelessWidget {
           },
         ),
       ],
+    );
+  }
+
+  void deleteAppointment(context, var id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirm Deletion"),
+          content: const Text("Are you sure you want to delete this item?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                await FirebaseFirestore.instance
+                    .collection('lawyers')
+                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                    .collection('appointments')
+                    .doc(id)
+                    .delete()
+                    .then((value) {
+                  Fluttertoast.showToast(msg: 'Deleted');
+                  Navigator.of(context).pop();
+                });
+              },
+              child: const Text("Delete"),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -77,8 +77,11 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
                               snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
+                          return Center(
+                              child: Padding(
+                            padding: EdgeInsets.only(top: Get.height * 0.2),
+                            child: const CircularProgressIndicator(),
+                          ));
                         }
 
                         if (snapshot.hasError) {
@@ -87,7 +90,7 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
                         }
 
                         if (!snapshot.hasData ||
-                            snapshot.data!.data() == null) {
+                            snapshot.data?.data() == null) {
                           return const Center(
                               child: Text('No schedule found.'));
                         }
@@ -95,9 +98,7 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
                         Map<String, dynamic> lawyerData =
                             snapshot.data!.data()!;
                         Map<String, dynamic> lawyerSchedule =
-                            (lawyerData['availability']
-                                    as Map<String, dynamic>) ??
-                                {};
+                            (lawyerData['availability']) ?? {};
 
                         return Column(
                           children: [

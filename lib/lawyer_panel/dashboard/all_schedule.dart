@@ -66,6 +66,7 @@ class _AllScheduleScreenState extends State<AllScheduleScreen> {
                     .collection('lawyers')
                     .doc(FirebaseAuth.instance.currentUser!.uid)
                     .collection('appointments')
+                    .orderBy('date')
                     .snapshots(),
                 //  .orderBy('date')
                 //  .startAt([searchText.toUpperCase()]).endAt(
@@ -92,11 +93,10 @@ class _AllScheduleScreenState extends State<AllScheduleScreen> {
                       ),
                     );
                   } else {
-                    //
-
                     return Column(
                       children: [
                         ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: snapshot.data?.docs.length ?? 0,
                           itemBuilder: (context, index) {
@@ -115,6 +115,7 @@ class _AllScheduleScreenState extends State<AllScheduleScreen> {
                                           status: appointment['status'],
                                           userId: appointment['userId'],
                                           caseId: appointment['caseId'],
+                                          userCaseId: appointment['userCaseId'],
                                         ));
                                   },
                                   child: Card(
