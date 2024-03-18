@@ -1,5 +1,5 @@
-import 'package:catch_case/user_panel/constant-widgets/constant_button.dart';
-import 'package:catch_case/user_panel/constant-widgets/constant_textfield.dart';
+import 'package:catch_case/constant-widgets/constant_button.dart';
+import 'package:catch_case/constant-widgets/constant_textfield.dart';
 import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:catch_case/user_panel/controllers/auth_controller.dart';
 import 'package:catch_case/user_panel/view/auth-view/forgot_password_view.dart';

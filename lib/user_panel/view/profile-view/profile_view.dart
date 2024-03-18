@@ -1,248 +1,204 @@
+import 'dart:io';
+
+import 'package:catch_case/constant-widgets/constant_textfield.dart';
 import 'package:catch_case/user_panel/constants/colors.dart';
 import 'package:catch_case/user_panel/constants/textstyles.dart';
-import 'package:catch_case/user_panel/view/lawyers-view/widgets/lawyers_button.dart';
-import 'package:catch_case/user_panel/view/profile-view/edit_profile_screen.dart';
-import 'package:catch_case/user_panel/view/profile-view/reminders_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:icon_decoration/icon_decoration.dart';
 
+import '../../../constant-widgets/constant_button.dart';
 import '../../controllers/profile_controller.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
 
   @override
-  State<ProfileView> createState() => _ProfileViewState();
+  State<ProfileView> createState() => _UpdateUserInfoScreenState();
 }
 
-ProfileController profileController = Get.put(ProfileController());
+class _UpdateUserInfoScreenState extends State<ProfileView> {
+  TextEditingController nameController = TextEditingController();
 
-class _ProfileViewState extends State<ProfileView> {
+  ProfileController profileController = Get.put(ProfileController());
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  void fetchUserData() async {
+    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+
+    if (userSnapshot.exists) {
+      Map<String, dynamic> userData =
+          userSnapshot.data() as Map<String, dynamic>;
+
+      setState(() {
+        nameController.text = userData['username'] ?? '';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: kButtonColor,
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-          title: Text(
-            'Profile',
-            style: kBody1White,
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: kButtonColor,
+        title: Text(
+          'Update Profile',
+          style: kHead2White,
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: kWhite,
           ),
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: Get.height * .03,
-                ),
-                Center(
-                  child: StreamBuilder(
-                      stream: profileController.allUsers(),
-                      builder:
-                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                        return Column(
-                            children: snapshot.data?.docs.map((e) {
-                                  return Column(
-                                    children: [
-                                      e["userId"] ==
-                                              FirebaseAuth
-                                                  .instance.currentUser!.uid
-                                          ? Column(
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+          child: Column(
+            children: [
+              StreamBuilder(
+                  stream: profileController.allUsers(),
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    return Column(
+                        children: snapshot.data?.docs.map((e) {
+                              return Column(
+                                children: [
+                                  e["userId"] ==
+                                          FirebaseAuth.instance.currentUser!.uid
+                                      ? Column(
+                                          children: [
+                                            Stack(
+                                              alignment: Alignment.bottomRight,
                                               children: [
                                                 Container(
-                                                  height: 99,
-                                                  width: 99,
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                  ),
+                                                  height: 60.h,
+                                                  width: 70.w,
+                                                  decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                          color: Colors.black)),
                                                   child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              111),
-                                                      child: e["userId"] == ''
-                                                          ? const Icon(
-                                                              Icons.person,
-                                                              size: 35,
-                                                            )
-                                                          : Image.network(
-                                                              e['image'],
-                                                              fit: BoxFit
-                                                                  .cover)),
-                                                ),
-                                                Text(
-                                                  e['username'],
-                                                  style: const TextStyle(
-                                                    color: Color(0xFF494949),
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w600,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            111.r),
+                                                    child: profileController
+                                                                .image ==
+                                                            null
+                                                        ? e["userId"] == ''
+                                                            ? const Icon(
+                                                                Icons.person,
+                                                                size: 35,
+                                                              )
+                                                            : Image.network(
+                                                                e['image'],
+                                                                fit: BoxFit
+                                                                    .cover)
+                                                        : Image.file(
+                                                            File(profileController
+                                                                    .image!
+                                                                    .path)
+                                                                .absolute,
+                                                            fit: BoxFit.cover,
+                                                          ),
                                                   ),
                                                 ),
-                                                Text(
-                                                  e['email'],
-                                                  style: const TextStyle(
-                                                    color: Color(0xFF494949),
-                                                    fontSize: 10,
-                                                    fontWeight: FontWeight.w400,
+                                                Positioned(
+                                                  right: 2,
+                                                  bottom: 1,
+                                                  child: CircleAvatar(
+                                                    radius: 15.r,
+                                                    backgroundColor:
+                                                        Colors.blue.shade300,
+                                                    child: IconButton(
+                                                        onPressed: () {
+                                                          profileController
+                                                              .pickImage(
+                                                                  context);
+                                                        },
+                                                        icon: const Icon(
+                                                          Icons.camera_alt,
+                                                          color: kWhite,
+                                                          size: 16,
+                                                        )),
                                                   ),
                                                 )
                                               ],
-                                            )
-                                          : const SizedBox()
-                                    ],
-                                  );
-                                }).toList() ??
-                                []);
-                      }),
-                ),
-                const SizedBox(
-                  height: 14,
-                ),
-                const Divider(),
-                SizedBox(
-                  height: Get.height * 0.03,
-                ),
-                ReUsableRow(
-                  text: 'Profile settings',
-                  icon: Icons.person_pin,
-                  onTap: () => Get.to(() => const UpdateUserInfoScreen()),
-                ),
-                SizedBox(
-                  height: Get.height * 0.03,
-                ),
-                ReUsableRow(
-                  text: 'Reminders',
-                  icon: Icons.notification_add,
-                  onTap: () => Get.to(() => const RemindersView()),
-                ),
-                SizedBox(
-                  height: Get.height * 0.03,
-                ),
-                ReUsableRow(
-                  text: 'Bank details',
-                  icon: Icons.food_bank,
-                  onTap: () {},
-                ),
-                SizedBox(
-                  height: Get.height * 0.03,
-                ),
-                ReUsableRow(
-                  text: 'Rate a lawyer',
-                  icon: Icons.star,
-                  onTap: () {},
-                ),
-                SizedBox(
-                  height: Get.height * 0.03,
-                ),
-                ReUsableRow(
-                  text: 'History',
-                  icon: Icons.history,
-                  onTap: () {},
-                ),
-                SizedBox(
-                  height: Get.height * 0.03,
-                ),
-                ReUsableRow(
-                  text: 'Help',
-                  icon: Icons.help,
-                  onTap: () {},
-                ),
-                SizedBox(
-                  height: Get.height * 0.03,
-                ),
-                ReUsableRow(
-                  text: 'About',
-                  icon: Icons.report,
-                  onTap: () {},
-                ),
-                SizedBox(
-                  height: Get.height * 0.05,
-                ),
-                Center(
-                    child: LawyersButton(
-                        buttonText: 'Logout',
-                        buttonColor: kButtonColor,
-                        onTap: () { showDialog(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      AlertDialog(
-                                                        title: const Text(
-                                                            "Are you sure ?"),
-                                                        content: const Text(
-                                                            "Click Confirm if you want to Log out of the app"),
-                                                        actions: [
-                                                          TextButton(
-                                                              onPressed: () {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              child: const Text(
-                                                                  "Cancel")),
-                                                          TextButton(
-                                                              onPressed: () {
-                                                                profileController
-                                                                    .logOut();
-
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              child: const Text(
-                                                                "Confirm",
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .red),
-                                                              ))
-                                                        ],
-                                                      ));}))
-              ],
-            ),
+                                            ),
+                                            Text(e['username'],
+                                                style: kBody1DarkBlue),
+                                            Text(e['email'], style: kBody3Grey),
+                                          ],
+                                        )
+                                      : const SizedBox()
+                                ],
+                              );
+                            }).toList() ??
+                            []);
+                  }),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  Text('Name', style: kBody1Black),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  ConstantTextField(
+                      controller: nameController,
+                      hintText: 'Enter Name',
+                      prefixIcon: Icons.person),
+                ],
+              ),
+              SizedBox(
+                height: Get.height * .1,
+              ),
+              ConstantButton(
+                  buttonText: 'Update',
+                  onTap: () {
+                    updateUserInfo();
+                  })
+            ],
           ),
         ),
       ),
     );
   }
-}
 
-class ReUsableRow extends StatelessWidget {
-  final String text;
+  void updateUserInfo() async {
+    try {
+      EasyLoading.show(status: 'Processing');
 
-  final IconData icon;
-  final VoidCallback onTap;
-  const ReUsableRow(
-      {super.key, required this.text, required this.icon, required this.onTap});
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update({
+        'username': nameController.text,
+      });
+      profileController.uploadProfilePicture();
+      Get.snackbar('Success', 'User information updated successfully');
+      EasyLoading.dismiss();
+    } catch (error) {
+      EasyLoading.dismiss();
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Row(
-        children: [
-          DecoratedIcon(
-            icon: Icon(
-              icon,
-              color: kWhite,
-            ),
-            decoration: IconDecoration(
-                border: IconBorder(color: kButtonColor, width: 3.r)),
-          ),
-          SizedBox(
-            width: Get.width * 0.02,
-          ),
-          Text(
-            text,
-            style: kBody2DarkBlue,
-          )
-        ],
-      ),
-    );
+      Get.snackbar('Error', error.toString());
+    }
   }
 }

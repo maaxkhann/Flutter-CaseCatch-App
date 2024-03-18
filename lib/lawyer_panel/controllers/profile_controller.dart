@@ -1,16 +1,16 @@
 import 'dart:io';
 
-import 'package:catch_case/user_panel/view/intro-view/intro_view1.dart';
+import 'package:catch_case/lawyer_panel/authentication/lawyer_login_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-
 
 class LawyerProfileController extends GetxController {
   RxBool isLoading = false.obs;
@@ -25,14 +25,16 @@ class LawyerProfileController extends GetxController {
 
   Future pickGalleryimage() async {
     isLoading.value = true;
-    final pickedFile =
-        await picker.pickImage(source: ImageSource.gallery, imageQuality: 100);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       _image = XFile(pickedFile.path);
-      uploadProfilePicture();
+      //   uploadProfilePicture();
 
       isLoading.value = false;
+    } else {
+      Fluttertoast.showToast(msg: 'No image selected');
     }
+    isLoading.value = false;
   }
 
   Future pickCameraimage() async {
@@ -42,10 +44,13 @@ class LawyerProfileController extends GetxController {
         await picker.pickImage(source: ImageSource.camera, imageQuality: 100);
     if (pickedFile != null) {
       _image = XFile(pickedFile.path);
-      uploadProfilePicture();
+      //  uploadProfilePicture();
 
       isLoading.value = false;
+    } else {
+      Fluttertoast.showToast(msg: 'No image selected');
     }
+    isLoading.value = false;
   }
 
   void pickImage(context) {
@@ -54,7 +59,7 @@ class LawyerProfileController extends GetxController {
       builder: (context) {
         return AlertDialog(
           content: SizedBox(
-            height: 120,
+            height: 100.h,
             child: Column(
               children: [
                 ListTile(
@@ -92,16 +97,15 @@ class LawyerProfileController extends GetxController {
     isLoading.value = true;
     try {
       FirebaseStorage storage = FirebaseStorage.instance;
-      Reference ref = storage.ref('profileImage/');
+      Reference ref = storage
+          .ref('profile_images/${FirebaseAuth.instance.currentUser!.uid}/');
       await ref.putFile(File(image!.path).absolute);
       String imageUrl = await ref.getDownloadURL();
-      // print("Image URL : " + imageUrl);
       await FirebaseAuth.instance.currentUser!.updatePhotoURL(imageUrl);
       FirebaseFirestore.instance
           .collection('lawyers')
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .update({'image': imageUrl.toString()}).then((value) {
-        Fluttertoast.showToast(msg: 'Profile updated');
         isLoading.value = false;
         _image = null;
       });
@@ -115,17 +119,11 @@ class LawyerProfileController extends GetxController {
 
     return '';
   }
-//
-
-//
-//
 
   logOut() async {
     await FirebaseAuth.instance.signOut();
-    Get.to(() => const IntroView1());
+    Get.offAll(() => const LawyerLoginView());
   }
-  //
-  //
 
   Future<void> updatePassword(
       {required String oldPassword, required String newPassword}) async {
@@ -146,21 +144,16 @@ class LawyerProfileController extends GetxController {
     }
   }
 
-  //
-  //
-  //
   Future<String> uploadProfile(
     String email,
     String fileName,
     String filePath,
   ) async {
-    // File file = File(FilePath);
     try {
       FirebaseStorage storage = FirebaseStorage.instance;
       Reference ref = storage.ref('$email/').child(fileName);
       await ref.putFile(File(filePath));
       String imageUrl = await ref.getDownloadURL();
-      // print("Image URL : " + imageUrl);
       await FirebaseAuth.instance.currentUser!.updatePhotoURL(imageUrl);
       return imageUrl;
     } on FirebaseException catch (e) {
@@ -168,36 +161,6 @@ class LawyerProfileController extends GetxController {
         print(e);
       }
     }
-
     return '';
-  }
-//
-//
-//
-
-  Future<void> updateCaseStatus({required String status,required String caseId}) async {
-    try {
-      // var uuid = const Uuid();
-      // var id = uuid.v6();
-
-      EasyLoading.show(status: 'Processing');
-      await FirebaseFirestore.instance
-          
-          .collection('appointments')
-          .doc(caseId)
-          .update({'status': status});
-      //
-      //
-
-      EasyLoading.dismiss();
-      Get.snackbar('Success', 'Case status updated successfully');
-    } catch (error) {
-      EasyLoading.dismiss();
-
-      if (kDebugMode) {
-        print('Error updating case status: $error');
-      }
-      Get.snackbar('Error', error.toString());
-    }
   }
 }

@@ -1,17 +1,12 @@
-import 'package:catch_case/user_panel/constant-widgets/constant_appbar.dart';
-import 'package:catch_case/user_panel/constant-widgets/constant_button.dart';
+import 'package:catch_case/constant-widgets/constant_appbar.dart';
+import 'package:catch_case/constant-widgets/constant_button.dart';
 import 'package:catch_case/user_panel/constants/colors.dart';
 import 'package:catch_case/user_panel/constants/textstyles.dart';
-import 'package:catch_case/user_panel/view/lawyer/book_lawyer_screen.dart';
-import 'package:catch_case/user_panel/view/lawyers-view/about-view/review_view.dart';
+import 'package:catch_case/user_panel/view/home-view/user_questions_view.dart';
 import 'package:catch_case/user_panel/view/lawyers-view/all_lawyers_view.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
-import '../../chat-view/chat_screen.dart';
-import 'lawyer_schedule.dart';
 
 class AboutView extends StatefulWidget {
   final String image;
@@ -20,7 +15,7 @@ class AboutView extends StatefulWidget {
   final String experience;
   final String bio;
   final String? fcmToken;
-  final String? lawyerId;
+  final String lawyerId;
   final String address;
   final String contact;
   final String practice;
@@ -33,7 +28,7 @@ class AboutView extends StatefulWidget {
       required this.experience,
       required this.bio,
       this.fcmToken,
-      this.lawyerId,
+      required this.lawyerId,
       required this.address,
       required this.contact,
       required this.practice});
@@ -60,7 +55,7 @@ class _AboutViewState extends State<AboutView> {
               alignment: Alignment.bottomCenter,
               child: Container(
                 padding: EdgeInsets.symmetric(
-                    horizontal: Get.width * 0.025, vertical: Get.width * 0.02),
+                    horizontal: Get.width * 0.026, vertical: Get.height * 0.01),
                 decoration: BoxDecoration(
                     color: kWhite,
                     borderRadius: BorderRadius.only(
@@ -74,8 +69,8 @@ class _AboutViewState extends State<AboutView> {
                     children: [
                       Center(
                         child: Container(
-                          width: Get.width * 0.16,
-                          height: Get.height * 0.01,
+                          width: Get.width * 0.14,
+                          height: Get.height * 0.008,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(
                                 Get.width * 0.04,
@@ -86,25 +81,9 @@ class _AboutViewState extends State<AboutView> {
                       SizedBox(
                         height: Get.height * 0.015,
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            widget.name,
-                            style: kHead2Black,
-                          ),
-                          const Spacer(),
-                          // Text(
-                          //   '4.7',
-                          //   style: kBody1MediumBlue,
-                          // ),
-                          InkWell(
-                            onTap: () => Get.to(() => const ReviewScreen()),
-                            child: const Icon(
-                              Icons.star,
-                              color: Colors.greenAccent,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        widget.name,
+                        style: kHead2Black,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -113,27 +92,18 @@ class _AboutViewState extends State<AboutView> {
                             'Area of practice',
                             style: kBody2Black,
                           ),
-                          // Text(
-                          //   '198 Reviews',
-                          //   style: kBody3Grey,
-                          // ),
+                          Text(
+                            'Category',
+                            style: kBody2Black,
+                          ),
                         ],
                       ),
                       SizedBox(
                         height: 2.h,
                       ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          // Container(
-                          //   padding: const EdgeInsets.all(6),
-                          //   decoration: BoxDecoration(
-                          //       borderRadius: BorderRadius.circular(6),
-                          //       border: Border.all(color: kMediumBlue)),
-                          //   child: Text(
-                          //     widget.category,
-                          //     style: kBody3DarkBlue,
-                          //   ),
-                          // ),
                           Container(
                             margin: const EdgeInsets.only(left: 4),
                             padding: const EdgeInsets.all(6),
@@ -145,30 +115,25 @@ class _AboutViewState extends State<AboutView> {
                               style: kBody3DarkBlue,
                             ),
                           ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 4),
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(color: kMediumBlue)),
+                            child: Text(
+                              widget.category,
+                              style: kBody3DarkBlue,
+                            ),
+                          ),
                         ],
                       ),
-                      // SizedBox(
-                      //   height: Get.height * 0.01,
-                      // ),
-                      // Container(
-                      //   padding: const EdgeInsets.all(6),
-                      //   decoration: BoxDecoration(
-                      //       borderRadius: BorderRadius.circular(6),
-                      //       border: Border.all(color: kMediumBlue)),
-                      //   child: Text(
-                      //     widget.category,
-                      //     style: kBody3DarkBlue,
-                      //   ),
-                      // ),
                       SizedBox(
                         height: Get.height * 0.015,
                       ),
                       Text(
                         'Biography',
                         style: kBody2Black,
-                      ),
-                      SizedBox(
-                        height: Get.height * 0.01,
                       ),
                       Text(
                         widget.bio,
@@ -193,7 +158,7 @@ class _AboutViewState extends State<AboutView> {
                         ],
                       ),
                       SizedBox(
-                        height: Get.height * 0.006,
+                        height: Get.height * 0.008,
                       ),
                       Row(
                         children: [
@@ -205,18 +170,18 @@ class _AboutViewState extends State<AboutView> {
                             width: Get.width * 0.012,
                           ),
                           Text(
-                            widget.experience,
+                            '${widget.experience} years',
                             style: kBody44DarkBlue,
                           )
                         ],
                       ),
                       SizedBox(
-                        height: Get.height * 0.006,
+                        height: Get.height * 0.008,
                       ),
                       Row(
                         children: [
                           const Icon(
-                            Icons.chat,
+                            Icons.call,
                             color: kMediumBlue,
                           ),
                           SizedBox(
@@ -229,88 +194,16 @@ class _AboutViewState extends State<AboutView> {
                         ],
                       ),
                       SizedBox(
-                        height: Get.height * 0.03,
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                Get.to(() => Chat(
-                                      fcmToken: widget.fcmToken,
-                                      groupId: FirebaseAuth
-                                          .instance.currentUser!.uid,
-                                      name: widget.name,
-                                      image: widget.image,
-                                      lawyerId: widget.lawyerId,
-                                    ));
-                              },
-                              child: Container(
-                                height: 49,
-                                width: Get.width * .4,
-                                padding: const EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                  color: kButtonColor,
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    'Continue chat',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                Get.to(() => ScheduleScreen(
-                                      lawyerId: widget.lawyerId.toString(),
-                                    ));
-                              },
-                              child: Container(
-                                width: Get.width * .4,
-                                height: 49,
-                                padding: const EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                  color: kButtonColor,
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    'Availability',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 22,
+                        height: Get.height * 0.07,
                       ),
                       Padding(
                         padding:
                             EdgeInsets.symmetric(horizontal: Get.width * 0.04),
                         child: ConstantButton(
-                            buttonText: 'Book now',
-                            onTap: () => Get.to(() => LawyerBookingScreen(
-                                  lawyerId: widget.lawyerId.toString(),
-                                  name: widget.name,
-                                  image: widget.image,
+                            buttonText: 'Question now',
+                            onTap: () => Get.to(() => QuestionsView(
+                                  lawyerId: widget.lawyerId,
+                                  token: widget.fcmToken,
                                 ))),
                       ),
                       Center(

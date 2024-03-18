@@ -1,5 +1,4 @@
-import 'package:catch_case/user_panel/constant-widgets/constant_appbar.dart';
-import 'package:catch_case/user_panel/constant-widgets/constant_textfield2.dart';
+import 'package:catch_case/constant-widgets/constant_appbar.dart';
 import 'package:catch_case/user_panel/constants/colors.dart';
 import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,23 +22,13 @@ class _AllLawyersCategoryViewState extends State<AllLawyersCategoryView> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: const ConstantAppBar(text: 'Lawyers'),
+        appBar: const ConstantAppBar(text: 'Lawyers Category'),
         body: Padding(
           padding: EdgeInsets.symmetric(
               horizontal: Get.width * 0.02, vertical: Get.height * 0.01),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-               ConstantTextField2(
-                controller: searchController,
-                  prefixIcon: Icons.search, suffixIcon: Icons.filter),
-              SizedBox(
-                height: Get.height * 0.02,
-              ),
-              Text(
-                'Types of lawyers',
-                style: kBody1DarkBlue,
-              ),
               SizedBox(
                 height: Get.height * 0.02,
               ),
@@ -47,8 +36,7 @@ class _AllLawyersCategoryViewState extends State<AllLawyersCategoryView> {
                   stream: FirebaseFirestore.instance
                       .collection('lawyers')
                       .orderBy('category')
-                      .startAt([searchText.toUpperCase()]).endAt(
-                          ['$searchText\uf8ff']).snapshots(),
+                      .snapshots(),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
@@ -63,13 +51,7 @@ class _AllLawyersCategoryViewState extends State<AllLawyersCategoryView> {
                       return Center(
                           child: Padding(
                         padding: const EdgeInsets.only(top: 233),
-                        child: Text(
-                          'No lawyer Registered yet',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.amber.shade700),
-                        ),
+                        child: Text('No Category found', style: kBody1DarkBlue),
                       ));
                     } else {
                       Set<String> categories = Set<String>();
@@ -104,7 +86,7 @@ class _AllLawyersCategoryViewState extends State<AllLawyersCategoryView> {
                                   child: Center(
                                       child: Text(
                                     category,
-                                    style: kBody4DarkBlue,
+                                    style: kBody2DarkBlue,
                                   )),
                                 ));
                           },

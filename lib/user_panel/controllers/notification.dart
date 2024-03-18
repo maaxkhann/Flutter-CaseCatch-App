@@ -25,7 +25,6 @@ class LocalNotificationService {
 
   static void display(RemoteMessage message) async {
     try {
-      print("In Notification method");
       Random random = Random();
       int id = random.nextInt(1000);
       const NotificationDetails notificationDetails = NotificationDetails(
@@ -35,7 +34,7 @@ class LocalNotificationService {
         importance: Importance.max,
         priority: Priority.high,
       ));
-      print("my id is ${id.toString()}");
+
       await _flutterLocalNotificationsPlugin.show(
         id,
         message.notification!.title,
@@ -49,10 +48,6 @@ class LocalNotificationService {
 
   static Future<void> sendNotification(
       {String? title, String? message, String? token}) async {
-    print("\n\n\n\n\n\n\n\n\n\n\n\n");
-    print("token is $token");
-    print("\n\n\n\n\n\n\n\n\n\n\n\n");
-
     final data = {
       "click_action": "FLUTTER_NOTIFICATION_CLICK",
       "id": "1",
@@ -77,15 +72,9 @@ class LocalNotificationService {
         ),
       );
 
-      print(r.body);
       if (r.statusCode == 200) {
-        print('DOne');
-      } else {
-        print(r.statusCode);
-      }
-    } catch (e) {
-      print('exception $e');
-    }
+      } else {}
+    } catch (e) {}
   }
 
   static storeToken() async {
@@ -158,7 +147,6 @@ class LocalNotificationService {
       criticalAlert: true,
       provisional: true,
       sound: true,
-      
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {

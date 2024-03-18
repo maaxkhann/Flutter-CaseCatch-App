@@ -1,4 +1,4 @@
-import 'package:catch_case/user_panel/constant-widgets/constant_button.dart';
+import 'package:catch_case/constant-widgets/constant_button.dart';
 import 'package:catch_case/user_panel/constants/colors.dart';
 import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:catch_case/user_panel/view/intro-view/intro_view3.dart';

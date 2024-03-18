@@ -1,4 +1,4 @@
-import 'package:catch_case/lawyer_panel/authentication/signin_screen.dart';
+import 'package:catch_case/lawyer_panel/authentication/lawyer_login_view.dart';
 import 'package:catch_case/user_panel/constants/colors.dart';
 import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:catch_case/user_panel/view/auth-view/login_view.dart';
@@ -29,7 +29,7 @@ class SelectUserView extends StatelessWidget {
                   height: Get.height * 0.1,
                 ),
                 GestureDetector(
-                  onTap: () => Get.to(() => const SigninScreen()),
+                  onTap: () => Get.to(() => const LawyerLoginView()),
                   child: Container(
                     width: Get.width * 0.5,
                     height: Get.height * 0.08,

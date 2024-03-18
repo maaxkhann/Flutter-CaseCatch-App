@@ -1,8 +1,4 @@
-import 'package:catch_case/user_panel/constant-widgets/constant_textfield2.dart';
-
 import 'package:catch_case/user_panel/constants/textstyles.dart';
-import 'package:catch_case/user_panel/view/home-view/widgets/free_consultation_widget.dart';
-
 import 'package:catch_case/user_panel/view/home-view/widgets/home_appbar.dart';
 import 'package:catch_case/user_panel/view/home-view/widgets/home_button.dart';
 import 'package:catch_case/user_panel/view/home-view/widgets/lawyers_category.dart';
@@ -10,9 +6,9 @@ import 'package:catch_case/user_panel/view/lawyers-view/all_lawyers_category_vie
 import 'package:catch_case/user_panel/view/lawyers-view/all_lawyers_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -35,18 +31,11 @@ class _HomeViewState extends State<HomeView> {
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: Get.width * 0.02, vertical: Get.height * 0.015),
+              horizontal: Get.width * 0.02, vertical: Get.height * 0.01),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ConstantTextField2(
-                    controller: searchController,
-                    prefixIcon: Icons.search,
-                    suffixIcon: Icons.filter_alt),
-                SizedBox(
-                  height: Get.height * 0.025,
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -55,8 +44,7 @@ class _HomeViewState extends State<HomeView> {
                       style: kBody1Black2,
                     ),
                     TextButton(
-                        onPressed: () =>
-                            Get.to(() => const FreeConsultaionScreen()),
+                        onPressed: () => Get.to(() => const AllLawyersView()),
                         child: Text(
                           'View all',
                           style: kBody3DarkBlue,
@@ -64,17 +52,13 @@ class _HomeViewState extends State<HomeView> {
                   ],
                 ),
                 SizedBox(
-                  height: Get.height * 0.02,
-                ),
-                SizedBox(
-                  height: 128,
+                  height: Get.height * 0.155,
                   child: StreamBuilder(
                       stream: FirebaseFirestore.instance
                           .collection('lawyers')
                           .limit(4)
                           .orderBy('name')
-                          .startAt([searchText.toUpperCase()]).endAt(
-                              ['$searchText\uf8ff']).snapshots(),
+                          .snapshots(),
                       builder:
                           (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (snapshot.connectionState ==
@@ -91,25 +75,14 @@ class _HomeViewState extends State<HomeView> {
                           return Center(
                               child: Padding(
                             padding: const EdgeInsets.only(top: 4),
-                            child: Text(
-                              'No lawyer Registered yet',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.amber.shade700),
-                            ),
+                            child: Text('No lawyer Registered yet',
+                                style: kBody1DarkBlue),
                           ));
                         } else {
                           return ListView.builder(
                             scrollDirection: Axis.horizontal,
                             shrinkWrap: true,
-                            // itemCount:snapshot.data!.docs.length
-                            // <
-                            //                         3
-                            //                     ? snapshot.data!.docs.length
-                            //                     : 3,
                             itemCount: snapshot.data?.docs.length ?? 0,
-
                             itemBuilder: (context, index) {
                               final e = snapshot.data!.docs[index];
                               return Card(
@@ -119,32 +92,24 @@ class _HomeViewState extends State<HomeView> {
                                     color: Colors.grey[100],
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  padding: const EdgeInsets.only(
-                                    left: 10,
-                                    right: 10,
-                                    top: 10,
-                                    bottom: 8,
-                                  ),
-                                  height: 120,
-                                  width: 220,
+                                  padding: EdgeInsets.all(8.r),
                                   child: Row(
                                     children: [
-                                      Container(
-                                        height: 90,
-                                        width: 80,
+                                      SizedBox(
+                                        height: 80.h,
+                                        width: 80.w,
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(12),
                                           child: Image.network(
                                             e['image'],
                                             fit: BoxFit.cover,
-                                            height: 75,
                                           ),
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 6, top: 9),
+                                        padding: EdgeInsets.only(
+                                            left: 6.w, top: 9.h),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -165,26 +130,12 @@ class _HomeViewState extends State<HomeView> {
                                                 ),
                                               ],
                                             ),
-                                            2.heightBox,
+                                            const SizedBox(height: 2),
                                             Text(
                                               e['category'],
                                               style: const TextStyle(
                                                 color: Colors.black87,
-                                                fontSize: 10,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                left: 60,
-                                                top: 10,
-                                              ),
-                                              child: Text(
-                                                e['price'],
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
+                                                fontSize: 11,
                                               ),
                                             ),
                                           ],
@@ -202,18 +153,22 @@ class _HomeViewState extends State<HomeView> {
                 SizedBox(
                   height: Get.height * 0.02,
                 ),
-                Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Catrgories',
+                      style: kBody1Black2,
+                    ),
+                    TextButton(
                       onPressed: () =>
                           Get.to(() => const AllLawyersCategoryView()),
                       child: Text(
                         'View all',
                         style: kBody3DarkBlue,
                       ),
-                    )),
-                SizedBox(
-                  height: Get.height * 0.01,
+                    ),
+                  ],
                 ),
                 const LawyersCategory(),
                 SizedBox(
@@ -249,173 +204,6 @@ class _HomeViewState extends State<HomeView> {
                     SvgPicture.asset('assets/images/home/Group 475.svg'),
                   ],
                 ),
-                // Center(
-                //     child: HomeButton(
-                //         buttonText: 'All lawyers',
-                //         onTap: () => Get.to(() => const AllLawyersView()))),
-                // SizedBox(
-                //   height: Get.height * 0.025,
-                // ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     Text(
-                //       'Our Lawyers',
-                //       style: kBody1Black2,
-                //     ),
-                //     TextButton(
-                //         onPressed: () => Get.to(() => const AllLawyersView()),
-                //         child: Text(
-                //           'View all',
-                //           style: kBody3DarkBlue,
-                //         ))
-                //   ],
-                // ),
-                // SizedBox(
-                //   height: Get.height * 0.02,
-                // ),
-                // SingleChildScrollView(
-                //   scrollDirection: Axis.horizontal,
-                //   child: Row(
-                //     children: [
-                //       SizedBox(
-                //         height: 128,
-                //         child: StreamBuilder(
-                //             stream: FirebaseFirestore.instance
-                //                 .collection('lawyers')
-                //                 .limit(4)
-                //                .snapshots(),
-                //             builder: (context,
-                //                 AsyncSnapshot<QuerySnapshot> snapshot) {
-                //               if (snapshot.connectionState ==
-                //                   ConnectionState.waiting) {
-                //                 return const Center(
-                //                     child: Padding(
-                //                   padding: EdgeInsets.only(top: 4),
-                //                   child: CircularProgressIndicator(),
-                //                 ));
-                //               } else if (snapshot.hasError) {
-                //                 return Text('Error: ${snapshot.error}');
-                //               } else if (!snapshot.hasData ||
-                //                   snapshot.data!.docs.isEmpty) {
-                //                 return Padding(
-                //                   padding: const EdgeInsets.only(left: 111),
-                //                   child: Text(
-                //                     'No lawyer Registered yet',
-                //                     style: TextStyle(
-                //                         fontSize: 16,
-                //                         fontWeight: FontWeight.w400,
-                //                         color: Colors.amber.shade700),
-                //                   ),
-                //                 );
-                //               } else {
-                //                 return ListView.builder(
-                //                   scrollDirection: Axis.horizontal,
-                //                   shrinkWrap: true,
-                //                   // itemCount:snapshot.data!.docs.length
-                //                   // <
-                //                   //                         3
-                //                   //                     ? snapshot.data!.docs.length
-                //                   //                     : 3,
-                //                   itemCount: snapshot.data?.docs.length ?? 0,
-
-                //                   itemBuilder: (context, index) {
-                //                     final e = snapshot.data!.docs[index];
-                //                     return Card(
-                //                       color: Colors.white,
-                //                       child: Container(
-                //                         decoration: BoxDecoration(
-                //                           color: Colors.grey[100],
-                //                           borderRadius:
-                //                               BorderRadius.circular(10),
-                //                         ),
-                //                         padding: const EdgeInsets.only(
-                //                           left: 10,
-                //                           right: 10,
-                //                           top: 10,
-                //                           bottom: 8,
-                //                         ),
-                //                         height: 120,
-                //                         width: 220,
-                //                         child: Row(
-                //                           children: [
-                //                             Container(
-                //                               height: 90,
-                //                               width: 80,
-                //                               child: ClipRRect(
-                //                                 borderRadius:
-                //                                     BorderRadius.circular(12),
-                //                                 child: Image.network(
-                //                                   e['image'],
-                //                                   fit: BoxFit.cover,
-                //                                   height: 75,
-                //                                 ),
-                //                               ),
-                //                             ),
-                //                             Padding(
-                //                               padding: const EdgeInsets.only(
-                //                                   left: 6, top: 9),
-                //                               child: Column(
-                //                                 crossAxisAlignment:
-                //                                     CrossAxisAlignment.start,
-                //                                 children: [
-                //                                   Row(
-                //                                     mainAxisAlignment:
-                //                                         MainAxisAlignment
-                //                                             .spaceBetween,
-                //                                     children: [
-                //                                       Text(
-                //                                         e['name'],
-                //                                         textAlign:
-                //                                             TextAlign.center,
-                //                                         style: const TextStyle(
-                //                                           color: Colors.black,
-                //                                           fontSize: 12,
-                //                                           fontWeight:
-                //                                               FontWeight.bold,
-                //                                         ),
-                //                                       ),
-                //                                     ],
-                //                                   ),
-                //                                   2.heightBox,
-                //                                   Text(
-                //                                     e['category'],
-                //                                     style: const TextStyle(
-                //                                       color: Colors.black87,
-                //                                       fontSize: 10,
-                //                                     ),
-                //                                   ),
-                //                                   Padding(
-                //                                     padding:
-                //                                         const EdgeInsets.only(
-                //                                       left: 60,
-                //                                       top: 10,
-                //                                     ),
-                //                                     child: Text(
-                //                                       e['price'],
-                //                                       style: const TextStyle(
-                //                                         color: Colors.black,
-                //                                         fontSize: 12,
-                //                                         fontWeight:
-                //                                             FontWeight.w600,
-                //                                       ),
-                //                                     ),
-                //                                   ),
-                //                                 ],
-                //                               ),
-                //                             ),
-                //                           ],
-                //                         ),
-                //                       ),
-                //                     );
-                //                   },
-                //                 );
-                //               }
-                //             }),
-                //       ),
-                //     ],
-                //   ),
-                // ),
               ],
             ),
           ),

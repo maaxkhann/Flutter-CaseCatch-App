@@ -1,53 +1,51 @@
-import 'package:catch_case/user_panel/constant-widgets/constant_appbar.dart';
 import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:catch_case/user_panel/view/lawyers-view/about-view/about_view.dart';
 import 'package:catch_case/user_panel/view/lawyers-view/widgets/lawyers_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
-import '../../constants/colors.dart';
+import '../../../../constant-widgets/constant_appbar.dart';
 
 class AllLawyersView extends StatefulWidget {
-  const AllLawyersView({super.key});
+  const AllLawyersView({
+    super.key,
+  });
 
   @override
-  State<AllLawyersView> createState() => _AllLawyersViewState();
+  State<AllLawyersView> createState() => _FreeConsultaionScreenState();
 }
 
-class _AllLawyersViewState extends State<AllLawyersView> {
+class _FreeConsultaionScreenState extends State<AllLawyersView> {
   TextEditingController searchController = TextEditingController();
-  String selectedCategory = '';
+
   String searchText = "";
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: kButtonColor,
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-          title: Text(
-            'Lawyers',
-            style: kHead2White,
-          ),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.02),
+        appBar: const ConstantAppBar(text: 'All lawyers'),
+        body: Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: Get.width * 0.02, vertical: Get.height * 0.01),
+          child: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: Get.height * 0.015,
-                ),
-                // const ConstantTextField2(
-                //     prefixIcon: Icons.search, suffixIcon: Icons.settings),
                 TextFormField(
                     controller: searchController,
                     cursorColor: Colors.amber,
                     decoration: InputDecoration(
                       hintText: 'Search for lawyers',
                       border: InputBorder.none,
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(Get.width * 0.02),
+                        borderSide: const BorderSide(color: Color(0xFFA7A7A7)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(Get.width * 0.02),
+                        borderSide: const BorderSide(color: Color(0xFFA7A7A7)),
+                      ),
                       prefixIcon: (searchText.isEmpty)
                           ? const Icon(Icons.search)
                           : IconButton(
@@ -58,14 +56,6 @@ class _AllLawyersViewState extends State<AllLawyersView> {
                                 setState(() {});
                               },
                             ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(Get.width * 0.02),
-                        borderSide: const BorderSide(color: Color(0xFFA7A7A7)),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(Get.width * 0.02),
-                        borderSide: const BorderSide(color: Color(0xFFA7A7A7)),
-                      ),
                       hintStyle: const TextStyle(
                         fontSize: 14,
                       ),
@@ -75,13 +65,12 @@ class _AllLawyersViewState extends State<AllLawyersView> {
                         searchText = value;
                       });
                     }),
-                const SizedBox(
-                  height: 12,
-                ),
                 StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection('lawyers')
-                        .snapshots(),
+                        .orderBy('name')
+                        .startAt([searchText.toUpperCase()]).endAt(
+                            ['$searchText\uf8ff']).snapshots(),
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(
@@ -90,7 +79,11 @@ class _AllLawyersViewState extends State<AllLawyersView> {
                           child: CircularProgressIndicator(),
                         ));
                       } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
+                        return Center(
+                            child: Text(
+                          'Error: ${snapshot.error}',
+                          style: kBody1Black,
+                        ));
                       } else if (!snapshot.hasData ||
                           snapshot.data!.docs.isEmpty) {
                         return Center(
@@ -98,16 +91,14 @@ class _AllLawyersViewState extends State<AllLawyersView> {
                           padding: const EdgeInsets.only(top: 233),
                           child: Text(
                             'No lawyer Registered yet',
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.amber.shade700),
+                            style: kBody1DarkBlue,
                           ),
                         ));
                       } else {
                         return ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          physics: const BouncingScrollPhysics(),
+                          padding: EdgeInsets.zero,
                           itemCount: snapshot.data?.docs.length ?? 0,
                           itemBuilder: (context, index) {
                             final e = snapshot.data!.docs[index];
@@ -115,14 +106,9 @@ class _AllLawyersViewState extends State<AllLawyersView> {
                                 .toString()
                                 .toLowerCase()
                                 .contains(searchText.toLowerCase())) {
-                              String fcmToken = '';
-                              try {
-                                fcmToken = e['fcmToken'];
-                              } catch (e) {
-                                fcmToken = '';
-                              }
                               return Container(
-                                margin: EdgeInsets.only(top: Get.height * 0.02),
+                                margin:
+                                    EdgeInsets.only(top: Get.height * 0.014),
                                 padding: EdgeInsets.symmetric(
                                     horizontal: Get.width * 0.02,
                                     vertical: Get.height * 0.01),
@@ -136,8 +122,8 @@ class _AllLawyersViewState extends State<AllLawyersView> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
-                                      width: Get.width * .17,
-                                      height: Get.height * .1,
+                                      width: 60.w,
+                                      height: 74.h,
                                       decoration: ShapeDecoration(
                                         image: DecorationImage(
                                           image: NetworkImage(e['image']),
@@ -148,9 +134,8 @@ class _AllLawyersViewState extends State<AllLawyersView> {
                                                 BorderRadius.circular(6)),
                                       ),
                                     ),
-                                    const SizedBox(width: 10),
                                     SizedBox(
-                                      width: Get.width * 0.01,
+                                      width: Get.width * 0.02,
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(
@@ -169,10 +154,6 @@ class _AllLawyersViewState extends State<AllLawyersView> {
                                             e['category'],
                                             style: kBody5Grey,
                                           ),
-                                          // Text(
-                                          //   'Tax lawyer',
-                                          //   style: kBody5Grey,
-                                          // ),
                                         ],
                                       ),
                                     ),
@@ -186,7 +167,8 @@ class _AllLawyersViewState extends State<AllLawyersView> {
                                         children: [
                                           Padding(
                                             padding: EdgeInsets.only(
-                                                left: Get.width * 0.05),
+                                                left: Get.width * 0.05,
+                                                bottom: Get.height * 0.06),
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -196,46 +178,31 @@ class _AllLawyersViewState extends State<AllLawyersView> {
                                                   style: kBody4Black,
                                                 ),
                                                 Text(
-                                                  e['experience'],
+                                                  '${e['experience']} years',
                                                   style: kBody5Grey,
                                                 )
                                               ],
                                             ),
                                           ),
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Text(
-                                                '4.7',
-                                                style: kBody4Black,
-                                              ),
-                                              Text(
-                                                e['price'] ?? 'Free',
-                                                style: kBody444DarkBlue,
-                                              ),
-                                              SizedBox(
-                                                height: Get.height * 0.01,
-                                              ),
-                                              LawyersButton(
-                                                  buttonText: 'Book Now',
-                                                  onTap: () => Get.to(() =>
-                                                      AboutView(
-                                                        fcmToken: fcmToken,
-                                                        lawyerId: e['lawyerId'],
-                                                        image: e['image'],
-                                                        name: e['name'],
-                                                        category: e['category'],
-                                                        experience:
-                                                            e['experience'],
-                                                        address: e['address'],
-                                                        practice: e['practice'],
-                                                        contact: e['contact'],
-                                                        bio: e['bio'],
-                                                      )))
-                                            ],
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: Get.height * 0.05),
+                                            child: LawyersButton(
+                                                buttonText: 'About',
+                                                onTap: () => Get.to(() =>
+                                                    AboutView(
+                                                      lawyerId: e['lawyerId'],
+                                                      image: e['image'],
+                                                      name: e['name'],
+                                                      category: e['category'],
+                                                      experience:
+                                                          e['experience'],
+                                                      address: e['address'],
+                                                      practice: e['practice'],
+                                                      contact: e['contact'],
+                                                      bio: e['bio'],
+                                                      fcmToken: e['fcmToken'],
+                                                    ))),
                                           )
                                         ],
                                       ),

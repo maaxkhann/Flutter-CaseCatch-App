@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,9 +20,6 @@ class ProfileController extends GetxController {
     return FirebaseFirestore.instance.collection('users').snapshots();
   }
 
- 
-
-
   final picker = ImagePicker();
   XFile? _image;
   XFile? get image => _image;
@@ -32,9 +30,12 @@ class ProfileController extends GetxController {
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 100);
     if (pickedFile != null) {
       _image = XFile(pickedFile.path);
-      uploadProfilePicture();
+      //  uploadProfilePicture();
       isLoading.value = false;
+    } else {
+      Fluttertoast.showToast(msg: 'No image selected');
     }
+    isLoading.value = false;
   }
 
   Future pickCameraimage() async {
@@ -44,9 +45,12 @@ class ProfileController extends GetxController {
         await picker.pickImage(source: ImageSource.camera, imageQuality: 100);
     if (pickedFile != null) {
       _image = XFile(pickedFile.path);
-      uploadProfilePicture();
+      //  uploadProfilePicture();
       isLoading.value = false;
+    } else {
+      Fluttertoast.showToast(msg: 'No image selected');
     }
+    isLoading.value = false;
   }
 
   void pickImage(context) {
@@ -55,7 +59,7 @@ class ProfileController extends GetxController {
       builder: (context) {
         return AlertDialog(
           content: SizedBox(
-            height: 120,
+            height: 100.h,
             child: Column(
               children: [
                 ListTile(
@@ -87,36 +91,33 @@ class ProfileController extends GetxController {
       },
     );
   }
- Future<String> uploadProfilePicture(
-    
-      ) async {
+
+  Future<String> uploadProfilePicture() async {
     isLoading.value = true;
     try {
       FirebaseStorage storage = FirebaseStorage.instance;
       Reference ref = storage.ref('profileImage/');
       await ref.putFile(File(image!.path).absolute);
       String imageUrl = await ref.getDownloadURL();
-      // print("Image URL : " + imageUrl);
       await FirebaseAuth.instance.currentUser!.updatePhotoURL(imageUrl);
-     FirebaseFirestore.instance
+      FirebaseFirestore.instance
           .collection('users')
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .update({'image': imageUrl.toString()}).then((value) {
-        Fluttertoast.showToast(msg: 'Profile updated');
         isLoading.value = false;
         _image = null;
       });
-            isLoading.value = false;
+      isLoading.value = false;
 
       return imageUrl;
     } on FirebaseException catch (e) {
-         isLoading.value = false;
+      isLoading.value = false;
       Get.snackbar('Error', e.toString());
     }
 
     return '';
   }
- 
+
 //
 //
 
@@ -124,8 +125,9 @@ class ProfileController extends GetxController {
     await FirebaseAuth.instance.signOut();
     Get.to(() => const IntroView1());
   }
-  // 
-  // 
+
+  //
+  //
   Future<String> uploadProfile(
     String email,
     String fileName,
@@ -146,5 +148,4 @@ class ProfileController extends GetxController {
 
     return '';
   }
-
 }

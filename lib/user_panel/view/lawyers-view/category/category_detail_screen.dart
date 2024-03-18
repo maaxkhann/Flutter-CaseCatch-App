@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:velocity_x/velocity_x.dart';
 
-import '../../../constant-widgets/constant_appbar.dart';
+import '../../../../constant-widgets/constant_appbar.dart';
 import '../../../constants/textstyles.dart';
 import '../about-view/about_view.dart';
 import '../widgets/lawyers_button.dart';
@@ -26,14 +26,12 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
       child: Scaffold(
         appBar: ConstantAppBar(text: widget.category),
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
+          padding: EdgeInsets.symmetric(
+              horizontal: Get.width * 0.02, vertical: Get.height * 0.01),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: 22,
-                ),
                 TextFormField(
                     controller: searchController,
                     cursorColor: Colors.amber,
@@ -68,8 +66,6 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                         searchText = value;
                       });
                     }),
-                22.heightBox,
-                const SizedBox(height: 10),
                 StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection('lawyers')
@@ -91,18 +87,13 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                         return Center(
                             child: Padding(
                           padding: const EdgeInsets.only(top: 233),
-                          child: Text(
-                            'No lawyer Registered yet',
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.amber.shade700),
-                          ),
+                          child: Text('No lawyer Registered yet',
+                              style: kBody1DarkBlue),
                         ));
                       } else {
                         return ListView.builder(
                           shrinkWrap: true,
-                          physics: const BouncingScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemCount: snapshot.data?.docs.length ?? 0,
                           itemBuilder: (context, index) {
                             final e = snapshot.data!.docs[index];
@@ -110,12 +101,6 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                                 .toString()
                                 .toLowerCase()
                                 .contains(searchText.toLowerCase())) {
-                              String fcmToken = '';
-                              try {
-                                fcmToken = e['fcmToken'];
-                              } catch (e) {
-                                fcmToken = '';
-                              }
                               return Container(
                                 margin: EdgeInsets.only(top: Get.height * 0.02),
                                 padding: EdgeInsets.symmetric(
@@ -131,8 +116,8 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
-                                      width: 60,
-                                      height: 76,
+                                      width: 60.w,
+                                      height: 74.h,
                                       decoration: ShapeDecoration(
                                         image: DecorationImage(
                                           image: NetworkImage(e['image']),
@@ -164,10 +149,6 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                                             e['category'],
                                             style: kBody5Grey,
                                           ),
-                                          // Text(
-                                          //   'Tax lawyer',
-                                          //   style: kBody5Grey,
-                                          // ),
                                         ],
                                       ),
                                     ),
@@ -181,7 +162,8 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                                         children: [
                                           Padding(
                                             padding: EdgeInsets.only(
-                                                left: Get.width * 0.05),
+                                                left: Get.width * 0.05,
+                                                bottom: Get.height * 0.06),
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -197,40 +179,25 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                                               ],
                                             ),
                                           ),
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Text(
-                                                '4.7',
-                                                style: kBody4Black,
-                                              ),
-                                              Text(
-                                                'Free',
-                                                style: kBody444DarkBlue,
-                                              ),
-                                              SizedBox(
-                                                height: Get.height * 0.01,
-                                              ),
-                                              LawyersButton(
-                                                  buttonText: 'Book Now',
-                                                  onTap: () => Get.to(() =>
-                                                      AboutView(
-                                                        fcmToken: fcmToken,
-                                                        lawyerId: e['lawyerId'],
-                                                        image: e['image'],
-                                                        name: e['name'],
-                                                        category: e['category'],
-                                                        experience:
-                                                            e['experience'],
-                                                        address: e['address'],
-                                                        practice: e['practice'],
-                                                        contact: e['contact'],
-                                                        bio: e['bio'],
-                                                      )))
-                                            ],
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: Get.height * 0.05),
+                                            child: LawyersButton(
+                                                buttonText: 'About',
+                                                onTap: () => Get.to(() =>
+                                                    AboutView(
+                                                      lawyerId: e['lawyerId'],
+                                                      image: e['image'],
+                                                      name: e['name'],
+                                                      category: e['category'],
+                                                      experience:
+                                                          e['experience'],
+                                                      address: e['address'],
+                                                      practice: e['practice'],
+                                                      contact: e['contact'],
+                                                      bio: e['bio'],
+                                                      fcmToken: e['fcmToken'],
+                                                    ))),
                                           )
                                         ],
                                       ),

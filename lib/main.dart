@@ -9,8 +9,6 @@ import 'package:get/get.dart';
 
 // import 'package:flutter_stripe/flutter_stripe.dart';
 
-import 'lawyer_panel/dashboard/chat/notification.dart';
-
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // print(message.data.toString());
   // print(message.notification!.toString());
@@ -23,7 +21,7 @@ void main() async {
   );
   // Stripe.publishableKey = "your_stripe_publishable_key";
 
-  LocalNotificationService.initialize();
+  // LocalNotificationService.initialize();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   runApp(const MyApp());

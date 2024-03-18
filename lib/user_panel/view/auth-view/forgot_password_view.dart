@@ -1,12 +1,10 @@
-import 'package:catch_case/lawyer_panel/controllers/auth_controller.dart';
-import 'package:catch_case/user_panel/constant-widgets/constant_button.dart';
-import 'package:catch_case/user_panel/constant-widgets/constant_textfield.dart';
+import 'package:catch_case/constant-widgets/constant_button.dart';
+import 'package:catch_case/constant-widgets/constant_textfield.dart';
+import 'package:catch_case/lawyer_panel/controllers/lawyer_auth_controller.dart';
 import 'package:catch_case/user_panel/constants/textstyles.dart';
-import 'package:catch_case/user_panel/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});
@@ -82,7 +80,6 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                       authController
                           .resetmypassword(emailController.text.trim());
                     }
-                    //   Get.to(() => const VerifyOtpView());
                   })
             ],
           ),

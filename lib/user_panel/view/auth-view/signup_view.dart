@@ -1,7 +1,6 @@
 import 'dart:io';
-
-import 'package:catch_case/user_panel/constant-widgets/constant_button.dart';
-import 'package:catch_case/user_panel/constant-widgets/constant_textfield.dart';
+import 'package:catch_case/constant-widgets/constant_button.dart';
+import 'package:catch_case/constant-widgets/constant_textfield.dart';
 import 'package:catch_case/user_panel/constants/textstyles.dart';
 import 'package:catch_case/user_panel/controllers/auth_controller.dart';
 import 'package:catch_case/user_panel/view/auth-view/login_view.dart';
@@ -9,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -85,26 +83,7 @@ class _SignUpViewState extends State<SignUpView> {
                                   radius: 40.r,
                                   backgroundImage: FileImage(
                                       File(authController.image!.path)),
-                                )
-                          // Container(
-                          //   height: 100,
-                          //   width: 100,
-                          //   decoration: BoxDecoration(
-                          //       borderRadius: BorderRadius.circular(60),
-                          //       border: Border.all(color: Colors.black12),
-                          //       color: const Color.fromARGB(255, 231, 231, 231),
-                          //       image: authController.image == null
-                          //           ? const DecorationImage(
-                          //               image: AssetImage(
-                          //                   'assets/images/home/download.png'))
-                          //           : DecorationImage(
-                          //               image: FileImage(
-                          //                 File(authController.image!.path)
-                          //                     .absolute,
-                          //               ),
-                          //               fit: BoxFit.cover)),
-                          // ),
-                          ),
+                                )),
                 ),
               ),
               SizedBox(
@@ -178,23 +157,7 @@ class _SignUpViewState extends State<SignUpView> {
                       },
                     );
                   }),
-              // Row(
-              //   children: [
-              //     ValueListenableBuilder(
-              //         valueListenable: isChecked,
-              //         builder: ((context, value, child) {
-              //           return Checkbox(
-              //               value: isChecked.value,
-              //               onChanged: (value) {
-              //                 isChecked.value = value!;
-              //               });
-              //         })),
-              //     Text(
-              //       'Remember me',
-              //       style: kBody4Dark,
-              //     ),
-              //   ],
-              // ),
+
               SizedBox(
                 height: Get.height * 0.04,
               ),
@@ -219,10 +182,7 @@ class _SignUpViewState extends State<SignUpView> {
                       return;
                     } else {
                       authController.createUser(
-                          email: email,
-                          name: name,
-                          password: password,
-                          context: context);
+                          email: email, name: name, password: password);
                     }
                   }),
               // SizedBox(
