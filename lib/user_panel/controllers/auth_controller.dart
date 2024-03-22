@@ -100,7 +100,7 @@ class AuthController extends GetxController {
     required String name,
     required String password,
   }) async {
-    EasyLoading.show(status: 'loading...');
+    EasyLoading.show(status: 'loading..', dismissOnTap: true);
     String? token = await FirebaseMessaging.instance.getToken();
     try {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
@@ -145,7 +145,7 @@ class AuthController extends GetxController {
 
   Future<void> loginUser(
       BuildContext context, String email, String password) async {
-    EasyLoading.show(status: 'loading...');
+    EasyLoading.show(status: 'loading..', dismissOnTap: true);
     try {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
           email: email, password: password);
@@ -176,12 +176,15 @@ class AuthController extends GetxController {
   }
 
   Future<void> resetmypassword(String email) async {
+    EasyLoading.show(status: 'loading..', dismissOnTap: true);
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      EasyLoading.dismiss();
       Get.snackbar('Success', 'Check your email for Password Reset Link');
       Get.back();
     } catch (e) {
-      Get.snackbar('Error', 'Something went wrong');
+      EasyLoading.dismiss();
+      Get.snackbar('Failed', 'Something went wrong');
     }
   }
 
@@ -232,10 +235,11 @@ class AuthController extends GetxController {
         'experience': experience,
         'lawyerId': FirebaseAuth.instance.currentUser!.uid,
       });
-      Get.snackbar('Success', 'Information updated ');
+      Get.snackbar('Success', 'Information updated');
 
       isLoading.value = false;
     } catch (e) {
+      Get.snackbar('Failed', 'Something went wrong');
       isLoading.value = false;
 
       Get.snackbar('Error', e.toString());

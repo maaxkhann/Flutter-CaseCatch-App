@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../../../constant-widgets/constant_appbar.dart';
-import '../../../constants/textstyles.dart';
+import '../../../../constants/textstyles.dart';
 import '../about-view/about_view.dart';
 import '../widgets/lawyers_button.dart';
 

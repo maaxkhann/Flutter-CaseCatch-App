@@ -1,5 +1,5 @@
-import 'package:catch_case/user_panel/constants/colors.dart';
-import 'package:catch_case/user_panel/constants/textstyles.dart';
+import 'package:catch_case/constants/colors.dart';
+import 'package:catch_case/constants/textstyles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

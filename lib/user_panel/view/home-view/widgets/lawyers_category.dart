@@ -1,4 +1,4 @@
-import 'package:catch_case/user_panel/constants/textstyles.dart';
+import 'package:catch_case/constants/textstyles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,6 +16,7 @@ class LawyersCategory extends StatelessWidget {
         stream: FirebaseFirestore.instance
             .collection('lawyers')
             .orderBy('category')
+            .limit(5)
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -34,13 +35,12 @@ class LawyersCategory extends StatelessWidget {
                 categories.add(category);
               }
             }
-            return Container(
+            return SizedBox(
               // width: double.infinity,
               height: Get.height * 0.1,
               child: ListView.builder(
                 itemCount: categories.length,
                 scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(),
                 shrinkWrap: true,
                 itemBuilder: (BuildContext context, int index) {
                   var category = categories.elementAt(index);

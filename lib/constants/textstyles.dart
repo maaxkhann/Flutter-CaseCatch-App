@@ -1,4 +1,4 @@
-import 'package:catch_case/user_panel/constants/colors.dart';
+import 'package:catch_case/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -48,8 +48,8 @@ TextStyle kBody22LightBlue = TextStyle(
     fontWeight: FontWeight.w600);
 TextStyle kBody2White = TextStyle(
     fontSize: 14.sp, color: Colors.white, fontWeight: FontWeight.w500);
-TextStyle kBody2Black = TextStyle(
-    fontSize: 14.sp, color: kBlack, fontWeight: FontWeight.w400);
+TextStyle kBody2Black =
+    TextStyle(fontSize: 14.sp, color: kBlack, fontWeight: FontWeight.w400);
 
 TextStyle kBody2MediumBlue = TextStyle(
     fontSize: 14.sp,

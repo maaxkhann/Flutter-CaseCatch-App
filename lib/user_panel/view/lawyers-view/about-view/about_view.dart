@@ -1,7 +1,7 @@
 import 'package:catch_case/constant-widgets/constant_appbar.dart';
 import 'package:catch_case/constant-widgets/constant_button.dart';
-import 'package:catch_case/user_panel/constants/colors.dart';
-import 'package:catch_case/user_panel/constants/textstyles.dart';
+import 'package:catch_case/constants/colors.dart';
+import 'package:catch_case/constants/textstyles.dart';
 import 'package:catch_case/user_panel/view/home-view/user_questions_view.dart';
 import 'package:catch_case/user_panel/view/lawyers-view/all_lawyers_view.dart';
 import 'package:flutter/material.dart';

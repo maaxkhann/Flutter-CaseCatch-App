@@ -1,6 +1,6 @@
 import 'package:catch_case/constant-widgets/constant_button.dart';
-import 'package:catch_case/user_panel/constants/colors.dart';
-import 'package:catch_case/user_panel/constants/textstyles.dart';
+import 'package:catch_case/constants/colors.dart';
+import 'package:catch_case/constants/textstyles.dart';
 import 'package:catch_case/user_panel/view/intro-view/intro_view3.dart';
 import 'package:catch_case/user_panel/view/select_user_view.dart';
 import 'package:flutter/material.dart';
@@ -81,10 +81,12 @@ class IntroView2 extends StatelessWidget {
                   ),
                   ConstantButton(
                     buttonText: 'Next',
-                    onTap: () => Get.to(() => const IntroView3()),
+                    onTap: () => Get.to(() => const IntroView3(),
+                        transition: Transition.rightToLeft),
                   ),
                   TextButton(
-                      onPressed: () => Get.offAll(() => const SelectUserView()),
+                      onPressed: () => Get.offAll(() => const SelectUserView(),
+                          transition: Transition.rightToLeft),
                       child: Text(
                         'Skip',
                         style: kBody1MediumBlue,

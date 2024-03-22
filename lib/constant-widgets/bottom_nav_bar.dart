@@ -1,4 +1,4 @@
-import 'package:catch_case/user_panel/constants/colors.dart';
+import 'package:catch_case/constants/colors.dart';
 import 'package:catch_case/user_panel/controllers/notification.dart';
 import 'package:catch_case/user_panel/view/home-view/home_view.dart';
 import 'package:catch_case/user_panel/view/home-view/show_question_answer_user_view.dart';

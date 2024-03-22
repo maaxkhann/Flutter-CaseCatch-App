@@ -1,7 +1,7 @@
 import 'package:catch_case/lawyer_panel/dashboard/lawyer_questions_answers_view.dart';
 import 'package:catch_case/lawyer_panel/dashboard/profile/lawyer_update_profile_view.dart';
 import 'package:catch_case/lawyer_panel/dashboard/show_question_answer_lawyer.dart';
-import 'package:catch_case/user_panel/constants/colors.dart';
+import 'package:catch_case/constants/colors.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

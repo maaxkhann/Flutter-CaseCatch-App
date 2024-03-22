@@ -1,9 +1,10 @@
-import 'package:catch_case/user_panel/constants/colors.dart';
-import 'package:catch_case/user_panel/constants/textstyles.dart';
+import 'package:catch_case/constants/colors.dart';
+import 'package:catch_case/constants/textstyles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ShowAnswerView extends StatelessWidget {
@@ -27,6 +28,7 @@ class ShowAnswerView extends StatelessWidget {
                 .collection('users')
                 .doc(FirebaseAuth.instance.currentUser!.uid)
                 .collection('questions')
+                .orderBy('date')
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -90,21 +92,34 @@ class ShowAnswerView extends StatelessWidget {
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) {
                     final data = snapshot.data!.docs[index];
-                    return Card(
-                      color: Colors.grey.shade50,
-                      margin:
-                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
-                      child: Padding(
-                        padding: EdgeInsets.all(8.r),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Q: ${data['question']}',
-                                style: kBody1Black2,
-                                textAlign: TextAlign.start),
-                            Text('Ans: ${data['answer']}',
-                                style: kBody1Black, textAlign: TextAlign.start),
-                          ],
+                    return Dismissible(
+                      key: UniqueKey(),
+                      direction: DismissDirection.startToEnd,
+                      onDismissed: (dismiss) {
+                        try {
+                          data.reference.delete();
+                          Fluttertoast.showToast(msg: 'Deleted');
+                        } catch (e) {
+                          Fluttertoast.showToast(msg: 'Something went wrong');
+                        }
+                      },
+                      child: Card(
+                        color: Colors.grey.shade50,
+                        margin: EdgeInsets.symmetric(
+                            horizontal: 8.w, vertical: 6.h),
+                        child: Padding(
+                          padding: EdgeInsets.all(8.r),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Q: ${data['question']}',
+                                  style: kBody1Black2,
+                                  textAlign: TextAlign.start),
+                              Text('Ans: ${data['answer']}',
+                                  style: kBody1Black,
+                                  textAlign: TextAlign.start),
+                            ],
+                          ),
                         ),
                       ),
                     );

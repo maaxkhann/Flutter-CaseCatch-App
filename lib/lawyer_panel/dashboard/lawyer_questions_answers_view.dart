@@ -1,9 +1,13 @@
-import 'package:catch_case/user_panel/constants/colors.dart';
-import 'package:catch_case/user_panel/constants/textstyles.dart';
+import 'package:catch_case/constants/colors.dart';
+import 'package:catch_case/constants/textstyles.dart';
 import 'package:catch_case/user_panel/controllers/notification.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class LawyerQuestionAnswer extends StatefulWidget {
@@ -32,6 +36,7 @@ class _QuestionAnswerState extends State<LawyerQuestionAnswer> {
               .collection('lawyers')
               .doc(FirebaseAuth.instance.currentUser!.uid)
               .collection('questions')
+              .orderBy('date')
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -72,69 +77,111 @@ class _QuestionAnswerState extends State<LawyerQuestionAnswer> {
                     String userDocId = data['userDocId'];
                     String token = data['fcmToken'];
 
-                    return Card(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 16),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              data['question'],
-                              style: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 8),
-                            TextField(
-                              controller: answerController,
-                              decoration: const InputDecoration(
-                                labelText: 'Your Answer',
-                                border: OutlineInputBorder(),
+                    return Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 4.h, horizontal: 6.w),
+                      child: Column(
+                        children: [
+                          Align(
+                              alignment: Alignment.topRight,
+                              child: Text(data['date'])),
+                          Dismissible(
+                            key: UniqueKey(),
+                            direction: DismissDirection.startToEnd,
+                            onDismissed: (dismiss) {
+                              data.reference.delete();
+                              Fluttertoast.showToast(msg: 'Deleted');
+                            },
+                            child: Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      data['question'],
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    TextField(
+                                      controller: answerController,
+                                      decoration: const InputDecoration(
+                                        labelText: 'Your Answer',
+                                        border: OutlineInputBorder(),
+                                      ),
+                                      maxLines: null,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Center(
+                                      child: ElevatedButton(
+                                        onPressed: () async {
+                                          EasyLoading.show(status: 'loading..');
+                                          // String formattedDateTime =
+                                          //     DateFormat('yyyy-MM-dd HH:mm')
+                                          //         .format(DateTime.now());
+                                          try {
+                                            if (answerController
+                                                .text.isNotEmpty) {
+                                              await FirebaseFirestore.instance
+                                                  .collection('users')
+                                                  .doc(userId)
+                                                  .collection('questions')
+                                                  .doc(userDocId)
+                                                  .update({
+                                                'answer': answerController.text
+                                              });
+                                              await FirebaseFirestore.instance
+                                                  .collection('lawyers')
+                                                  .doc(FirebaseAuth.instance
+                                                      .currentUser!.uid)
+                                                  .collection('questions')
+                                                  .doc(docId)
+                                                  .update({
+                                                'answer': answerController.text
+                                              });
+                                              EasyLoading.dismiss();
+                                              Fluttertoast.showToast(
+                                                  msg: 'Submitted');
+                                              LocalNotificationService
+                                                  .sendNotification(
+                                                      title: 'Answer',
+                                                      message:
+                                                          answerController.text,
+                                                      token: token);
+                                            } else {
+                                              EasyLoading.dismiss();
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      'Please answer the question');
+                                            }
+                                          } on FirebaseException catch (e) {
+                                            EasyLoading.dismiss();
+                                            if (e.code == 'not-found') {
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      'This question is deleted by user');
+                                              return;
+                                            }
+                                          } catch (e) {
+                                            EasyLoading.dismiss();
+                                            Fluttertoast.showToast(
+                                                msg: 'Something went wrong');
+                                            rethrow;
+                                          }
+                                          answerController.clear();
+                                          setState(() {});
+                                        },
+                                        child: const Text('Submit'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              maxLines: null,
                             ),
-                            const SizedBox(height: 8),
-                            Center(
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  // String formattedDateTime =
-                                  //     DateFormat('yyyy-MM-dd HH:mm')
-                                  //         .format(DateTime.now());
-                                  try {
-                                    await FirebaseFirestore.instance
-                                        .collection('users')
-                                        .doc(userId)
-                                        .collection('questions')
-                                        .doc(userDocId)
-                                        .update(
-                                            {'answer': answerController.text});
-                                    await FirebaseFirestore.instance
-                                        .collection('lawyers')
-                                        .doc(FirebaseAuth
-                                            .instance.currentUser!.uid)
-                                        .collection('questions')
-                                        .doc(docId)
-                                        .update(
-                                            {'answer': answerController.text});
-                                    Fluttertoast.showToast(msg: 'Submitted');
-                                    LocalNotificationService.sendNotification(
-                                        title: 'Answer',
-                                        message: answerController.text,
-                                        token: token);
-                                  } catch (e) {
-                                    Fluttertoast.showToast(
-                                        msg: 'Something went wrong');
-                                    rethrow;
-                                  }
-                                  answerController.clear();
-                                  setState(() {});
-                                },
-                                child: const Text('Submit'),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     );
                   });

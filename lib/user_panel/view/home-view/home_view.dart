@@ -1,4 +1,4 @@
-import 'package:catch_case/user_panel/constants/textstyles.dart';
+import 'package:catch_case/constants/textstyles.dart';
 import 'package:catch_case/user_panel/view/home-view/widgets/home_appbar.dart';
 import 'package:catch_case/user_panel/view/home-view/widgets/home_button.dart';
 import 'package:catch_case/user_panel/view/home-view/widgets/lawyers_category.dart';

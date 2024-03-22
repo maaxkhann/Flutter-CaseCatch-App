@@ -34,7 +34,7 @@ class LawyerAuthController extends GetxController {
     required String experience,
     required String bio,
   }) async {
-    EasyLoading.show(status: 'loading...');
+    EasyLoading.show(status: 'loading..', dismissOnTap: true);
     String? token = await FirebaseMessaging.instance.getToken();
     try {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
@@ -84,7 +84,7 @@ class LawyerAuthController extends GetxController {
   }
 
   Future<void> loginUser(String email, String password) async {
-    EasyLoading.show(status: 'loading...');
+    EasyLoading.show(status: 'loading..', dismissOnTap: true);
     try {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
           email: email, password: password);
@@ -116,11 +116,15 @@ class LawyerAuthController extends GetxController {
   }
 
   Future<void> resetmypassword(String email) async {
+    EasyLoading.show(status: 'loading..', dismissOnTap: true);
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      EasyLoading.dismiss();
       Get.snackbar('Success', 'Check your email for Password Reset Link');
       Get.to(() => const LawyerLoginView());
     } catch (e) {
+      EasyLoading.dismiss();
+      Get.snackbar('Failed', 'Something went wrong');
       Get.snackbar('Error', e.toString());
     }
   }

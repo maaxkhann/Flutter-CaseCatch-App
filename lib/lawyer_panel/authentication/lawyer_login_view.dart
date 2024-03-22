@@ -1,7 +1,7 @@
 import 'package:catch_case/constant-widgets/constant_button.dart';
 import 'package:catch_case/constant-widgets/constant_textfield.dart';
 import 'package:catch_case/lawyer_panel/authentication/lawyer_signup_view.dart';
-import 'package:catch_case/user_panel/constants/textstyles.dart';
+import 'package:catch_case/constants/textstyles.dart';
 import 'package:catch_case/user_panel/view/auth-view/forgot_password_view.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
